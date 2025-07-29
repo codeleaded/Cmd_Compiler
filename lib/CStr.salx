@@ -1,0 +1,22 @@
+
+namespace cstr {
+    i64 len(i8* cstr){
+        i64 size = 0;
+        i8 ch = cstr[0];
+        while ch != 0 {
+            size += 1;
+            ch = cstr[size];
+        }
+        return size;
+    }
+    void set(i8* ptr,i8 value,i64 size){
+        for i64 i = 0,i<size,i+=1 {
+            ptr[i] = value;
+        }
+    }
+    void cpy(i8* dst,i8* src,i64 size){
+        for i64 i = 0,i<size,i+=1 {
+            dst[i] = src[i];
+        }
+    }
+}
