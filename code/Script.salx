@@ -1,0 +1,17 @@
+
+namespace io {
+    void input(i8* cstr,i64 size){
+        asm "mov rax,0";
+        asm "mov rdi,0";
+        asm "mov rsi," cstr;
+        asm "mov rdx," size;
+        asm "syscall";
+    }
+    void print(i8* cstr,i64 size){
+        asm "mov rax,1";
+        asm "mov rdi,1";
+        asm "mov rsi," cstr;
+        asm "mov rdx," size;
+        asm "syscall";
+    }
+}

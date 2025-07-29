@@ -1,0 +1,137 @@
+import "../lib/System.salx";
+import "../lib/Stream.alx";
+import "../lib/Terminal.alx";
+
+void render(f64 x,f64 y){
+    esc::cursor::pos::set((i64)x,(i64)y);
+    io::put('#');
+    esc::cursor::pos::set((i64)x,(i64)y+1);
+    io::put('#');
+    esc::cursor::pos::set((i64)x,(i64)y+2);
+    io::put('#');
+    esc::cursor::pos::set((i64)x,(i64)y+3);
+    io::put('#');
+    esc::cursor::pos::set((i64)x,(i64)y+4);
+    io::put('#');
+    esc::cursor::pos::set((i64)x,(i64)y+5);
+    io::put('#');
+    esc::cursor::pos::set((i64)x,(i64)y+6);
+    io::put('#');
+    esc::cursor::pos::set((i64)x,(i64)y+7);
+    io::put('#');
+}
+void renderb(f64 x,f64 y){
+    esc::cursor::pos::set((i64)x,(i64)y);
+    io::put('O');
+    io::put('O');
+    esc::cursor::pos::set((i64)x,(i64)y+1);
+    io::put('O');
+    io::put('O');
+}
+
+global i32 main(){
+    ter::Keyboard kb = ter::Keyboard::new();
+
+    f64 x1 = 5.0;
+    f64 y1 = 10.0;
+    f64 x2 = 208.0;
+    f64 y2 = 10.0;
+
+    f64 xb = 100.0;
+    f64 yb = 25.0;
+    f64 vx = 0.1;
+    f64 vy = 0.05;
+
+    bool running = true;
+
+    esc::screen::del::all();
+    esc::cursor::invisible();
+    while running {
+        kb.update();
+
+        i8 ch = kb.getlast();
+
+        if ch=='Q' || ch=='q' {
+            running = false;
+        }
+
+        if ch=='W' || ch=='w' {
+            y1 -= 0.1;
+        }
+        if ch=='S' || ch=='s' {
+            y1 += 0.1;
+        }
+        if kb.getup() {
+            y2 -= 0.1;
+        }
+        if kb.getdown() {
+            y2 += 0.1;
+        }
+
+        xb += vx;
+        yb += vy;
+
+        if y1<2.0 {
+            y1 = 2.0;
+        }
+        if y1>50.0 {
+            y1 = 50.0;
+        }
+        if y2<2.0 {
+            y2 = 2.0;
+        }
+        if y2>50.0 {
+            y2 = 50.0;
+        }
+
+        if xb<0.0 {
+            xb = 100.0;
+            yb = 25.0;
+            vx = 0.1;
+            vy = 0.05;
+        }
+        if xb>210.0 {
+            xb = 100.0;
+            yb = 25.0;
+            vx = 0.1;
+            vy = 0.05;
+        }
+        if yb<2.0 {
+            yb = 2.0;
+            vy = -vy;
+            vy += 0.01 * math::float::sign(vy);
+        }
+        if yb>56.0 {
+            yb = 56.0;
+            vy = -vy;
+            vy += 0.01 * math::float::sign(vy);
+        }
+
+        if (i64)x1==(i64)xb || (i64)x1==(i64)xb+1 {
+            if (i64)yb>=(i64)y1-2 && (i64)yb<(i64)y1+8 {
+                xb = x1 + 1.0;
+                vx = -vx;
+                vx += 0.05 * math::float::sign(vx);
+            }
+        }
+        if (i64)x2==(i64)xb || (i64)x2==(i64)xb-1 {
+            if (i64)yb>=(i64)y2-2 && (i64)yb<(i64)y2+8 {
+                xb = x2 - 2.0;
+                vx = -vx;
+                vx += 0.05 * math::float::sign(vx);
+            }
+        }
+
+        esc::screen::del::all();
+        render(x1,y1);
+        render(x2,y2);
+        renderb(xb,yb);
+        mem::msleep(2);
+    }
+
+    esc::cursor::pos::set(0,0);
+    esc::screen::del::all();
+    esc::cursor::visible();
+    kb.delete();
+    return 0;
+}
