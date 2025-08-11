@@ -42,7 +42,13 @@ f.cstr.len:
     add rsp,1
     cmp al,0
     je l.1_WHILE2_0
-    add QWORD[rsp + 1],1
+    sub rsp,8
+    mov rax,QWORD[rsp + 9]
+    add rax,1
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 9],rax
+    add rsp,8
     sub rsp,8
     mov rax,QWORD[rsp + 25]
     add rax,QWORD[rsp + 9]
@@ -69,7 +75,7 @@ f.cstr.len:
 f.cstr.set:
     sub rsp,8
     mov QWORD[rsp + 0],0
-    l.0_FOR3_0:
+    l.0_WHILE2_1:
     sub rsp,1
     sub rsp,1
     mov rax,QWORD[rsp + 2]
@@ -81,7 +87,7 @@ f.cstr.set:
     mov al,BYTE[rsp + 0]
     add rsp,1
     cmp al,0
-    je l.1_FOR3_0
+    je l.1_WHILE2_1
     sub rsp,8
     mov rax,QWORD[rsp + 33]
     add rax,QWORD[rsp + 8]
@@ -94,16 +100,22 @@ f.cstr.set:
     mov BYTE[rdx],al
     add rsp,8
     add rsp,8
-    add QWORD[rsp + 0],1
-    jmp l.0_FOR3_0
-    l.1_FOR3_0:
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    add rax,1
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    jmp l.0_WHILE2_1
+    l.1_WHILE2_1:
     add rsp,8
     ret
 
 f.cstr.cpy:
     sub rsp,8
     mov QWORD[rsp + 0],0
-    l.0_FOR3_1:
+    l.0_WHILE2_2:
     sub rsp,1
     sub rsp,1
     mov rax,QWORD[rsp + 2]
@@ -115,7 +127,7 @@ f.cstr.cpy:
     mov al,BYTE[rsp + 0]
     add rsp,1
     cmp al,0
-    je l.1_FOR3_1
+    je l.1_WHILE2_2
     sub rsp,8
     mov rax,QWORD[rsp + 40]
     add rax,QWORD[rsp + 8]
@@ -138,9 +150,15 @@ f.cstr.cpy:
     add rsp,8
     add rsp,8
     add rsp,8
-    add QWORD[rsp + 0],1
-    jmp l.0_FOR3_1
-    l.1_FOR3_1:
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    add rax,1
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    jmp l.0_WHILE2_2
+    l.1_WHILE2_2:
     add rsp,8
     ret
 

@@ -77,10 +77,10 @@ void SuperALX_AtFPU(SuperALX* ll,Token* a){
                     CStr_Free(&location);
                 }
             }else{
-                Enviroment_ErrorHandler(&ll->ev,"AtFPU -> Error: %s is not a int of float!",a->str);
+                Compiler_ErrorHandler(&ll->ev,"AtFPU -> Error: %s is not a int of float!",a->str);
             }
         }else{
-            Enviroment_ErrorHandler(&ll->ev,"AtFPU -> Error: %s is not a var!",a->str);
+            Compiler_ErrorHandler(&ll->ev,"AtFPU -> Error: %s is not a var!",a->str);
         }
     }else if(a->tt==TOKEN_FLOAT){
         CStr fstr = SuperALX_GetFloatStr(ll,a->str);
@@ -95,7 +95,7 @@ void SuperALX_AtFPU(SuperALX* ll,Token* a){
         SuperALX_Indentation_Appendf(ll,&ll->text,"fild %s[%s]",SUPERALX_DREF_64,SUPERALX_REG_SP_64);
         SuperALX_Indentation_Appendf(ll,&ll->text,"add %s,8",SUPERALX_REG_SP_64);
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"AtFPU -> Error: %s is not a var or const!",a->str);
+        Compiler_ErrorHandler(&ll->ev,"AtFPU -> Error: %s is not a var or const!",a->str);
     }
 }
 void SuperALX_DoFPU(SuperALX* ll,Token* a,CStr inst){
@@ -133,10 +133,10 @@ void SuperALX_DoFPU(SuperALX* ll,Token* a,CStr inst){
                     CStr_Free(&location);
                 }
             }else{
-                Enviroment_ErrorHandler(&ll->ev,"DoFPU -> Error: %s is not a int of float!",a->str);
+                Compiler_ErrorHandler(&ll->ev,"DoFPU -> Error: %s is not a int of float!",a->str);
             }
         }else{
-            Enviroment_ErrorHandler(&ll->ev,"DoFPU -> Error: %s is not a var!",a->str);
+            Compiler_ErrorHandler(&ll->ev,"DoFPU -> Error: %s is not a var!",a->str);
         }
     }else if(a->tt==TOKEN_FLOAT){
         CStr fstr = SuperALX_GetFloatStr(ll,a->str);
@@ -151,7 +151,7 @@ void SuperALX_DoFPU(SuperALX* ll,Token* a,CStr inst){
         SuperALX_Indentation_Appendf(ll,&ll->text,"%s %s[%s]",rinst,SUPERALX_DREF_64,SUPERALX_REG_SP_64);
         SuperALX_Indentation_Appendf(ll,&ll->text,"add %s,8",SUPERALX_REG_SP_64);
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"DoFPU -> Error: %s is not a var or const!",a->str);
+        Compiler_ErrorHandler(&ll->ev,"DoFPU -> Error: %s is not a var or const!",a->str);
     }
     
     CStr_Free(&rinst);
@@ -192,13 +192,13 @@ void SuperALX_FromFPU(SuperALX* ll,Token* a){
                     CStr_Free(&location);
                 }
             }else{
-                Enviroment_ErrorHandler(&ll->ev,"FromFPU -> Error: %s is not a int of float!",a->str);
+                Compiler_ErrorHandler(&ll->ev,"FromFPU -> Error: %s is not a int of float!",a->str);
             }
         }else{
-            Enviroment_ErrorHandler(&ll->ev,"FromFPU -> Error: var %s doesn't exist!",a->str);
+            Compiler_ErrorHandler(&ll->ev,"FromFPU -> Error: var %s doesn't exist!",a->str);
         }
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"FromFPU -> Error: %s is not a var!",a->str);
+        Compiler_ErrorHandler(&ll->ev,"FromFPU -> Error: %s is not a var!",a->str);
     }
 }
 void SuperALX_CmpFPU(SuperALX* ll,Token* a){
@@ -210,7 +210,7 @@ void SuperALX_CmpFPU(SuperALX* ll,Token* a){
 }
 
 Token SuperALX_ExecuteFAss(SuperALX* ll,Token* a,Token* b,Token* op,CStr instname,CStr instnameupper){
-    //Enviroment_InfoHandler(&ll->ev,"%s: %s %s %s",instnameupper,a->str,op->str,b->str);
+    //Compiler_InfoHandler(&ll->ev,"%s: %s %s %s",instnameupper,a->str,op->str,b->str);
     
     if(SuperALX_ErrorsInArg(ll,a)) return Token_Null();
     if(SuperALX_ErrorsInArg(ll,b)) return Token_Null();
@@ -221,7 +221,7 @@ Token SuperALX_ExecuteFAss(SuperALX* ll,Token* a,Token* b,Token* op,CStr instnam
     return Token_Cpy(b);
 }
 Token SuperALX_ExecuteFAssSingle(SuperALX* ll,Token* a,Token* op,CStr instname,CStr instnameupper){
-    //Enviroment_InfoHandler(&ll->ev,"%s: %s %s %s",instnameupper,a->str,op->str,b->str);
+    //Compiler_InfoHandler(&ll->ev,"%s: %s %s %s",instnameupper,a->str,op->str,b->str);
     
     if(SuperALX_ErrorsInArg(ll,a)) return Token_Null();
 
@@ -230,7 +230,7 @@ Token SuperALX_ExecuteFAssSingle(SuperALX* ll,Token* a,Token* op,CStr instname,C
 }
 
 Token SuperALX_ExecuteF(SuperALX* ll,Token* a,Token* b,Token* op,CStr instname,CStr instnameupper,Double (*inst)(Double,Double)){
-    //Enviroment_InfoHandler(&ll->ev,"%s: %s %s %s",instnameupper,a->str,op->str,b->str);
+    //Compiler_InfoHandler(&ll->ev,"%s: %s %s %s",instnameupper,a->str,op->str,b->str);
     
     if(SuperALX_ErrorsInArg(ll,a)) return Token_Null();
     if(SuperALX_ErrorsInArg(ll,b)) return Token_Null();
@@ -253,7 +253,7 @@ Token SuperALX_ExecuteF(SuperALX* ll,Token* a,Token* b,Token* op,CStr instname,C
     }
 }
 Token SuperALX_ExecuteFSingle(SuperALX* ll,Token* a,Token* op,CStr instname,CStr instnameupper,Double (*inst)(Double)){
-    //Enviroment_InfoHandler(&ll->ev,"%s: %s%s",instnameupper,op->str,a->str);
+    //Compiler_InfoHandler(&ll->ev,"%s: %s%s",instnameupper,op->str,a->str);
     
     if(SuperALX_ErrorsInArg(ll,a)) return Token_Null();
 
@@ -276,7 +276,7 @@ Token SuperALX_ExecuteFSingle(SuperALX* ll,Token* a,Token* op,CStr instname,CStr
     }
 }
 Token SuperALX_ExecuteFCmp(SuperALX* ll,Token* a,Token* b,Token* op,CStr instname,CStr instnameupper,Boolean (*inst)(Double,Double)){
-    //Enviroment_InfoHandler(&ll->ev,"%s: %s %s %s",instnameupper,a->str,op->str,b->str);
+    //Compiler_InfoHandler(&ll->ev,"%s: %s %s %s",instnameupper,a->str,op->str,b->str);
     
     if(SuperALX_ErrorsInArg(ll,a)) return Token_Null();
     if(SuperALX_ErrorsInArg(ll,b)) return Token_Null();

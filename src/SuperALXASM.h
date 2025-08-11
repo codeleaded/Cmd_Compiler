@@ -3,7 +3,7 @@
 
 #include "/home/codeleaded/System/Static/Library/AlxScope.h"
 #include "/home/codeleaded/System/Static/Library/AlxShutingYard.h"
-#include "/home/codeleaded/System/Static/Library/AlxEnviroment.h"
+#include "/home/codeleaded/System/Static/Library/AlxCompiler.h"
 #include "/home/codeleaded/System/Static/Library/ConstParser.h"
 #include "/home/codeleaded/System/Static/Library/Files.h"
 #include "/home/codeleaded/System/Static/Library/String_G.h"
@@ -39,7 +39,7 @@ void Define_Print(Define* d){
 
 
 typedef struct SuperALX {
-    Enviroment ev; // like inheritance
+    Compiler ev; // like inheritance
     CVector filesstack; // call stack of files -> path
     CVector filesinc;
     String bss;
@@ -703,7 +703,7 @@ Boolean SuperALX_Extract(SuperALX* ll,Token* a,Number* n){
         *n = Number_Parse(a->str);
         return True;
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"Number -> 1. Arg: %s is not a int type!",a->str);
+        Compiler_ErrorHandler(&ll->ev,"Number -> 1. Arg: %s is not a int type!",a->str);
         return False;
     }
 }
@@ -714,49 +714,49 @@ Boolean SuperALX_ExtractBool(SuperALX* ll,Token* a,Boolean* b){
         *b = Boolean_Parse(a->str);
         return True;
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"1. Arg: %s is not a bool type!",a->str);
+        Compiler_ErrorHandler(&ll->ev,"1. Arg: %s is not a bool type!",a->str);
         return False;
     }
 }
 
 Boolean SuperALX_ErrorsInArg(SuperALX* ll,Token* a){
     if(a->tt==TOKEN_NONE){
-        Enviroment_ErrorHandler(&ll->ev,"Errors -> Tokentype of %s is NONE!",a->str);
+        Compiler_ErrorHandler(&ll->ev,"Errors -> Tokentype of %s is NONE!",a->str);
         return 1;
     }
     if(a->tt==TOKEN_CONSTSTRING_DOUBLE){
         if(a->str == NULL){
-            Enviroment_ErrorHandler(&ll->ev,"Errors -> const str %s is null!",a->str);
+            Compiler_ErrorHandler(&ll->ev,"Errors -> const str %s is null!",a->str);
             return 1; 
         }
     }
     if(a->tt==TOKEN_NUMBER){
         if(Number_Parse(a->str) == NUMBER_PARSE_ERROR){
-            Enviroment_ErrorHandler(&ll->ev,"Errors -> number %s is invalid!",a->str);
+            Compiler_ErrorHandler(&ll->ev,"Errors -> number %s is invalid!",a->str);
             return 1;
         }
     }
     if(a->tt==TOKEN_FLOAT){
         if(Double_Parse(a->str,0) == DOUBLE_PARSE_ERROR){
-            Enviroment_ErrorHandler(&ll->ev,"Errors -> float %s is invalid!",a->str);
+            Compiler_ErrorHandler(&ll->ev,"Errors -> float %s is invalid!",a->str);
             return 1;
         }
     }
     if(a->tt==TOKEN_SUPERALX_BOOLEAN){
         if(Boolean_Parse(a->str) == BOOL_PARSE_ERROR){
-            Enviroment_ErrorHandler(&ll->ev,"Errors -> bool %s is invalid!",a->str);
+            Compiler_ErrorHandler(&ll->ev,"Errors -> bool %s is invalid!",a->str);
             return 1;
         }
     }
     if(a->tt==TOKEN_STRING){
         if(Scope_FindVariable(&ll->ev.sc,a->str) == NULL){
-            Enviroment_ErrorHandler(&ll->ev,"Errors -> variable %s doesn't exist!",a->str);
+            Compiler_ErrorHandler(&ll->ev,"Errors -> variable %s doesn't exist!",a->str);
             return 1;
         }
     }
     if(a->tt==TOKEN_FUNCTIONPOINTER){
         if(Scope_FindVariable(&ll->ev.sc,a->str) == NULL){
-            Enviroment_ErrorHandler(&ll->ev,"Errors -> function %s is null!",a->str);
+            Compiler_ErrorHandler(&ll->ev,"Errors -> function %s is null!",a->str);
             return 1;
         }
     }
@@ -786,10 +786,10 @@ void SuperALX_DrefIntoReg(SuperALX* ll,Token* a,CStr reg){
                 }
                 CStr_Free(&location);
             }else{
-                Enviroment_ErrorHandler(&ll->ev,"IntoReg -> Error: %s is not a var!",a->str);
+                Compiler_ErrorHandler(&ll->ev,"IntoReg -> Error: %s is not a var!",a->str);
             }
         }else{
-            Enviroment_ErrorHandler(&ll->ev,"DrefIntoReg -> Error: %s is not a dref var!",a->str);
+            Compiler_ErrorHandler(&ll->ev,"DrefIntoReg -> Error: %s is not a dref var!",a->str);
         }
     }
 }
@@ -812,7 +812,7 @@ void SuperALX_IntoReg(SuperALX* ll,Token* a,CStr reg){
             }
             CStr_Free(&location);
         }else{
-            Enviroment_ErrorHandler(&ll->ev,"IntoReg -> Error: %s is not a var!",a->str);
+            Compiler_ErrorHandler(&ll->ev,"IntoReg -> Error: %s is not a var!",a->str);
         }
     }else{
         SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,%s",reg,a->str);
@@ -837,10 +837,10 @@ void SuperALX_IntoSet(SuperALX* ll,Token* a,CStr reg){
             }
             CStr_Free(&location);
         }else{
-            Enviroment_ErrorHandler(&ll->ev,"IntoSet -> Error: %s is not a var!",a->str);
+            Compiler_ErrorHandler(&ll->ev,"IntoSet -> Error: %s is not a var!",a->str);
         }
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"IntoSet -> Error: %s is not a var but assigned!",a->str);
+        Compiler_ErrorHandler(&ll->ev,"IntoSet -> Error: %s is not a var but assigned!",a->str);
     }
 }
 void SuperALX_AtReg(SuperALX* ll,Token* a,CStr reg,CStr inst){
@@ -862,7 +862,7 @@ void SuperALX_AtReg(SuperALX* ll,Token* a,CStr reg,CStr inst){
             }
             CStr_Free(&location);
         }else{
-            Enviroment_ErrorHandler(&ll->ev,"AtReg -> Error: %s is not a var!",a->str);
+            Compiler_ErrorHandler(&ll->ev,"AtReg -> Error: %s is not a var!",a->str);
         }
     }else{
         SuperALX_Indentation_Appendf(ll,&ll->text,"%s %s,%s",inst,reg,a->str);
@@ -887,7 +887,7 @@ void SuperALX_AtRegSingle(SuperALX* ll,Token* a,CStr inst){//Always A ex: mul,di
             }
             CStr_Free(&location);
         }else{
-            Enviroment_ErrorHandler(&ll->ev,"AtRegSingle -> Error: %s is not a var!",a->str);
+            Compiler_ErrorHandler(&ll->ev,"AtRegSingle -> Error: %s is not a var!",a->str);
         }
     }else{
         SuperALX_Indentation_Appendf(ll,&ll->text,"%s %s",inst,a->str);
@@ -915,10 +915,10 @@ void SuperALX_AtSet(SuperALX* ll,Token* a,CStr reg,CStr inst){
             }
             CStr_Free(&location);
         }else{
-            Enviroment_ErrorHandler(&ll->ev,"AtSet -> Error: %s is not a var!",a->str);
+            Compiler_ErrorHandler(&ll->ev,"AtSet -> Error: %s is not a var!",a->str);
         }
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"Set -> Error: %s is not a var but assigned!",a->str);
+        Compiler_ErrorHandler(&ll->ev,"Set -> Error: %s is not a var but assigned!",a->str);
     }
 }
 void SuperALX_CmpAtReg(SuperALX* ll,Token* a,CStr reg){
@@ -960,12 +960,12 @@ void SuperALX_CmpAtSet(SuperALX* ll,Token* a,CStr inst){
         }
         CStr_Free(&location);
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"Set -> Error: %s is not a var but assigned!",a->str);
+        Compiler_ErrorHandler(&ll->ev,"Set -> Error: %s is not a var but assigned!",a->str);
     }
 }
 
 Token SuperALX_ExecuteAss(SuperALX* ll,Token* a,Token* b,Token* op,CStr instname,CStr instnameupper){
-    //Enviroment_InfoHandler(&ll->ev,"%s: %s %s %s",instnameupper,a->str,op->str,b->str);
+    //Compiler_InfoHandler(&ll->ev,"%s: %s %s %s",instnameupper,a->str,op->str,b->str);
     
     if(SuperALX_ErrorsInArg(ll,a)) return Token_Null();
     if(SuperALX_ErrorsInArg(ll,b)) return Token_Null();
@@ -992,7 +992,7 @@ Token SuperALX_ExecuteAss(SuperALX* ll,Token* a,Token* b,Token* op,CStr instname
     }
 }
 Token SuperALX_ExecuteAssA(SuperALX* ll,Token* a,Token* b,Token* op,CStr instname,CStr instnameupper){
-    //Enviroment_InfoHandler(&ll->ev,"%s: %s %s %s",instnameupper,a->str,op->str,b->str);
+    //Compiler_InfoHandler(&ll->ev,"%s: %s %s %s",instnameupper,a->str,op->str,b->str);
     
     if(SuperALX_ErrorsInArg(ll,a)) return Token_Null();
     if(SuperALX_ErrorsInArg(ll,b)) return Token_Null();
@@ -1010,7 +1010,7 @@ Token SuperALX_ExecuteAssA(SuperALX* ll,Token* a,Token* b,Token* op,CStr instnam
     return Token_Cpy(a);
 }
 Token SuperALX_ExecuteAssSingle(SuperALX* ll,Token* a,Token* op,CStr instname,CStr instnameupper){
-    //Enviroment_InfoHandler(&ll->ev,"%s: %s %s %s",instnameupper,a->str,op->str,b->str);
+    //Compiler_InfoHandler(&ll->ev,"%s: %s %s %s",instnameupper,a->str,op->str,b->str);
     
     if(SuperALX_ErrorsInArg(ll,a)) return Token_Null();
 
@@ -1019,7 +1019,7 @@ Token SuperALX_ExecuteAssSingle(SuperALX* ll,Token* a,Token* op,CStr instname,CS
 }
 
 Token SuperALX_Execute(SuperALX* ll,Token* a,Token* b,Token* op,CStr instname,CStr instnameupper,Number (*inst)(Number,Number)){
-    //Enviroment_InfoHandler(&ll->ev,"%s: %s %s %s",instnameupper,a->str,op->str,b->str);
+    //Compiler_InfoHandler(&ll->ev,"%s: %s %s %s",instnameupper,a->str,op->str,b->str);
     
     if(SuperALX_ErrorsInArg(ll,a)) return Token_Null();
     if(SuperALX_ErrorsInArg(ll,b)) return Token_Null();
@@ -1047,7 +1047,7 @@ Token SuperALX_Execute(SuperALX* ll,Token* a,Token* b,Token* op,CStr instname,CS
     }
 }
 Token SuperALX_ExecuteA(SuperALX* ll,Token* a,Token* b,Token* op,CStr instname,CStr instnameupper,Number (*inst)(Number,Number)){
-    //Enviroment_InfoHandler(&ll->ev,"%s: %s %s %s",instnameupper,a->str,op->str,b->str);
+    //Compiler_InfoHandler(&ll->ev,"%s: %s %s %s",instnameupper,a->str,op->str,b->str);
     
     if(SuperALX_ErrorsInArg(ll,a)) return Token_Null();
     if(SuperALX_ErrorsInArg(ll,b)) return Token_Null();
@@ -1087,7 +1087,7 @@ Token SuperALX_ExecuteA(SuperALX* ll,Token* a,Token* b,Token* op,CStr instname,C
     }
 }
 Token SuperALX_ExecuteAR(SuperALX* ll,Token* a,Token* b,Token* op,CStr instname,CStr instnameupper,Number (*inst)(Number,Number)){
-    //Enviroment_InfoHandler(&ll->ev,"%s: %s %s %s",instnameupper,a->str,op->str,b->str);
+    //Compiler_InfoHandler(&ll->ev,"%s: %s %s %s",instnameupper,a->str,op->str,b->str);
     
     if(SuperALX_ErrorsInArg(ll,a)) return Token_Null();
     if(SuperALX_ErrorsInArg(ll,b)) return Token_Null();
@@ -1127,7 +1127,7 @@ Token SuperALX_ExecuteAR(SuperALX* ll,Token* a,Token* b,Token* op,CStr instname,
     }
 }
 Token SuperALX_ExecuteSingle(SuperALX* ll,Token* a,Token* op,CStr instname,CStr instnameupper,Number (*inst)(Number)){
-    //Enviroment_InfoHandler(&ll->ev,"%s: %s%s",instnameupper,op->str,a->str);
+    //Compiler_InfoHandler(&ll->ev,"%s: %s%s",instnameupper,op->str,a->str);
     
     if(SuperALX_ErrorsInArg(ll,a)) return Token_Null();
 
@@ -1151,7 +1151,7 @@ Token SuperALX_ExecuteSingle(SuperALX* ll,Token* a,Token* op,CStr instname,CStr 
     }
 }
 Token SuperALX_ExecuteCmp(SuperALX* ll,Token* a,Token* b,Token* op,CStr instname,CStr instnameupper,Boolean (*inst)(Number,Number)){
-    //Enviroment_InfoHandler(&ll->ev,"%s: %s %s %s",instnameupper,a->str,op->str,b->str);
+    //Compiler_InfoHandler(&ll->ev,"%s: %s %s %s",instnameupper,a->str,op->str,b->str);
     
     if(SuperALX_ErrorsInArg(ll,a)) return Token_Null();
     if(SuperALX_ErrorsInArg(ll,b)) return Token_Null();
