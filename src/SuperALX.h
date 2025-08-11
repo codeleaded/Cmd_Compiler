@@ -3,7 +3,7 @@
 
 #include "/home/codeleaded/System/Static/Library/AlxScope.h"
 #include "/home/codeleaded/System/Static/Library/AlxShutingYard.h"
-#include "/home/codeleaded/System/Static/Library/AlxEnviroment.h"
+#include "/home/codeleaded/System/Static/Library/AlxCompiler.h"
 
 #include "/home/codeleaded/System/Static/Library/ConstParser.h"
 #include "/home/codeleaded/System/Static/Library/Files.h"
@@ -78,7 +78,7 @@ Boolean ShutingYard_compress_functionpointer(SuperALX* ll,TokenMap* tm){
                         continue;
                     }
                     if(pretr + i==tm->size-1){
-                        Enviroment_ErrorHandler(&ll->ev,"Compress Functionpointer -> needs a ) to end function pointer type!");
+                        Compiler_ErrorHandler(&ll->ev,"Compress Functionpointer -> needs a ) to end function pointer type!");
                         return 0;
                     }
                 }
@@ -235,7 +235,7 @@ Boolean ShutingYard_compress_function(SuperALX* ll,TokenMap* tm){
                         Boolean bconstant = constant>=0;
                         Vector_Push(&params,(Member[]){ Member_Make(bconstant,0,stype,sname) });
                     }else{
-                        Enviroment_ErrorHandler(&ll->ev,"Compress Function: no type and no var found");
+                        Compiler_ErrorHandler(&ll->ev,"Compress Function: no type and no var found");
                     }
 
                     TokenMap_Free(&first);
@@ -290,28 +290,28 @@ Boolean ShutingYard_compress(SuperALX* ll,TokenMap* tm){
     return False;
 }
 
-Boolean ShutingYard_PP_if(Enviroment* ev,TokenMap* tm){
+Boolean ShutingYard_PP_if(Compiler* ev,TokenMap* tm){
     CallPosition cp =  CallPosition_New(TOKEN_SUPERALX_IF,ev->iter);
     Vector_Push(&ev->cs,&cp);
     return False;
 }
-Boolean ShutingYard_PP_elif(Enviroment* ev,TokenMap* tm){
+Boolean ShutingYard_PP_elif(Compiler* ev,TokenMap* tm){
     CallPosition cp =  CallPosition_New(TOKEN_SUPERALX_ELIF,ev->iter);
     Vector_Push(&ev->cs,&cp);
     return False;
 }
-Boolean ShutingYard_PP_else(Enviroment* ev,TokenMap* tm){
+Boolean ShutingYard_PP_else(Compiler* ev,TokenMap* tm){
     CallPosition cp =  CallPosition_New(TOKEN_SUPERALX_ELSE,ev->iter);
     Vector_Push(&ev->cs,&cp);
     return False;
 }
-Boolean ShutingYard_PP_while(Enviroment* ev,TokenMap* tm){
+Boolean ShutingYard_PP_while(Compiler* ev,TokenMap* tm){
     CallPosition cp =  CallPosition_New(TOKEN_SUPERALX_WHILE,ev->iter);
     Vector_Push(&ev->cs,&cp);
     return False;
 }
-Boolean ShutingYard_PP_for(Enviroment* ev,TokenMap* tm){
-    CallPosition cp =  CallPosition_New(TOKEN_SUPERALX_FOR,ev->iter);
+Boolean ShutingYard_PP_for(Compiler* ev,TokenMap* tm){
+    CallPosition cp = CallPosition_New(TOKEN_SUPERALX_FOR,ev->iter);
     Vector_Push(&ev->cs,&cp);
     return False;
 }
@@ -339,10 +339,10 @@ Boolean ShutingYard_PP_Struct(SuperALX* ll,TokenMap* tm){
                     TT_Iter pub = TokenMap_Find(&first,TOKEN_SUPERALX_PUB);
 
                     if(type<0){
-                        Enviroment_ErrorHandler(&ll->ev,"Struct -> Error: couldn't find Type!");
+                        Compiler_ErrorHandler(&ll->ev,"Struct -> Error: couldn't find Type!");
                         return False;
                     }else if(name<0){
-                        Enviroment_ErrorHandler(&ll->ev,"Struct -> Error: couldn't find name!");
+                        Compiler_ErrorHandler(&ll->ev,"Struct -> Error: couldn't find name!");
                         return False;
                     }else{
                         CStr sname = ((Token*)Vector_Get(&first,name))->str;
@@ -360,7 +360,7 @@ Boolean ShutingYard_PP_Struct(SuperALX* ll,TokenMap* tm){
 
                 Type* parent = Scope_FindType(&ll->ev.sc,STRUCT_TYPE);
                 if(!parent){
-                    Enviroment_ErrorHandler(&ll->ev,"Struct -> Error: type %s doesn't exist!",STRUCT_TYPE);
+                    Compiler_ErrorHandler(&ll->ev,"Struct -> Error: type %s doesn't exist!",STRUCT_TYPE);
                     return False;
                 }
                 
@@ -373,15 +373,15 @@ Boolean ShutingYard_PP_Struct(SuperALX* ll,TokenMap* tm){
                 TokenMap_Clear(tm);
                 return False;
             }else{
-                Enviroment_ErrorHandler(&ll->ev,"Struct: expected [: ");
+                Compiler_ErrorHandler(&ll->ev,"Struct: expected [: ");
                 return False;
             }
         }else{
-            Enviroment_ErrorHandler(&ll->ev,"Struct: struct decl needs body [...]!");
+            Compiler_ErrorHandler(&ll->ev,"Struct: struct decl needs body [...]!");
             return False;
         }
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"Struct: name of struct doesn't exist!");
+        Compiler_ErrorHandler(&ll->ev,"Struct: name of struct doesn't exist!");
         return False;
     }
 }
@@ -393,7 +393,7 @@ Boolean ShutingYard_PP_Impl(SuperALX* ll,TokenMap* tm){
         CallPosition cp = CallPosition_New_N(TOKEN_SUPERALX_IMPL,ll->ev.iter,t_name->str);
         Vector_Push(&ll->ev.cs,&cp);
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"Impl: name of impl doesn't exist!");
+        Compiler_ErrorHandler(&ll->ev,"Impl: name of impl doesn't exist!");
     }
     return False;
 }
@@ -405,7 +405,7 @@ Boolean ShutingYard_PP_Namespace(SuperALX* ll,TokenMap* tm){
         CallPosition cp = CallPosition_New_N(TOKEN_SUPERALX_NAMESPACE,ll->ev.iter,t_name->str);
         Vector_Push(&ll->ev.cs,&cp);
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"Namespace: name of namespace doesn't exist!");
+        Compiler_ErrorHandler(&ll->ev,"Namespace: name of namespace doesn't exist!");
     }
     return False;
 }
@@ -437,7 +437,7 @@ Boolean ShutingYard_PP_Curly_R(SuperALX* ll,TokenMap* tm){
     case TOKEN_NONE:
         break;
     default:
-        Enviroment_ErrorHandler(&ll->ev,"Call Stack top type is not defined!");
+        Compiler_ErrorHandler(&ll->ev,"Call Stack top type is not defined!");
         break;
     }
     CallStack_Pop(&ll->ev.cs);
@@ -459,19 +459,19 @@ Boolean ShutingYard_Import(SuperALX* ll,TokenMap* tm){
                 CVector_Push(&ll->filesstack,(CStr[]){ CStr_Cpy(realpath) });
                 CVector_Push(&ll->filesinc,(CStr[]){ CStr_Cpy(realpath) });
     
-                Enviroment_AddScript(&ll->ev,ll->ev.iter,realpath);
+                Compiler_AddScript(&ll->ev,ll->ev.iter,realpath);
             
                 CVector_PopTop(&ll->filesstack);
                 CStr_Free(&realpath);
             }else{
-                Enviroment_ErrorHandler(&ll->ev,"module \"%s\" already included!",file->str);
+                Compiler_ErrorHandler(&ll->ev,"module \"%s\" already included!",file->str);
             }
         }else{
-            Enviroment_ErrorHandler(&ll->ev,"file type of module \"%s\" is wrong: .%s, should be .%s",file->str,type,SUPERALX_TYPE);
+            Compiler_ErrorHandler(&ll->ev,"file type of module \"%s\" is wrong: .%s, should be .%s",file->str,type,SUPERALX_TYPE);
         }
         free(type);
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"module \"%s\" doesn't exist!",file->str);
+        Compiler_ErrorHandler(&ll->ev,"module \"%s\" doesn't exist!",file->str);
     }
     return True;
 }
@@ -483,7 +483,7 @@ Boolean ShutingYard_Define(SuperALX* ll,TokenMap* tm){
         Define d = Define_New(name->str,TokenMap_Sub(tm,2,tm->size));
         CVector_Push(&ll->defines,&d);
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"Define: define needs a name!");
+        Compiler_ErrorHandler(&ll->ev,"Define: define needs a name!");
     }
     TokenMap_Clear(tm);
     return False;
@@ -508,9 +508,9 @@ Boolean ShutingYard_if(SuperALX* ll,TokenMap* tm){
                 SuperALX_Variable_Build_Decl(ll,btok.str,BOOL_TYPE);
 
                 Vector_Add(tm,(Token[]){ Token_Cpy(&btok) },0);
-                Vector_Add(tm,(Token[]){ Enviroment_SetterToken(&ll->ev) },1);
+                Vector_Add(tm,(Token[]){ Compiler_SetterToken(&ll->ev) },1);
 
-                Boolean ret = Enviroment_ShutingYard(&ll->ev,tm);
+                Boolean ret = Compiler_ShutingYard(&ll->ev,tm);
                 SuperALX_IntoReg(ll,&btok,SUPERALX_REG_A_L8);
                 Scope_DestroyVariable(&ll->ev.sc,btok.str);
                 Token_Free(&btok);
@@ -527,18 +527,18 @@ Boolean ShutingYard_if(SuperALX* ll,TokenMap* tm){
 
                 ll->ev.sc.range++;
                 CallPosition cp = CallPosition_New(TOKEN_SUPERALX_IF,ll->ev.iter);
-                CallStack_Add(&ll->ev.cs,&cp,ll->ev.cs.size - 1);
+                CallStack_Push(&ll->ev.cs,&cp);
                 return ret;
             }else{
-                Enviroment_ErrorHandler(&ll->ev,"if: global if isn't allowed!");
+                Compiler_ErrorHandler(&ll->ev,"if: global if isn't allowed!");
                 return False;
             }
         }else{
-            Enviroment_ErrorHandler(&ll->ev,"if: should end with a { like: if ... { ");
+            Compiler_ErrorHandler(&ll->ev,"if: should end with a { like: if ... { ");
             return False;
         }
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"if: should look like: if ... { ");
+        Compiler_ErrorHandler(&ll->ev,"if: should look like: if ... { ");
         return False;
     }
 }
@@ -561,9 +561,9 @@ Boolean ShutingYard_elif(SuperALX* ll,TokenMap* tm){
                 SuperALX_Variable_Build_Decl(ll,btok.str,BOOL_TYPE);
 
                 Vector_Add(tm,(Token[]){ Token_Cpy(&btok) },0);
-                Vector_Add(tm,(Token[]){ Enviroment_SetterToken(&ll->ev) },1);
+                Vector_Add(tm,(Token[]){ Compiler_SetterToken(&ll->ev) },1);
 
-                Boolean ret = Enviroment_ShutingYard(&ll->ev,tm);
+                Boolean ret = Compiler_ShutingYard(&ll->ev,tm);
                 SuperALX_IntoReg(ll,&btok,SUPERALX_REG_A_L8);
                 Scope_DestroyVariable(&ll->ev.sc,btok.str);
                 Token_Free(&btok);
@@ -580,18 +580,18 @@ Boolean ShutingYard_elif(SuperALX* ll,TokenMap* tm){
 
                 ll->ev.sc.range++;
                 CallPosition cp = CallPosition_New(TOKEN_SUPERALX_ELIF,ll->ev.iter);
-                CallStack_Add(&ll->ev.cs,&cp,ll->ev.cs.size - 1);
+                CallStack_Push(&ll->ev.cs,&cp);
                 return ret;
             }else{
-                Enviroment_ErrorHandler(&ll->ev,"elif: global elif isn't allowed!");
+                Compiler_ErrorHandler(&ll->ev,"elif: global elif isn't allowed!");
                 return False;
             }
         }else{
-            Enviroment_ErrorHandler(&ll->ev,"elif: should end with a { like: elif ... { ");
+            Compiler_ErrorHandler(&ll->ev,"elif: should end with a { like: elif ... { ");
             return False;
         }
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"elif: should look like: elif ... { ");
+        Compiler_ErrorHandler(&ll->ev,"elif: should look like: elif ... { ");
         return False;
     }
 }
@@ -616,18 +616,18 @@ Boolean ShutingYard_else(SuperALX* ll,TokenMap* tm){
 
                 ll->ev.sc.range++;
                 CallPosition cp = CallPosition_New(TOKEN_SUPERALX_ELSE,ll->ev.iter);
-                CallStack_Add(&ll->ev.cs,&cp,ll->ev.cs.size - 1);
+                CallStack_Push(&ll->ev.cs,&cp);
                 return False;
             }else{
-                Enviroment_ErrorHandler(&ll->ev,"else: global else isn't allowed!");
+                Compiler_ErrorHandler(&ll->ev,"else: global else isn't allowed!");
                 return False;
             }
         }else{
-            Enviroment_ErrorHandler(&ll->ev,"else: should end with a { like: else { ");
+            Compiler_ErrorHandler(&ll->ev,"else: should end with a { like: else { ");
             return False;
         }
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"else: should look like: else { ");
+        Compiler_ErrorHandler(&ll->ev,"else: should look like: else { ");
         return False;
     }
 }
@@ -655,9 +655,9 @@ Boolean ShutingYard_while(SuperALX* ll,TokenMap* tm){
                 SuperALX_Variable_Build_Decl(ll,btok.str,BOOL_TYPE);
 
                 Vector_Add(tm,(Token[]){ Token_Cpy(&btok) },0);
-                Vector_Add(tm,(Token[]){ Enviroment_SetterToken(&ll->ev) },1);
+                Vector_Add(tm,(Token[]){ Compiler_SetterToken(&ll->ev) },1);
 
-                Boolean ret = Enviroment_ShutingYard(&ll->ev,tm);
+                Boolean ret = Compiler_ShutingYard(&ll->ev,tm);
                 SuperALX_IntoReg(ll,&btok,SUPERALX_REG_A_L8);
                 Scope_DestroyVariable(&ll->ev.sc,btok.str);
                 Token_Free(&btok);
@@ -669,18 +669,18 @@ Boolean ShutingYard_while(SuperALX* ll,TokenMap* tm){
 
                 ll->ev.sc.range++;
                 CallPosition cp = CallPosition_New(TOKEN_SUPERALX_WHILE,ll->ev.iter);
-                CallStack_Add(&ll->ev.cs,&cp,ll->ev.cs.size - 1);
+                CallStack_Push(&ll->ev.cs,&cp);
                 return ret;
             }else{
-                Enviroment_ErrorHandler(&ll->ev,"while: global while isn't allowed!");
+                Compiler_ErrorHandler(&ll->ev,"while: global while isn't allowed!");
                 return False;
             }
         }else{
-            Enviroment_ErrorHandler(&ll->ev,"while: should end with a { like: while ... { ");
+            Compiler_ErrorHandler(&ll->ev,"while: should end with a { like: while ... { ");
             return False;
         }
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"while: should look like: while ... { ");
+        Compiler_ErrorHandler(&ll->ev,"while: should look like: while ... { ");
         return False;
     }
 }
@@ -706,7 +706,7 @@ Boolean ShutingYard_for(SuperALX* ll,TokenMap* tm){
                 TokenMap_Free(&statement_up);
 
                 ll->ev.sc.range++;
-                Enviroment_Do(&ll->ev,&statement_0);
+                Compiler_Do(&ll->ev,&statement_0);
                 TokenMap_Free(&statement_0);
 
                 SuperALX_LogicAddPath(ll);
@@ -720,9 +720,9 @@ Boolean ShutingYard_for(SuperALX* ll,TokenMap* tm){
                     SuperALX_Variable_Build_Decl(ll,btok.str,BOOL_TYPE);
 
                     Vector_Add(&statement_1,(Token[]){ Token_Cpy(&btok) },0);
-                    Vector_Add(&statement_1,(Token[]){ Enviroment_SetterToken(&ll->ev) },1);
+                    Vector_Add(&statement_1,(Token[]){ Compiler_SetterToken(&ll->ev) },1);
 
-                    ret = Enviroment_ShutingYard(&ll->ev,&statement_1);
+                    ret = Compiler_ShutingYard(&ll->ev,&statement_1);
                     SuperALX_IntoReg(ll,&btok,SUPERALX_REG_A_L8);
                     Scope_DestroyVariable(&ll->ev.sc,btok.str);
                     Token_Free(&btok); 
@@ -737,18 +737,19 @@ Boolean ShutingYard_for(SuperALX* ll,TokenMap* tm){
 
                 ll->ev.sc.range++;
                 CallPosition cp = CallPosition_Make(statement_2,TOKEN_SUPERALX_FOR,ll->ev.iter,NULL,ll->ev.sc.range);
-                CallStack_Add(&ll->ev.cs,&cp,ll->ev.cs.size - 1);
+                CallStack_Push(&ll->ev.cs,&cp);
                 return ret;
             }else{
-                Enviroment_ErrorHandler(&ll->ev,"while: global while isn't allowed!");
+                Compiler_ErrorHandler(&ll->ev,"for: global for isn't allowed!");
                 return False;
             }
         }else{
-            Enviroment_ErrorHandler(&ll->ev,"while: should end with a { like: while ... { ");
+            //TokenMap_Print(tm);
+            Compiler_ErrorHandler(&ll->ev,"for: should end with a { like: for ..., ..., ... { ");
             return False;
         }
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"while: should look like: while ... { ");
+        Compiler_ErrorHandler(&ll->ev,"for: should look like: for ..., ..., ... { ");
         return False;
     }
 }
@@ -757,11 +758,11 @@ Boolean ShutingYard_Curly_L(SuperALX* ll,TokenMap* tm){
     SuperALX_LogicAddPath(ll);
     ll->ev.sc.range++;
     CallPosition cp = CallPosition_New(TOKEN_NONE,ll->ev.iter);
-    CallStack_Add(&ll->ev.cs,&cp,ll->ev.cs.size - 1);
+    CallStack_Push(&ll->ev.cs,&cp);
     return False;
 }
 Boolean ShutingYard_Curly_R(SuperALX* ll,TokenMap* tm){
-    TT_Type tt = CallStack_PreBack(&ll->ev.cs);
+    TT_Type tt = CallStack_Back(&ll->ev.cs);
 
     switch (tt){
     case TOKEN_FUNCTIONDECL:
@@ -798,7 +799,7 @@ Boolean ShutingYard_Curly_R(SuperALX* ll,TokenMap* tm){
         break;
     case TOKEN_SUPERALX_FOR:
         CallPosition* cp = (CallPosition*)Vector_Get(&ll->ev.cs,ll->ev.cs.size-2);
-        Enviroment_Do(&ll->ev,&cp->tm);
+        Compiler_Do(&ll->ev,&cp->tm);
 
         Scope_Pop(&ll->ev.sc);
         ll->logic = TOKEN_SUPERALX_FOR;
@@ -807,10 +808,10 @@ Boolean ShutingYard_Curly_R(SuperALX* ll,TokenMap* tm){
         Scope_Pop(&ll->ev.sc);
         break;
     default:
-        Enviroment_ErrorHandler(&ll->ev,"Call Stack top type is not defined!");
+        Compiler_ErrorHandler(&ll->ev,"Call Stack top type is not defined!");
         break;
     }
-    CallStack_Remove(&ll->ev.cs,ll->ev.cs.size-2);
+    CallStack_Pop(&ll->ev.cs);
     return False;
 }
 Boolean ShutingYard_Impl(SuperALX* ll,TokenMap* tm){
@@ -819,9 +820,9 @@ Boolean ShutingYard_Impl(SuperALX* ll,TokenMap* tm){
     
     if(t_name->tt==TOKEN_TYPE){
         CallPosition cp =  CallPosition_New_N(TOKEN_SUPERALX_IMPL,ll->ev.iter,t_name->str);
-        CallStack_Add(&ll->ev.cs,&cp,ll->ev.cs.size - 1);
+        CallStack_Push(&ll->ev.cs,&cp);
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"Impl: name of impl doesn't exist!");
+        Compiler_ErrorHandler(&ll->ev,"Impl: name of impl doesn't exist!");
     }
     return False;
 }
@@ -831,9 +832,9 @@ Boolean ShutingYard_Namespace(SuperALX* ll,TokenMap* tm){
     
     if(t_name->tt==TOKEN_STRING){
         CallPosition cp =  CallPosition_New_N(TOKEN_SUPERALX_NAMESPACE,ll->ev.iter,t_name->str);
-        CallStack_Add(&ll->ev.cs,&cp,ll->ev.cs.size - 1);
+        CallStack_Push(&ll->ev.cs,&cp);
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"Impl: name of impl doesn't exist!");
+        Compiler_ErrorHandler(&ll->ev,"Impl: name of impl doesn't exist!");
     }
     return False;
 }
@@ -848,7 +849,7 @@ Boolean ShutingYard_function(SuperALX* ll,TokenMap* tm){
 
         Type* t = Scope_FindType(&ll->ev.sc,f->rettype);
         if(t){
-            SuperALX_Variable_Build_Ref(ll,ENVIROMENT_RETURN"0",f->rettype);
+            SuperALX_Variable_Build_Ref(ll,COMPILER_RETURN"0",f->rettype);
             
             for(int i = 0;i<f->params.size;i++){
                 Member* m = (Member*)Vector_Get(&f->params,i);
@@ -865,9 +866,9 @@ Boolean ShutingYard_function(SuperALX* ll,TokenMap* tm){
         CStr_Free(&fname);
 
         CallPosition cp = CallPosition_New_N(TOKEN_FUNCTIONDECL,ll->ev.iter,tfunc->str);
-        CallStack_Add(&ll->ev.cs,&cp,ll->ev.cs.size - 1);
+        CallStack_Push(&ll->ev.cs,&cp);
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"Function -> %s not defined!",tfunc->str);
+        Compiler_ErrorHandler(&ll->ev,"Function -> %s not defined!",tfunc->str);
     }
 
     return False;
@@ -875,24 +876,25 @@ Boolean ShutingYard_function(SuperALX* ll,TokenMap* tm){
 Boolean ShutingYard_return(SuperALX* ll,TokenMap* tm){
     if(tm->size!=1){
         TokenMap cpy = TokenMap_Cpy(tm);
-        Variable* v = Scope_FindVariable(&ll->ev.sc,ENVIROMENT_RETURN"0");
+        Variable* v = Scope_FindVariable(&ll->ev.sc,COMPILER_RETURN"0");
         
         if(v){
             Vector_Remove(&cpy,0);
             Vector_Add(&cpy,(Token[]){ Token_By(TOKEN_STRING,v->name) },0);
             Vector_Add(&cpy,(Token[]){ Token_By(TOKEN_SUPERALX_ASS,"=") },1);
         }else{
-            Enviroment_ErrorHandler(&ll->ev,"return: return value doesn't exist!");
+            Compiler_ErrorHandler(&ll->ev,"return: return value doesn't exist!");
             TokenMap_Free(&cpy);
             return False;
         }
 
-        Enviroment_ShutingYard(&ll->ev,&cpy);
+        Compiler_ShutingYard(&ll->ev,&cpy);
         TokenMap_Free(&cpy);
     }
+
     Scope_FromTo_DestroyOnly(&ll->ev.sc,1,ll->ev.sc.range);
     
-    /*Function* f = Enviroment_FunctionIn(&ll->ev);
+    /*Function* f = Compiler_FunctionIn(&ll->ev);
     if(f && f->params.size>0){
         CStr retaddress = SuperALX_StackDir(ll,8,0);
         SuperALX_Indentation_Appendf(ll,&ll->text,"mov rax,%s",retaddress);
@@ -919,16 +921,16 @@ Boolean ShutingYard_Decl(SuperALX* ll,TokenMap* tm){
                     Token* t = (Token*)Vector_Get(tm,0);
                     Token_Free(t);
                     Vector_Remove(tm,0);
-                    Boolean ret = Enviroment_ShutingYard(&ll->ev,tm);
+                    Boolean ret = Compiler_ShutingYard(&ll->ev,tm);
                     return ret;
                 }else{
-                    Enviroment_ErrorHandler(&ll->ev,"decl: global variable can't be set like this!");
+                    Compiler_ErrorHandler(&ll->ev,"decl: global variable can't be set like this!");
                     return False;
                 }
             }
-        }else   Enviroment_ErrorHandler(&ll->ev,"decl: name self is not allowed for decl!");
+        }else   Compiler_ErrorHandler(&ll->ev,"decl: name self is not allowed for decl!");
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"decl: name of decl variable doesn't exist!");
+        Compiler_ErrorHandler(&ll->ev,"decl: name of decl variable doesn't exist!");
         return False;
     }
     return False;
@@ -950,7 +952,7 @@ Boolean ShutingYard_Assembly(SuperALX* ll,TokenMap* tm){
             String_Append(&ll->text,location);
             CStr_Free(&location);
         }else{
-            Enviroment_ErrorHandler(&ll->ev,"asm: assembly keyword can't handle: %s!",t->str);
+            Compiler_ErrorHandler(&ll->ev,"asm: assembly keyword can't handle: %s!",t->str);
         }
     }
     String_AppendChar(&ll->text,'\n');
@@ -990,14 +992,14 @@ Boolean ShutingYard_FunctionCall_Acs(SuperALX* ll,TokenMap* tm,int i,int args,To
         if(it_f>=0){
             Function* f = (Function*)Vector_Get(&ll->ev.fs,it_f);
             if(f->access || CStr_Cmp(accssed->str,SUPERALX_SELF)){
-                Boolean ret = Enviroment_FunctionCall(&ll->ev,func);
+                Boolean ret = Compiler_FunctionCall(&ll->ev,func);
                 if(!ret){
-                    CStr retstr = Enviroment_Variablename_This(&ll->ev,ENVIROMENT_RETURN,7);
+                    CStr retstr = Compiler_Variablename_This(&ll->ev,COMPILER_RETURN,7);
                     *tok = Token_Move(TOKEN_STRING,retstr);
                 }
                 return ret;
             }else{
-                Enviroment_ErrorHandler(&ll->ev,"Function: %s isn't pub or non self %s tries to access!",func->str,accssed->str);
+                Compiler_ErrorHandler(&ll->ev,"Function: %s isn't pub or non self %s tries to access!",func->str,accssed->str);
                 return FUNCTIONRT_NONE;
             }
         }
@@ -1037,14 +1039,14 @@ Boolean ShutingYard_FunctionCall_Arw(SuperALX* ll,TokenMap* tm,int i,int args,To
         if(it_f>=0){
             Function* f = (Function*)Vector_Get(&ll->ev.fs,it_f);
             if(f->access || CStr_Cmp(accssed->str,SUPERALX_SELF)){
-                Boolean ret = Enviroment_FunctionCall(&ll->ev,func);
+                Boolean ret = Compiler_FunctionCall(&ll->ev,func);
                 if(!ret){
-                    CStr retstr = Enviroment_Variablename_This(&ll->ev,ENVIROMENT_RETURN,7);
+                    CStr retstr = Compiler_Variablename_This(&ll->ev,COMPILER_RETURN,7);
                     *tok = Token_Move(TOKEN_STRING,retstr);
                 }
                 return ret;
             }else{
-                Enviroment_ErrorHandler(&ll->ev,"Function: %s isn't pub or non self %s tries to access!",func->str,accssed->str);
+                Compiler_ErrorHandler(&ll->ev,"Function: %s isn't pub or non self %s tries to access!",func->str,accssed->str);
                 return FUNCTIONRT_NONE;
             }
         }
@@ -1065,13 +1067,13 @@ void SuperALX_Function_Handler(SuperALX* ll,Token* t,Function* f){
             CStr_Free(&location);
         }
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"Function: %s doesn't exist!",t->str);
+        Compiler_ErrorHandler(&ll->ev,"Function: %s doesn't exist!",t->str);
     }
 }
 
 SuperALX SuperALX_New(char* dllpath,char* src,char* output,char bits) {
     SuperALX ll;
-    ll.ev = Enviroment_New(
+    ll.ev = Compiler_New(
         KeywordMap_Make((KeywordRP[]){
             KeywordRP_New("return",TOKEN_SUPERALX_RETURN),
             KeywordRP_New("if",TOKEN_SUPERALX_IF),
@@ -1388,8 +1390,8 @@ SuperALX SuperALX_New(char* dllpath,char* src,char* output,char bits) {
         }),
         KeywordExecuterMap_Make((KeywordExecuter[]){
             KeywordExecuter_New(TOKEN_TYPE,                 (void*)ShutingYard_Decl),
-            KeywordExecuter_New(TOKEN_PARENTHESES_L,        (void*)Enviroment_ShutingYard),
-            KeywordExecuter_New(TOKEN_SUPERALX_DRF,         (void*)Enviroment_ShutingYard),
+            KeywordExecuter_New(TOKEN_PARENTHESES_L,        (void*)Compiler_ShutingYard),
+            KeywordExecuter_New(TOKEN_SUPERALX_DRF,         (void*)Compiler_ShutingYard),
             KeywordExecuter_New(TOKEN_CURLY_BRACES_L,       (void*)ShutingYard_Curly_L),
             KeywordExecuter_New(TOKEN_CURLY_BRACES_R,       (void*)ShutingYard_Curly_R),
             KeywordExecuter_New(TOKEN_SUPERALX_IF,          (void*)ShutingYard_if),
@@ -1454,7 +1456,7 @@ SuperALX SuperALX_New(char* dllpath,char* src,char* output,char bits) {
 
     CVector_Push(&ll.filesstack,(CStr[]){ CStr_Cpy(src) });
     CVector_Push(&ll.filesinc,(CStr[]){ CStr_Cpy(src) });
-    Enviroment_Script(&ll.ev,src);
+    Compiler_Script(&ll.ev,src);
     CVector_PopTop(&ll.filesstack);
     return ll;
 }
@@ -1498,7 +1500,7 @@ void SuperALX_Build_EntryPoint(SuperALX* ll) {
     String_Appendf(&ll->text,"%ssyscall\n",SUPERALX_INDENTATION);
 }
 void SuperALX_Build(SuperALX* ll) {
-    Enviroment_Begin(&ll->ev);
+    Compiler_Begin(&ll->ev);
     
     if(!ll->ev.error){
         SuperALX_Construct_EntryPoint(ll);
@@ -1532,7 +1534,7 @@ void SuperALX_Free(SuperALX* ll) {
     CStr_Free(&ll->src);
     CStr_Free(&ll->output);
 
-    Enviroment_Free(&ll->ev);
+    Compiler_Free(&ll->ev);
 
     CVector_Free(&ll->filesstack);
     CVector_Free(&ll->filesinc);
@@ -1550,7 +1552,7 @@ void SuperALX_Print(SuperALX* ll) {
     CVector_Print(&ll->filesinc);
     CVector_Print(&ll->constsstr);
     CVector_Print(&ll->defines);
-    Enviroment_Print(&ll->ev);
+    Compiler_Print(&ll->ev);
     printf("--------------------------\n");
 }
 

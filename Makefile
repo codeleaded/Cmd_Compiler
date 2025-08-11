@@ -36,4 +36,11 @@ cleanlib:
 exe:
 	./$(TARGET) ./code/Main.salx ./asm/Main.asm
 
+comp:
+	nasm -f elf64 ./asm/Main.asm -o ./build/Output.o
+	ld -m elf_x86_64 ./build/Output.o -o ./build/Output
+	./build/Output
+#nasm -f elf32 hello.asm -o hello.o
+#ld -m elf_i386 hello.o -o hello
+
 do: clean all exe
