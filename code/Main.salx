@@ -20,10 +20,17 @@ Fehlt:
 // import "../lib/System.salx";
 import "../lib/IO.salx";
 
+
+i64 addition(i64 a,i64 b){
+    return a + b;
+}
+
 i64 main(){
     io::print("Hello World\n");
-
     
+    i8* buffer = "          ";
+    io::input(buffer,10);
+    io::print(buffer);
 
-    return 0;
+    return addition(1,2) + addition(3,4);
 }

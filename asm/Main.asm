@@ -8,6 +8,7 @@ section .bss
 
 section .data
 GLOBAL_STR0: db "Hello World",10,0
+GLOBAL_STR1: db 0
 
 section .text
 global _start
@@ -306,13 +307,65 @@ f.io.error:
     add rsp,8
     ret
 
+f.addition:
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    add rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 32],rax
+    add rsp,8
+    ret
+    ret
+
 f.main:
     sub rsp,8
     mov QWORD[rsp + 0],GLOBAL_STR0
     call f.io.print
     add rsp,8
-    mov QWORD[rsp + 8],0
+    sub rsp,8
+    mov QWORD[rsp + 0],GLOBAL_STR1
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov QWORD[rsp + 0],10
+    call f.io.input
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    call f.io.print
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],1
+    sub rsp,8
+    mov QWORD[rsp + 0],2
+    call f.addition
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],3
+    sub rsp,8
+    mov QWORD[rsp + 0],4
+    call f.addition
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    add rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 40],rax
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
     ret
+    add rsp,8
     ret
 
 
