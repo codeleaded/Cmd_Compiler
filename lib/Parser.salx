@@ -1,0 +1,646 @@
+import "../lib/CStr.salx";
+import "../lib/Char.salx";
+import "../lib/Memory.salx";
+
+namespace parse {
+    namespace boolean {
+        void get(i8* out,bool b){
+            if b==false {
+                ptr::cpy(out,"false",5);
+            }elif b==true {
+                ptr::cpy(out,"true",4);
+            }else{
+                ptr::cpy(out,"none",4);
+            }
+        }
+        bool by(i8* cstr){
+            if cstr::cmp(cstr,"false") || cstr::cmp(cstr,"0") {
+                return false;
+            }
+            if cstr::cmp(cstr,"true") || cstr::cmp(cstr,"1") {
+                return true;
+            }
+            return (bool)2;
+        }
+        bool by_s(i8* cstr,bool* ptr){
+            if ptr==null {
+                return false;
+            }
+            if cstr::cmp(cstr,"false") || cstr::cmp(cstr,"0") {
+                *ptr = false;
+                return true;
+            }
+            if cstr::cmp(cstr,"true") || cstr::cmp(cstr,"1") {
+                *ptr = true;
+                return true;
+            }
+            return false;
+        }
+    }
+
+    namespace uint {
+        u64 pow(u64 base,u64 ex){
+            u64 out = 1;
+            while ex>0 {
+                out *= base;
+                ex -= 1;
+            }
+            return out;
+        }
+        u64 logb(u64 base,u64 res){// BASE ab 16, res, out
+            u64 out = -1;
+            while res > 0 {
+                res /= base;
+                out += 1;
+            }
+            return out;
+        }
+        u64 log10(u64 res){
+            return math::uint::logb(10,res);
+        }
+        
+        u64 min(u64 a,u64 b){
+            if a<b {
+                return a;
+            }
+            return b;
+        }
+        u64 max(u64 a,u64 b){
+            if a>b {
+                return a;
+            }
+            return b;
+        }
+    
+        void get(i8* out,u64 num){
+            if num==0 {
+                *out = 48;
+            }else{
+                u64 size = math::uint::log10(num);
+                for i32 i = size,i>=0,i-- {
+                    u64 dig = num % 10;
+                    *(out+i) = (i8)(dig + 48);
+                    num /= 10;
+                }
+            }
+        }
+        u64 by(i8* cstr){
+            i32 size = cstr::len(cstr);
+            u64 out = 0;
+            
+            i32 startdigit = 0;
+            i32 digits = 0;
+        
+            i32 i = size-1;
+            while i>=0 {
+                i8 c = *(cstr+i);
+                if c>=48 && c<=57 {
+                    out += (c-48) * math::uint::pow(10,digits);
+                    digits++;
+                    i--;
+                }else{
+                    return 0;
+                }
+            }
+            return out;
+        }
+        bool by_s(i8* cstr,u64* ptr){
+            if ptr==null {
+                return false;
+            }
+            
+            i32 size = cstr::len(cstr);
+            u64 out = 0;
+            
+            i32 startdigit = 0;
+            i32 digits = 0;
+        
+            i32 i = size-1;
+            while i>=0 {
+                i8 c = *(cstr+i);
+                if c>=48 && c<=57 {
+                    out += (c-48) * math::uint::pow(10,digits);
+                    digits++;
+                    i--;
+                }else{
+                    return false;
+                }
+            }
+            *ptr = out;
+            return true;
+        }
+    }
+    
+    namespace int {
+        i64 min(i64 a,i64 b){
+            if a<b {
+                return a;
+            }
+            return b;
+        }
+        i64 max(i64 a,i64 b){
+            if a>b {
+                return a;
+            }
+            return b;
+        }
+        
+        void get(i8* out,i64 num){
+            if num==0 {
+                *out = 48;
+            }else{
+                i32 minus = 0;
+                if num<0 {
+                    minus = 1;
+                    out[0] = '-';
+                    num = -num;
+                }
+                u64 size = math::uint::log10(num);
+            
+                for i32 i = minus+size,i>=minus,i-- {
+                    u64 dig = num % 10;
+                    *(out+i) = (i8)(dig + 48);
+                    num /= 10;
+                }
+            }
+        }
+        i64 by(i8* cstr){
+            i32 size = cstr::len(cstr);
+            i64 out = 0;
+            
+            i32 startdigit = 0;
+            i32 digits = 0;
+
+            i32 sign = 0;
+            if cstr[0]=='-' {
+                sign = 1;
+            }
+        
+            i32 i = size-1;
+            while i>=sign {
+                i8 c = *(cstr+i);
+                if c>=48 && c<=57 {
+                    out += (c-48) * math::uint::pow(10,digits);
+                    digits++;
+                    i--;
+                }else{
+                    return 0;
+                }
+            }
+            if sign>0 {
+                out = -out;
+            }
+            return out;
+        }
+        bool by_s(i8* cstr,i64* ptr){
+            if ptr==null {
+                return false;
+            }
+            
+            i32 size = cstr::len(cstr);
+            i64 out = 0;
+            
+            i32 startdigit = 0;
+            i32 digits = 0;
+
+            i32 sign = 0;
+            if cstr[0]=='-' {
+                sign = 1;
+            }
+        
+            i32 i = size-1;
+            while i>=sign {
+                i8 c = *(cstr+i);
+                if c>=48 && c<=57 {
+                    out += (c-48) * math::uint::pow(10,digits);
+                    digits++;
+                    i--;
+                }else{
+                    return false;
+                }
+            }
+            if sign>0 {
+                out = -out;
+            }
+            *ptr = out;
+            return true;
+        }
+    }
+
+    namespace float {
+        void setmode(u16 mode){
+            asm "fldcw " mode;
+        }
+        void setstd(){
+            u16 std = 0x037F;
+            asm "fldcw " std;
+        }
+
+        f64 powi(f64 base,i64 ex){
+            f64 out = 1.0;
+            if ex<0 {
+                base = 1.0 / base;
+                ex = -ex;
+            }
+            while ex>0 {
+                out *= base;
+                ex -= 1;
+            }
+            return out;
+        }
+
+        f64 sign(f64 num){
+            if num>0.0 {
+                return 1.0;
+            }elif num<0.0 {
+                return -1.0;
+            }
+            return 0.0;
+        }
+
+        f64 ylnx(f64 x,f64 y){ // y * ln(x)
+            return math::lib::yl2x(x,y) * math::lib::ln2();
+        }
+        f64 pow(f64 x,f64 y){ // x ^ y -> 2 ^ (y * log2(x))
+            f64 ex = math::lib::yl2x(x,y);
+            
+            i64 ipart = (i64)ex;
+            f64 fpart = ex - ipart;
+
+            f64 iout = math::float::powi(2.0,ipart);
+            f64 fout = math::lib::f2xm1(fpart) + 1.0;
+            return iout * fout;
+        }
+
+        f64 ln(f64 x){ 
+            return math::float::ylnx(x,1.0);
+        }
+        f64 ex(f64 x){ 
+            return math::float::pow(math::e,x);
+        }
+
+        void get(i8* out,f64 n,u64 postdigits){ // f32 -> 7-9  |  f64 -> 15-17
+            if n<0.0 && (i64)n==0 {
+                *out = '-';
+                out++;
+            }
+            math::int::get(out,(i64)n);
+            u64 len = cstr::len(out);
+            *(out+len) = '.';
+            len++;
+
+            u64 max = 15 - math::uint::min(15,len-1);
+            postdigits = math::uint::min(postdigits,max);
+
+            n = n - (i64)n;
+            if n<0.0 {
+                n = -n;
+            }
+            n *= math::float::powi(10.0,postdigits);
+            math::uint::get(out+len,(u64)n);
+        }
+        f64 by(i8* cstr){
+            u64 len = cstr::len(cstr);
+            i64 dot = cstr::findc(cstr,'.');
+            if dot>=0 {
+                *(cstr+dot) = '\0';
+            }
+
+            f64 out = (f64)math::int::by(cstr);
+
+            u64 max = math::uint::min(15,len) - dot; // MAXIMUS otherwise errors because of precision
+            *(cstr+dot+1+max) = '\0';
+            if dot>=0 {
+                f64 comma = (f64)math::uint::by(cstr+dot+1) * math::float::powi(0.1,max);
+                if out != 0.0 {
+                    comma *= math::float::sign(out);
+                }elif (*cstr)=='-' {
+                    comma = -comma;
+                }
+                out += comma;
+            }
+            return out;
+        }
+        bool by_s(i8* cstr,f64* ptr){
+            if ptr==null {
+                return false;
+            }
+            
+            u64 len = cstr::len(cstr);
+            i64 dot = cstr::findc(cstr,'.');
+            if dot>=0 {
+                *(cstr+dot) = '\0';
+            }
+
+            u64 n;
+            if math::uint::by_s(cstr,&n)!=true {
+                return false;
+            }
+            f64 out = (f64)n;
+
+            u64 max = math::uint::min(15,len) - dot; // MAXIMUS otherwise errors because of precision
+            *(cstr+dot+1+max) = '\0';
+            if dot>=0 {
+                if math::uint::by_s(cstr+dot+1,&n)!=true {
+                    return false;
+                }
+                f64 comma = (f64)n * math::float::powi(0.1,max);
+                if out != 0.0 {
+                    comma *= math::float::sign(out);
+                }elif (*cstr)=='-' {
+                    comma = -comma;
+                }
+                out += comma;
+            }
+            *ptr = out;
+            return true;
+        }
+    }
+
+    namespace aprox {
+        f64 sin_tp19(f64 x){
+            x = x - 6.283185307179586476925286766559 * (f64)((i64)(x * 0.15915494309189533576888376337251));
+            f64 x3 = x * x * x    * 0.16666666666666666666666666666667; // / 6.0;  
+            f64 x5 = x3 * x * x   * 0.05000000000000000000000000000000; // / 20.0; 
+            f64 x7 = x5 * x * x   * 0.02380952380952380952380952380952; // / 42.0; 
+            f64 x9 = x7 * x * x   * 0.01388888888888888888888888888889; // / 72.0; 
+            f64 x11 = x9 * x * x  * 0.00909090909090909090909090909091; // / 110;  
+            f64 x13 = x11 * x * x * 0.00641025641025641025641025641026; // / 156;  
+            f64 x15 = x13 * x * x * 0.00476190476190476190476190476190; // / 210;  
+            f64 x17 = x15 * x * x * 0.00367647058823529411764705882353; // / 272;  
+            f64 x19 = x17 * x * x * 0.00292397660818713450292397660819; // / 342;  
+            return x - x3 + x5 - x7 + x9 - x11 + x13 - x15 + x17 - x19;
+        }
+        f64 sin_sq(f64 x){
+            f64 y = x * 0.15915494309189533576888376337251;// / (2*PI);
+            y = y - (f64)(i64)y;
+            y = y + 1.0;
+            y = y - (f64)(i64)y;
+            if y<0.5 {
+                return -16.0*y*y+8.0*y; 
+            }
+            return 16.0*y*y-16.0*y-8.0*y+8.0;
+        }
+
+        f64 ex_tp10(f64 x){
+            f64 xe = x;
+            f64 out = 1.0 + xe;
+            xe *= x;
+            out += xe * 0.5; // / 2.0;
+            xe *= x;
+            out += xe * 0.166666666;
+            xe *= x;
+            out += xe * 0.041666666;
+            xe *= x;
+            out += xe * 0.008333333;// 5
+            xe *= x;
+            out += xe * 0.001388888;
+            xe *= x;
+            out += xe * 0.000198413;
+            xe *= x;
+            out += xe * 0.000024802;
+            xe *= x;
+            out += xe * 0.000002756;
+            xe *= x;
+            out += xe * 0.000000276;// 10
+            return out;
+        }
+        f64 ln_tp10(f64 x){
+            x = x - 1.0;
+            f64 xe = x;
+            f64 out = xe;
+            xe *= x;
+            out -= xe * 0.5; // / 2.0;
+            xe *= x;
+            out += xe * 0.333333333;
+            xe *= x;
+            out -= xe * 0.25;
+            xe *= x;
+            out += xe * 0.2;// 5
+            xe *= x;
+            out -= xe * 0.166666667;
+            xe *= x;
+            out += xe * 0.142857143;
+            xe *= x;
+            out -= xe * 0.125;
+            xe *= x;
+            out += xe * 0.111111111;
+            xe *= x;
+            out -= xe * 0.1;// 10
+            return out;
+        }
+    }
+
+    namespace hex {
+        void get(i8* out,u64 num){
+            *(out) = '0';
+            *(out+1) = 'x';
+            if num==0 {
+                out[2] = 48;
+            }else{
+                u64 size = math::uint::logb(16,num);
+                for i32 i = size,i>=0,i-- {
+                    u64 dig = num % 16;
+                    *(out+i+2) = char::to::hex(dig);
+                    num /= 16;
+                }
+            }
+        }
+        u64 by(i8* cstr){
+            if (*cstr != '0' || *(cstr+1) != 'x') {
+                return 0;
+            }
+            
+            i32 size = cstr::len(cstr);
+            u64 out = 0;
+            
+            i32 startdigit = 0;
+            i32 digits = 0;
+        
+            i32 i = size-1;
+            while i>=2 {
+                i8 c = *(cstr+i);
+                i64 num = char::by::hex(c);
+                if num>=0 {
+                    out += num * math::uint::pow(16,digits);
+                    digits++;
+                    i--;
+                }else{
+                    return 0;
+                }
+            }
+            return out;
+        }
+        bool by_s(i8* cstr,u64* ptr){
+            if ptr==null {
+                return false;
+            }
+            if (*cstr != '0' || *(cstr+1) != 'x') {
+                return false;
+            }
+            
+            i32 size = cstr::len(cstr);
+            u64 out = 0;
+            
+            i32 startdigit = 0;
+            i32 digits = 0;
+        
+            i32 i = size-1;
+            while i>=2 {
+                i8 c = *(cstr+i);
+                i64 num = char::by::hex(c);
+                if num>=0 {
+                    out += num * math::uint::pow(16,digits);
+                    digits++;
+                    i--;
+                }else{
+                    return false;
+                }
+            }
+            *ptr = out;
+            return true;
+        }
+    }
+
+    namespace oct {
+        void get(i8* out,u64 num){
+            *(out) = '0';
+            *(out+1) = 'o';
+            if num==0 {
+                out[2] = 48;
+            }else{
+                u64 size = math::uint::logb(8,num);
+                for i32 i = size,i>=0,i-- {
+                    u64 dig = num % 8;
+                    *(out+i+2) = char::to::oct(dig);
+                    num /= 8;
+                }
+            }
+        }
+        u64 by(i8* cstr){
+            if (*cstr != '0' || *(cstr+1) != 'o') {
+                return 0;
+            }
+            
+            i32 size = cstr::len(cstr);
+            u64 out = 0;
+            
+            i32 startdigit = 0;
+            i32 digits = 0;
+        
+            i32 i = size-1;
+            while i>=2 {
+                i8 c = *(cstr+i);
+                i64 num = char::by::oct(c);
+                if num>=0 {
+                    out += num * math::uint::pow(8,digits);
+                    digits++;
+                    i--;
+                }else{
+                    return 0;
+                }
+            }
+            return out;
+        }
+        bool by_s(i8* cstr,u64* ptr){
+            if ptr==null {
+                return false;
+            }
+            if (*cstr != '0' || *(cstr+1) != 'o') {
+                return false;
+            }
+            
+            i32 size = cstr::len(cstr);
+            u64 out = 0;
+            
+            i32 startdigit = 0;
+            i32 digits = 0;
+        
+            i32 i = size-1;
+            while i>=2 {
+                i8 c = *(cstr+i);
+                i64 num = char::by::oct(c);
+                if num>=0 {
+                    out += num * math::uint::pow(8,digits);
+                    digits++;
+                    i--;
+                }else{
+                    return false;
+                }
+            }
+            *ptr = out;
+            return true;
+        }
+    }
+
+    namespace bin {
+        void get(i8* out,u64 num){
+            *(out) = '0';
+            *(out+1) = 'b';
+            if num==0 {
+                out[2] = 48;
+            }else{
+                u64 size = math::uint::logb(2,num);
+                for i32 i = size,i>=0,i-- {
+                    u64 dig = num % 2;
+                    *(out+i+2) = char::to::bin(dig);
+                    num /= 2;
+                }
+            }
+        }
+        u64 by(i8* cstr){
+            if (*cstr != '0' || *(cstr+1) != 'b') {
+                return 0;
+            }
+            
+            i32 size = cstr::len(cstr);
+            u64 out = 0;
+            
+            i32 startdigit = 0;
+            i32 digits = 0;
+        
+            i32 i = size-1;
+            while i>=2 {
+                i8 c = *(cstr+i);
+                i64 num = char::by::bin(c);
+                if num>=0 {
+                    out += num * math::uint::pow(2,digits);
+                    digits++;
+                    i--;
+                }else{
+                    return 0;
+                }
+            }
+            return out;
+        }
+        bool by_s(i8* cstr,u64* ptr){
+            if ptr==null {
+                return false;
+            }
+            if (*cstr != '0' || *(cstr+1) != 'b') {
+                return false;
+            }
+            
+            i32 size = cstr::len(cstr);
+            u64 out = 0;
+            
+            i32 startdigit = 0;
+            i32 digits = 0;
+        
+            i32 i = size-1;
+            while i>=2 {
+                i8 c = *(cstr+i);
+                i64 num = char::by::bin(c);
+                if num>=0 {
+                    out += num * math::uint::pow(2,digits);
+                    digits++;
+                    i--;
+                }else{
+                    return false;
+                }
+            }
+            *ptr = out;
+            return true;
+        }
+    }
+}

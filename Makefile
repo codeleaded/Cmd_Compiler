@@ -39,7 +39,15 @@ exe:
 comp:
 	nasm -f elf64 ./asm/Main.asm -o ./build/Output.o
 	ld -m elf_x86_64 ./build/Output.o -o ./build/Output
-	./build/Output
+	./build/Output; echo $$?
+
+dg: clean
+	$(CC) $(CFLAGS) -g $(INCLUDES) ./$(SRC_DIR)/Main.c -o ./$(TARGET) $(LDFLAGS)
+	-./$(TARGET) ./code/Main.salx ./asm/Main.asm
+	ulimit -c unlimited
+#sudo echo "./core" > /proc/sys/kernel/core_pattern
+	gdb ./$(TARGET) ./core
+
 #nasm -f elf32 hello.asm -o hello.o
 #ld -m elf_i386 hello.o -o hello
 

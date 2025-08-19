@@ -1,5 +1,5 @@
-import "../lib/CStr.salx";
 import "../lib/System.salx";
+import "../lib/CStr.salx";
 
 namespace io {
     void input(i8* cstr,i64 len){
