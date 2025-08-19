@@ -1,0 +1,152 @@
+//define NUMBER_PARSE_ERROR  9223372036854775801;
+//define DOUBLE_PARSE_ERROR  1.2E-320;
+//define BOOL_PARSE_ERROR    -1;
+
+namespace math {
+    define PI   3.141592654;
+    define E    2.718281828;
+    
+    f64 sin(f64 x){
+        asm "fld " x;
+        asm "fsin";
+        asm "fstp " x;
+        return x;
+    }
+    f64 cos(f64 x){
+        asm "fld " x;
+        asm "fcos";
+        asm "fstp " x;
+        return x;
+    }
+    f64 tan(f64 x){
+        return math::sin(x) / math::cos(x);
+    }
+    
+    f64 atan(f64 x){
+        asm "fld " x;
+        asm "fpatan";
+        asm "fstp " x;
+        return x;
+    }
+    
+    f64 f2xm1(f64 x){ // 2^x-1
+        asm "fld " x;
+        asm "f2xm1";
+        asm "fstp " x;
+        return x;
+    }
+    f64 yl2x(f64 x,f64 y){ // y * log2(x)
+        asm "fld " y;
+        asm "fld " x;
+        asm "fyl2x";
+        asm "fstp " x;
+        return x;
+    }
+    f64 yl2xp1(f64 x,f64 y){ // y * log2(x+1)
+        asm "fld " y;
+        asm "fld " x;
+        asm "fyl2xp1";
+        asm "fstp " x;
+        return x;
+    }
+    f64 sqrt(f64 x){
+        asm "fld " x;
+        asm "fsqrt";
+        asm "fstp " x;
+        return x;
+    }
+    f64 ln2(){ // ln(2)
+        f64 x;
+        asm "fldln2";
+        asm "fstp " x;
+        return x;
+    }
+    f64 log2_e(){ // log2(e)
+        f64 x;
+        asm "fldl2e";
+        asm "fstp " x;
+        return x;
+    }
+    f64 log2_10(){ // log2(10)
+        f64 x;
+        asm "fldl2t";
+        asm "fstp " x;
+        return x;
+    }
+    f64 pi(){ // 3.141592654
+        f64 x;
+        asm "fldpi";
+        asm "fstp " x;
+        return x;
+    }
+    f64 log10_2(){ // log10(2)
+        f64 x;
+        asm "fldlg2";
+        asm "fstp " x;
+        return x;
+    }
+
+    /*
+    struct Vec2[
+        pub f64 x,
+        pub f64 y
+    ];
+
+    impl Vec2{
+        pub Vec2 new(f64 x,f64 y){
+            Vec2 vec;
+            vec.x = x;
+            vec.y = y;
+            return vec;
+        }
+
+        pub Vec2 add(Vec2* self,Vec2 other){
+            Vec2 vec;
+            vec.x = self->x + other.x;
+            vec.y = self->y + other.y;
+            return vec;
+        }
+        pub Vec2 sub(Vec2* self,Vec2 other){
+            Vec2 vec;
+            vec.x = self->x - other.x;
+            vec.y = self->y - other.y;
+            return vec;
+        }
+        pub Vec2 mul(Vec2* self,f64 n){
+            Vec2 vec;
+            vec.x = self->x * n;
+            vec.y = self->y * n;
+            return vec;
+        }
+        pub Vec2 div(Vec2* self,f64 n){
+            Vec2 vec;
+            vec.x = self->x / n;
+            vec.y = self->y / n;
+            return vec;
+        }
+
+        pub f64 mag(Vec2* self){
+            return math::lib::sqrt(self->x * self->x + self->y * self->y);
+        }
+        pub f64 mag2(Vec2* self){
+            return self->x * self->x + self->y * self->y;
+        }
+
+        pub Vec2 norm(Vec2* self){
+            return self->div(self->mag());
+        }
+        pub Vec2 perp(Vec2* self,f64 n){
+            Vec2 vec;
+            vec.x = -self->y;
+            vec.y = self->x;
+            return vec;
+        }
+        pub Vec2 perpa(Vec2* self,f64 n){
+            Vec2 vec;
+            vec.x = -self->y;
+            vec.y = self->x;
+            return vec;
+        }
+    }
+    */
+}

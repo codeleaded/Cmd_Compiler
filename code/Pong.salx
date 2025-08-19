@@ -133,5 +133,6 @@ global i32 main(){
     esc::screen::del::all();
     esc::cursor::visible();
     kb.delete();
+    
     return 0;
 }

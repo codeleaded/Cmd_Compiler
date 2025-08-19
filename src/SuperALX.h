@@ -130,24 +130,41 @@ Boolean ShutingYard_compress_subscript(SuperALX* ll,TokenMap* tm){
     return False;
 }
 Boolean ShutingYard_compress_staticmethods(SuperALX* ll,TokenMap* tm){
-    for(int i = 0;i<tm->size-2;i++){
+    for(int i = 0;i<tm->size;i++){
         Token* class = (Token*)Vector_Get(tm,i);
-        Token* dddop = (Token*)Vector_Get(tm,i+1);
-        Token* func = (Token*)Vector_Get(tm,i+2);
+        
+        if(i<tm->size-2){
+            Token* dddop = (Token*)Vector_Get(tm,i+1);
+            Token* func = (Token*)Vector_Get(tm,i+2);
 
-        if((class->tt==TOKEN_STRING || class->tt==TOKEN_TYPE) && dddop->tt==TOKEN_SUPERALX_DDDOT && func->tt==TOKEN_STRING){
-            class->tt = TOKEN_STRING;
-            String builder = String_Make(class->str);
-            String_Append(&builder,dddop->str);
-            String_Append(&builder,func->str);
+            if((class->tt==TOKEN_STRING || class->tt==TOKEN_TYPE) && dddop->tt==TOKEN_SUPERALX_DDDOT && (func->tt==TOKEN_STRING || func->tt==TOKEN_TYPE)){
+                String builder = String_Make(class->str);
+                String_Append(&builder,dddop->str);
+                String_Append(&builder,func->str);
 
-            CStr space = String_CStr(&builder);
-            String_Free(&builder);
+                CStr space = String_CStr(&builder);
+                String_Free(&builder);
 
-            CStr_Set((CStr*)&class->str,space);
-            CStr_Free(&space);
+                CStr_Set((CStr*)&func->str,space);
+                CStr_Free(&space);
 
-            TokenMap_Remove(tm,i+1,i+3);
+                TokenMap_Remove(tm,i,i+2);
+                i--;
+                continue;
+            }
+        }
+        if(class->tt==TOKEN_STRING){
+            Type* t = TypeMap_Find(&ll->ev.sc.types,class->str);
+            if(t) class->tt = TOKEN_TYPE;
+            else{
+                CStr spacename = SuperALX_SpaceName(ll,class->str);
+                Type* t = TypeMap_Find(&ll->ev.sc.types,spacename);
+                if(t){
+                    class->tt = TOKEN_TYPE;
+                    CStr_Set(&class->str,spacename);
+                }
+                CStr_Free(&spacename);
+            }
         }
     }
     return False;
@@ -255,7 +272,7 @@ Boolean ShutingYard_compress_function(SuperALX* ll,TokenMap* tm){
 
             Vector_Push(&params,(Member[]){ MEMBER_END });
 
-            CStr realname = SuperALX_SpaceName(ll,tname->str);
+            CStr realname = SuperALX_FuncSpaceName(ll,tname->str);
             CStr_Set((char**)&tname->str,realname);
 
             CallPosition cp = CallPosition_New(TOKEN_FUNCTIONDECL,ll->ev.iter);
@@ -278,13 +295,13 @@ Boolean ShutingYard_compress_function(SuperALX* ll,TokenMap* tm){
 Boolean ShutingYard_compress(SuperALX* ll,TokenMap* tm){
     //ShutingYard_compress_objects(ev,tm);
 
+    ShutingYard_compress_staticmethods(ll,tm);
     ShutingYard_compress_defines(ll,tm);
     ShutingYard_compress_pointer(ll,tm);
     ShutingYard_compress_functionpointer(ll,tm);
     ShutingYard_compress_cast(ll,tm);
     ShutingYard_compress_subscript(ll,tm);
     ShutingYard_compress_function(ll,tm);
-    ShutingYard_compress_staticmethods(ll,tm);
     ShutingYard_compress_functioncalls(ll,tm);
     ShutingYard_compress_functionaspointer(ll,tm);
     return False;
@@ -319,7 +336,7 @@ Boolean ShutingYard_PP_for(Compiler* ev,TokenMap* tm){
 Boolean ShutingYard_PP_Struct(SuperALX* ll,TokenMap* tm){
     Token* t_struct = (Token*)Vector_Get(tm,0);
     Token* t_name = (Token*)Vector_Get(tm,1);
-    
+
     if(t_name->tt==TOKEN_STRING){
         if(tm->size>2){
             Token* subsl = (Token*)Vector_Get(tm,2);
@@ -365,12 +382,14 @@ Boolean ShutingYard_PP_Struct(SuperALX* ll,TokenMap* tm){
                 }
                 
                 Type t = Type_Cpy(parent);
-                CStr_Set(&t.name,t_name->str);
-                Type_SetAllOperators(&t,STRUCT_TYPE,t_name->str);
+                
+                CStr realname = SuperALX_SpaceName(ll,t_name->str);
+                CStr_Set(&t.name,realname);
+                Type_SetAllOperators(&t,STRUCT_TYPE,realname);
+                CStr_Free(&realname);
+
                 MemberMap_Set(&t.related,&params);
                 TypeMap_Push(&ll->ev.sc.types,&t);
-                
-                TokenMap_Clear(tm);
                 return False;
             }else{
                 Compiler_ErrorHandler(&ll->ev,"Struct: expected [: ");
@@ -814,6 +833,9 @@ Boolean ShutingYard_Curly_R(SuperALX* ll,TokenMap* tm){
     CallStack_Pop(&ll->ev.cs);
     return False;
 }
+Boolean ShutingYard_Struct(SuperALX* ll,TokenMap* tm){
+    return False;
+}
 Boolean ShutingYard_Impl(SuperALX* ll,TokenMap* tm){
     Token* t_impl = (Token*)Vector_Get(tm,0);
     Token* t_name = (Token*)Vector_Get(tm,1);
@@ -966,41 +988,44 @@ Boolean ShutingYard_FunctionCall_Acs(SuperALX* ll,TokenMap* tm,int i,int args,To
     if(func->tt==TOKEN_FUNCTION){
         Variable* v = Scope_FindVariable(&ll->ev.sc,accssed->str);
 
-        CStr type = SuperALX_TypeOfDref(ll,v->typename);
-        CStr oldname = CStr_Cpy(func->str);
-        CStr newname = CStr_Format("%s::%s",type,func->str);
-        CStr_Set((char**)&func->str,newname);
+        if(v){
+            CStr type = SuperALX_TypeOfDref(ll,v->typename);
+            CStr oldname = CStr_Cpy(func->str);
+            CStr newname = CStr_Format("%s::%s",type,func->str);
+            CStr_Set((char**)&func->str,newname);
 
-        TT_Iter it_f = FunctionMap_Find(&ll->ev.fs,func->str);
-        if(it_f>=0){
-            TokenMap acs = TokenMap_Make((Token[]){
-                Token_By(TOKEN_SUPERALX_ADR,"&"),
-                Token_Cpy(accssed),
-                Token_Null()
-            });
+            TT_Iter it_f = FunctionMap_Find(&ll->ev.fs,func->str);
+            if(it_f>=0){
+                TokenMap acs = TokenMap_Make((Token[]){
+                    Token_By(TOKEN_SUPERALX_ADR,"&"),
+                    Token_Cpy(accssed),
+                    Token_Null()
+                });
 
-            Vector_Add(func->args,&acs,0);
-        }else{
-            CStr_Set((char**)&func->str,oldname);
-        }
-
-        CStr_Free(&newname);
-        CStr_Free(&oldname);
-        CStr_Free(&type);
-
-        it_f = FunctionMap_Find(&ll->ev.fs,func->str);
-        if(it_f>=0){
-            Function* f = (Function*)Vector_Get(&ll->ev.fs,it_f);
-            if(f->access || CStr_Cmp(accssed->str,SUPERALX_SELF)){
-                Boolean ret = Compiler_FunctionCall(&ll->ev,func);
-                if(!ret){
-                    CStr retstr = Compiler_Variablename_This(&ll->ev,COMPILER_RETURN,7);
-                    *tok = Token_Move(TOKEN_STRING,retstr);
-                }
-                return ret;
+                Vector_Add(func->args,&acs,0);
             }else{
-                Compiler_ErrorHandler(&ll->ev,"Function: %s isn't pub or non self %s tries to access!",func->str,accssed->str);
-                return FUNCTIONRT_NONE;
+                CStr_Set((char**)&func->str,oldname);
+            }
+
+            CStr_Free(&newname);
+            CStr_Free(&oldname);
+            CStr_Free(&type);
+
+            it_f = FunctionMap_Find(&ll->ev.fs,func->str);
+            if(it_f>=0){
+                Function* f = (Function*)Vector_Get(&ll->ev.fs,it_f);
+
+                if(f->access || CStr_Cmp(accssed->str,SUPERALX_SELF)){
+                    Boolean ret = Compiler_FunctionCall(&ll->ev,func);
+                    if(!ret){
+                        CStr retstr = Compiler_Variablename_This(&ll->ev,COMPILER_RETURN,7);
+                        *tok = Token_Move(TOKEN_STRING,retstr);
+                    }
+                    return ret;
+                }else{
+                    Compiler_ErrorHandler(&ll->ev,"Function: %s isn't pub or non self %s tries to access!",func->str,accssed->str);
+                    return FUNCTIONRT_NONE;
+                }
             }
         }
     }
@@ -1014,40 +1039,42 @@ Boolean ShutingYard_FunctionCall_Arw(SuperALX* ll,TokenMap* tm,int i,int args,To
     if(func->tt==TOKEN_FUNCTION){
         Variable* v = Scope_FindVariable(&ll->ev.sc,accssed->str);
 
-        CStr type = SuperALX_TypeOfPointer(ll,v->typename);
-        CStr oldname = CStr_Cpy(func->str);
-        CStr newname = CStr_Format("%s::%s",type,func->str);
-        CStr_Set((char**)&func->str,newname);
+        if(v){
+            CStr type = SuperALX_TypeOfPointer(ll,v->typename);
+            CStr oldname = CStr_Cpy(func->str);
+            CStr newname = CStr_Format("%s::%s",type,func->str);
+            CStr_Set((char**)&func->str,newname);
 
-        TT_Iter it_f = FunctionMap_Find(&ll->ev.fs,func->str);
-        if(it_f>=0){
-            TokenMap acs = TokenMap_Make((Token[]){
-                Token_Cpy(accssed),
-                Token_Null()
-            });
+            TT_Iter it_f = FunctionMap_Find(&ll->ev.fs,func->str);
+            if(it_f>=0){
+                TokenMap acs = TokenMap_Make((Token[]){
+                    Token_Cpy(accssed),
+                    Token_Null()
+                });
 
-            Vector_Add(func->args,&acs,0);
-        }else{
-            CStr_Set((char**)&func->str,oldname);
-        }
-
-        CStr_Free(&newname);
-        CStr_Free(&oldname);
-        CStr_Free(&type);
-
-        it_f = FunctionMap_Find(&ll->ev.fs,func->str);
-        if(it_f>=0){
-            Function* f = (Function*)Vector_Get(&ll->ev.fs,it_f);
-            if(f->access || CStr_Cmp(accssed->str,SUPERALX_SELF)){
-                Boolean ret = Compiler_FunctionCall(&ll->ev,func);
-                if(!ret){
-                    CStr retstr = Compiler_Variablename_This(&ll->ev,COMPILER_RETURN,7);
-                    *tok = Token_Move(TOKEN_STRING,retstr);
-                }
-                return ret;
+                Vector_Add(func->args,&acs,0);
             }else{
-                Compiler_ErrorHandler(&ll->ev,"Function: %s isn't pub or non self %s tries to access!",func->str,accssed->str);
-                return FUNCTIONRT_NONE;
+                CStr_Set((char**)&func->str,oldname);
+            }
+
+            CStr_Free(&newname);
+            CStr_Free(&oldname);
+            CStr_Free(&type);
+
+            it_f = FunctionMap_Find(&ll->ev.fs,func->str);
+            if(it_f>=0){
+                Function* f = (Function*)Vector_Get(&ll->ev.fs,it_f);
+                if(f->access || CStr_Cmp(accssed->str,SUPERALX_SELF)){
+                    Boolean ret = Compiler_FunctionCall(&ll->ev,func);
+                    if(!ret){
+                        CStr retstr = Compiler_Variablename_This(&ll->ev,COMPILER_RETURN,7);
+                        *tok = Token_Move(TOKEN_STRING,retstr);
+                    }
+                    return ret;
+                }else{
+                    Compiler_ErrorHandler(&ll->ev,"Function: %s isn't pub or non self %s tries to access!",func->str,accssed->str);
+                    return FUNCTIONRT_NONE;
+                }
             }
         }
     }
@@ -1374,6 +1401,12 @@ SuperALX SuperALX_New(char* dllpath,char* src,char* output,char bits) {
             KeywordExecuter_New(TOKEN_PARENTHESES_L,        (void*)ShutingYard_compress),
             KeywordExecuter_New(TOKEN_SUPERALX_DRF,         (void*)ShutingYard_compress),
             KeywordExecuter_New(TOKEN_SUPERALX_PUB,         (void*)ShutingYard_compress),
+
+            KeywordExecuter_New(TOKEN_SUPERALX_STRUCT,      (void*)ShutingYard_compress_staticmethods),
+            KeywordExecuter_New(TOKEN_SUPERALX_STRUCT,      (void*)ShutingYard_compress_pointer),
+            KeywordExecuter_New(TOKEN_SUPERALX_IMPL,        (void*)ShutingYard_compress_staticmethods),
+            KeywordExecuter_New(TOKEN_SUPERALX_IMPL,        (void*)ShutingYard_compress_pointer),
+
             KeywordExecuter_New(TOKEN_SUPERALX_STRUCT,      (void*)ShutingYard_PP_Struct),
             KeywordExecuter_New(TOKEN_SUPERALX_IMPL,        (void*)ShutingYard_PP_Impl),
             KeywordExecuter_New(TOKEN_SUPERALX_NAMESPACE,   (void*)ShutingYard_PP_Namespace),
@@ -1400,6 +1433,7 @@ SuperALX SuperALX_New(char* dllpath,char* src,char* output,char bits) {
             KeywordExecuter_New(TOKEN_SUPERALX_WHILE,       (void*)ShutingYard_while),
             KeywordExecuter_New(TOKEN_SUPERALX_FOR,         (void*)ShutingYard_for),
             KeywordExecuter_New(TOKEN_SUPERALX_RETURN,      (void*)ShutingYard_return),
+            KeywordExecuter_New(TOKEN_SUPERALX_STRUCT,      (void*)ShutingYard_Struct),
             KeywordExecuter_New(TOKEN_SUPERALX_IMPL,        (void*)ShutingYard_Impl),
             KeywordExecuter_New(TOKEN_SUPERALX_NAMESPACE,   (void*)ShutingYard_Namespace),
             KeywordExecuter_New(TOKEN_FUNCTIONDECL,         (void*)ShutingYard_function),

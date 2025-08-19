@@ -419,15 +419,39 @@ CStr SuperALX_SpaceName(SuperALX* ll,CStr name){
 
     for(int i = 0;i<ll->ev.cs.size;i++){
         CallPosition* cp = (CallPosition*)Vector_Get(&ll->ev.cs,i);
-        if(cp->type==TOKEN_SUPERALX_IMPL){
-            String_Append(&builder,cp->fname);
-            String_Append(&builder,"::");
-        }
         if(cp->type==TOKEN_SUPERALX_NAMESPACE){
             String_Append(&builder,cp->fname);
             String_Append(&builder,"::");
         }
     }
+    String_Append(&builder,name);
+
+    CStr cstr = String_CStr(&builder);
+    String_Free(&builder);
+    return cstr;
+}
+CStr SuperALX_FuncSpaceName(SuperALX* ll,CStr name){
+    String builder = String_New();
+
+    for(int i = 0;i<ll->ev.cs.size;i++){
+        CallPosition* cp = (CallPosition*)Vector_Get(&ll->ev.cs,i);
+        if(cp->type==TOKEN_SUPERALX_IMPL){
+            String_Append(&builder,cp->fname);
+            String_Append(&builder,"::");
+            break;
+        }
+    }
+
+    if(builder.size == 0){
+        for(int i = 0;i<ll->ev.cs.size;i++){
+            CallPosition* cp = (CallPosition*)Vector_Get(&ll->ev.cs,i);
+            if(cp->type==TOKEN_SUPERALX_NAMESPACE){
+                String_Append(&builder,cp->fname);
+                String_Append(&builder,"::");
+            }
+        }
+    }
+
     String_Append(&builder,name);
 
     CStr cstr = String_CStr(&builder);
