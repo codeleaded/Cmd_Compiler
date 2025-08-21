@@ -7,6 +7,7 @@ bits 64
 section .bss
 
 section .data
+GLOBAL_STR0: db "Hello World",10,0
 
 section .text
 global _start
@@ -718,32 +719,11 @@ f.math.log10_2:
 
 f.main:
     sub rsp,8
-    sub rsp,8
-    sub rsp,8
-    mov rax,4607182418800017408
-    mov QWORD[rsp + 0],rax
-    call f.math.sin
+    mov QWORD[rsp + 0],GLOBAL_STR0
+    call f.io.print
     add rsp,8
-    sub rsp,8
-    fld QWORD[rsp + 8]
-    sub rsp,8
-    mov QWORD[rsp],4652007308841189376
-    fmul QWORD[rsp]
-    add rsp,8
-    fstp QWORD[rsp + 0]
-    mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 16],rax
-    add rsp,8
-    add rsp,8
-    sub rsp,8
-    fld QWORD[rsp + 8]
-    fistp QWORD[rsp + 0]
-    mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 24],rax
-    add rsp,8
-    add rsp,8
+    mov QWORD[rsp + 8],0
     ret
-    add rsp,8
     ret
 
 
