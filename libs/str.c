@@ -44,14 +44,14 @@ void Ex_Packer(ExternFunctionMap* Extern_Functions,Vector* funcs,Scope* s){//Vec
     TypeMap_PushContained(&s->types,funcs,
         Type_Make(VOID_TYPE,sizeof(SuperALXVariable),OperatorInterationMap_Make((OperatorInterater[]){
             OperatorInterater_Make((CStr[]){ NULL },OperatorDefineMap_Make((OperatorDefiner[]){
-                OperatorDefiner_New(TOKEN_CAST,(void*)Str_Handler_Cast),
-                OperatorDefiner_New(TOKEN_INIT,(void*)SuperALX_Init),
-                OperatorDefiner_New(TOKEN_SUPERALX_SIZE,(void*)Str_Handler_Size),
+                OperatorDefiner_New(TOKEN_CAST,(Token(*)(void*,Token*,Vector*))Str_Handler_Cast),
+                OperatorDefiner_New(TOKEN_INIT,(Token(*)(void*,Token*,Vector*))SuperALX_Init),
+                OperatorDefiner_New(TOKEN_SUPERALX_SIZE,(Token(*)(void*,Token*,Vector*))Str_Handler_Size),
                 //OperatorDefiner_New(TOKEN_DESTROY,NULL),
                 OPERATORDEFINER_END
             })),
             OperatorInterater_Make((CStr[]){ VOID_TYPE,NULL },OperatorDefineMap_Make((OperatorDefiner[]){
-                //OperatorDefiner_New(TOKEN_SUPERALX_ASS,(void*)Str_Str_Handler_Ass),
+                //OperatorDefiner_New(TOKEN_SUPERALX_ASS,(Token(*)(void*,Token*,Vector*))Str_Str_Handler_Ass),
                 OPERATORDEFINER_END
             })),
             OPERATORINTERATER_END
