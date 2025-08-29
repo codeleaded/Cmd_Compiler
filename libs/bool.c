@@ -124,19 +124,19 @@ void Ex_Packer(ExternFunctionMap* Extern_Functions,Vector* funcs,Scope* s){//Vec
     TypeMap_PushContained(&s->types,funcs,
         Type_Make(BOOL_TYPE,sizeof(SuperALXVariable),OperatorInterationMap_Make((OperatorInterater[]){
             OperatorInterater_Make((CStr[]){ NULL },OperatorDefineMap_Make((OperatorDefiner[]){
-                OperatorDefiner_New(TOKEN_SUPERALX_LOT,(void*)Bool_Handler_Lot),
-                OperatorDefiner_New(TOKEN_CAST,(void*)Bool_Handler_Cast),
-                OperatorDefiner_New(TOKEN_INIT,(void*)SuperALX_Init),
-                OperatorDefiner_New(TOKEN_SUPERALX_SIZE,(void*)Bool_Handler_Size),
+                OperatorDefiner_New(TOKEN_SUPERALX_LOT, (Token(*)(void*,Token*,Vector*))Bool_Handler_Lot),
+                OperatorDefiner_New(TOKEN_CAST,         (Token(*)(void*,Token*,Vector*))Bool_Handler_Cast),
+                OperatorDefiner_New(TOKEN_INIT,         (Token(*)(void*,Token*,Vector*))SuperALX_Init),
+                OperatorDefiner_New(TOKEN_SUPERALX_SIZE,(Token(*)(void*,Token*,Vector*))Bool_Handler_Size),
                 //OperatorDefiner_New(TOKEN_DESTROY,NULL),
                 OPERATORDEFINER_END
             })),
             OperatorInterater_Make((CStr[]){ BOOL_TYPE,NULL },OperatorDefineMap_Make((OperatorDefiner[]){
-                OperatorDefiner_New(TOKEN_SUPERALX_ASS,(void*)Bool_Bool_Handler_Ass),
-                OperatorDefiner_New(TOKEN_SUPERALX_LND,(void*)Bool_Bool_Handler_Lnd),
-                OperatorDefiner_New(TOKEN_SUPERALX_LOR,(void*)Bool_Bool_Handler_Lor),
-                OperatorDefiner_New(TOKEN_SUPERALX_EQU,(void*)Bool_Bool_Handler_Equ),
-                OperatorDefiner_New(TOKEN_SUPERALX_NEQ,(void*)Bool_Bool_Handler_Neq),
+                OperatorDefiner_New(TOKEN_SUPERALX_ASS,(Token(*)(void*,Token*,Vector*))Bool_Bool_Handler_Ass),
+                OperatorDefiner_New(TOKEN_SUPERALX_LND,(Token(*)(void*,Token*,Vector*))Bool_Bool_Handler_Lnd),
+                OperatorDefiner_New(TOKEN_SUPERALX_LOR,(Token(*)(void*,Token*,Vector*))Bool_Bool_Handler_Lor),
+                OperatorDefiner_New(TOKEN_SUPERALX_EQU,(Token(*)(void*,Token*,Vector*))Bool_Bool_Handler_Equ),
+                OperatorDefiner_New(TOKEN_SUPERALX_NEQ,(Token(*)(void*,Token*,Vector*))Bool_Bool_Handler_Neq),
                 OPERATORDEFINER_END
             })),
             OPERATORINTERATER_END
