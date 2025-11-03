@@ -1,7 +1,19 @@
+#if defined __linux__
 #include "/home/codeleaded/System/Static/Library/AlxCallStack.h"
 #include "/home/codeleaded/System/Static/Library/AlxExternFunctions.h"
 #include "/home/codeleaded/Hecke/C/Cmd_Compiler/src/SuperALX.h"
 #include "/home/codeleaded/Hecke/C/Cmd_Compiler/src/SuperALXASM.h"
+#elif defined _WINE
+#include "/home/codeleaded/System/Static/Library/AlxCallStack.h"
+#include "/home/codeleaded/System/Static/Library/AlxExternFunctions.h"
+#include "/home/codeleaded/Hecke/C/Cmd_Compiler/src/SuperALX.h"
+#include "/home/codeleaded/Hecke/C/Cmd_Compiler/src/SuperALXASM.h"
+#elif defined _WIN32
+#include "F:/home/codeleaded/System/Static/Library/AlxCallStack.h"
+#include "F:/home/codeleaded/System/Static/Library/AlxExternFunctions.h"
+#include "F:/home/codeleaded/Hecke/C/Cmd_Compiler/src/SuperALX.h"
+#include "F:/home/codeleaded/Hecke/C/Cmd_Compiler/src/SuperALXASM.h"
+#endif
 
 Token Bool_Bool_Handler_Ass(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
