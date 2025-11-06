@@ -7,8 +7,9 @@
 
 #include "/home/codeleaded/System/Static/Library/ConstParser.h"
 #include "/home/codeleaded/System/Static/Library/Files.h"
-#include "/home/codeleaded/System/Static/Library/String_G.h"
-#include "/home/codeleaded/System/Static/Library/../Container/CVector.h"
+#include "/home/codeleaded/System/Static/Library/String.h"
+
+#include "/home/codeleaded/System/Static/Container/CVector.h"
 
 #include "SuperALXDefines.h"
 #include "SuperALXASM.h"
