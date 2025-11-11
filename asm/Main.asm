@@ -7,6 +7,7 @@ bits 64
 section .bss
 
 section .data
+GLOBAL_STR0: db "Hello from Human",10,0
 
 section .text
 global _start
@@ -571,45 +572,52 @@ f.io.error:
     add rsp,8
     ret
 
-f.cmp.test:
-    sub rsp,1
-    sub rsp,1
-    mov rax,QWORD[rsp + 10]
-    cmp rax,2
-    setl BYTE[rsp + 0]
-    mov al,BYTE[rsp + 0]
-    mov BYTE[rsp + 1],al
-    add rsp,1
-    mov al,BYTE[rsp + 0]
-    add rsp,1
-    cmp al,0
-    je l.1_IF2_3
-    l.0_IF2_3:
-    mov QWORD[rsp + 16],1
+f.Human.new:
+    sub rsp,16
+    mov DWORD[rsp + 0],1
+    mov DWORD[rsp + 4],2
+    mov DWORD[rsp + 8],3
+    mov DWORD[rsp + 12],4
+    mov rax,QWORD[rsp + 0 + 0]
+    mov QWORD[rsp + 24 + 0],rax
+    mov rax,QWORD[rsp + 0 + 8]
+    mov QWORD[rsp + 24 + 8],rax
+    add rsp,16
     ret
-    jmp l.1_LOG2_3
-    l.1_IF2_3:
-    l.0_ELSE2_3:
-    mov QWORD[rsp + 24],2
-    ret
-    l.1_LOG2_3:
+    add rsp,16
     ret
 
-f.main:
+f.Human.sayHello:
     sub rsp,8
-    mov QWORD[rsp + 0],0
-    sub rsp,8
+    mov QWORD[rsp + 0],GLOBAL_STR0
+    call f.io.print
+    add rsp,8
+    ret
+
+f.Human.getA:
     sub rsp,8
     mov rax,QWORD[rsp + 16]
     mov QWORD[rsp + 0],rax
-    call f.cmp.test
+    call f.Human.sayHello
     add rsp,8
-    mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 24],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],8
+    mov rcx,QWORD[rsp + 0]
+    mov rax,QWORD[rcx + 0]
+    mov QWORD[rsp + 32 + 0],rax
     add rsp,8
     add rsp,8
     ret
-    add rsp,8
+    ret
+
+f.main:
+    mov QWORD[rsp + 8],0
+    ret
     ret
 
 
