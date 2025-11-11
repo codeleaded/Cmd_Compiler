@@ -76,7 +76,7 @@ namespace parse {
                 *out = 48;
             }else{
                 u64 size = math::uint::log10(num);
-                for i32 i = size,i>=0,i-- {
+                for i32 i = size,i>=0,i-=1 {
                     u64 dig = num % 10;
                     *(out+i) = (i8)(dig + 48);
                     num /= 10;
@@ -95,8 +95,8 @@ namespace parse {
                 i8 c = *(cstr+i);
                 if c>=48 && c<=57 {
                     out += (c-48) * math::uint::pow(10,digits);
-                    digits++;
-                    i--;
+                    digits+=1;
+                    i-=1;
                 }else{
                     return 0;
                 }
@@ -119,8 +119,8 @@ namespace parse {
                 i8 c = *(cstr+i);
                 if c>=48 && c<=57 {
                     out += (c-48) * math::uint::pow(10,digits);
-                    digits++;
-                    i--;
+                    digits+=1;
+                    i-=1;
                 }else{
                     return false;
                 }
@@ -156,7 +156,7 @@ namespace parse {
                 }
                 u64 size = math::uint::log10(num);
             
-                for i32 i = minus+size,i>=minus,i-- {
+                for i32 i = minus+size,i>=minus,i-=1 {
                     u64 dig = num % 10;
                     *(out+i) = (i8)(dig + 48);
                     num /= 10;
@@ -180,8 +180,8 @@ namespace parse {
                 i8 c = *(cstr+i);
                 if c>=48 && c<=57 {
                     out += (c-48) * math::uint::pow(10,digits);
-                    digits++;
-                    i--;
+                    digits+=1;
+                    i-=1;
                 }else{
                     return 0;
                 }
@@ -212,8 +212,8 @@ namespace parse {
                 i8 c = *(cstr+i);
                 if c>=48 && c<=57 {
                     out += (c-48) * math::uint::pow(10,digits);
-                    digits++;
-                    i--;
+                    digits+=1;
+                    i-=1;
                 }else{
                     return false;
                 }
@@ -281,12 +281,12 @@ namespace parse {
         void get(i8* out,f64 n,u64 postdigits){ // f32 -> 7-9  |  f64 -> 15-17
             if n<0.0 && (i64)n==0 {
                 *out = '-';
-                out++;
+                out+=1;
             }
             math::int::get(out,(i64)n);
             u64 len = cstr::len(out);
             *(out+len) = '.';
-            len++;
+            len+=1;
 
             u64 max = 15 - math::uint::min(15,len-1);
             postdigits = math::uint::min(postdigits,max);
@@ -438,7 +438,7 @@ namespace parse {
                 out[2] = 48;
             }else{
                 u64 size = math::uint::logb(16,num);
-                for i32 i = size,i>=0,i-- {
+                for i32 i = size,i>=0,i-=1 {
                     u64 dig = num % 16;
                     *(out+i+2) = char::to::hex(dig);
                     num /= 16;
@@ -462,8 +462,8 @@ namespace parse {
                 i64 num = char::by::hex(c);
                 if num>=0 {
                     out += num * math::uint::pow(16,digits);
-                    digits++;
-                    i--;
+                    digits+=1;
+                    i-=1;
                 }else{
                     return 0;
                 }
@@ -490,8 +490,8 @@ namespace parse {
                 i64 num = char::by::hex(c);
                 if num>=0 {
                     out += num * math::uint::pow(16,digits);
-                    digits++;
-                    i--;
+                    digits+=1;
+                    i-=1;
                 }else{
                     return false;
                 }
@@ -509,7 +509,7 @@ namespace parse {
                 out[2] = 48;
             }else{
                 u64 size = math::uint::logb(8,num);
-                for i32 i = size,i>=0,i-- {
+                for i32 i = size,i>=0,i-=1 {
                     u64 dig = num % 8;
                     *(out+i+2) = char::to::oct(dig);
                     num /= 8;
@@ -533,8 +533,8 @@ namespace parse {
                 i64 num = char::by::oct(c);
                 if num>=0 {
                     out += num * math::uint::pow(8,digits);
-                    digits++;
-                    i--;
+                    digits+=1;
+                    i-=1;
                 }else{
                     return 0;
                 }
@@ -561,8 +561,8 @@ namespace parse {
                 i64 num = char::by::oct(c);
                 if num>=0 {
                     out += num * math::uint::pow(8,digits);
-                    digits++;
-                    i--;
+                    digits+=1;
+                    i-=1;
                 }else{
                     return false;
                 }
@@ -580,7 +580,7 @@ namespace parse {
                 out[2] = 48;
             }else{
                 u64 size = math::uint::logb(2,num);
-                for i32 i = size,i>=0,i-- {
+                for i32 i = size,i>=0,i-=1 {
                     u64 dig = num % 2;
                     *(out+i+2) = char::to::bin(dig);
                     num /= 2;
@@ -604,8 +604,8 @@ namespace parse {
                 i64 num = char::by::bin(c);
                 if num>=0 {
                     out += num * math::uint::pow(2,digits);
-                    digits++;
-                    i--;
+                    digits+=1;
+                    i-=1;
                 }else{
                     return 0;
                 }
@@ -632,8 +632,8 @@ namespace parse {
                 i64 num = char::by::bin(c);
                 if num>=0 {
                     out += num * math::uint::pow(2,digits);
-                    digits++;
-                    i--;
+                    digits+=1;
+                    i-=1;
                 }else{
                     return false;
                 }
