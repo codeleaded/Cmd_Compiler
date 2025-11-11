@@ -34,7 +34,43 @@ import "../lib/IO.salx";
 //import "../lib/Parser.salx";
 //import "../lib/Memory.salx";
 
+struct Animal [
+    pub i32 a,
+    pub i32 b
+];
+
+struct Human [
+    pub i32 a,
+    pub i32 b,
+    pub Animal c
+];
+
+impl Human {
+    Human new(){
+        Human h;
+        h.a = 1;
+        h.b = 2;
+        h.c.a = 3;
+        h.c.b = 4;
+        return h;
+    }
+    void sayHello(Human* self){
+        io::print("Hello from Human\n");
+    }
+    Animal getA(Human* self){
+        self->sayHello();
+        return self->c;
+    }
+}
+
 i64 main(){
+
+    Human h = Human::new();
+    h.sayHello();
+
+    Animal a = h.getA();
+    return a.a + a.b;
+
 
     //i8* buffer = " ";
     //io::input(buffer,100);
@@ -46,5 +82,5 @@ i64 main(){
     //alloc.delete();
 
     //time::msleep(1000);
-    return 0;
+    //return 0;
 }
