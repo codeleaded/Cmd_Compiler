@@ -1,11 +1,7 @@
-import "Alx_Lib/System.alx";
-import "Alx_Lib/String.alx";
+import "System.salx";
+import "String.salx";
 
 namespace ios {
-    define stdin    0;
-    define stdout   1;
-    define stderr   2;
-
     struct OStream[
         IO_FILE file,
         string::String data

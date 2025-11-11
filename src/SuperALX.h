@@ -478,13 +478,13 @@ Boolean ShutingYard_Import(SuperALX* ll,TokenMap* tm){
             if(!CVector_Contains(&ll->filesinc,(CStr[]){ realpath })){
                 CVector_Push(&ll->filesstack,(CStr[]){ CStr_Cpy(realpath) });
                 CVector_Push(&ll->filesinc,(CStr[]){ CStr_Cpy(realpath) });
-    
+                
                 Compiler_AddScript(&ll->ev,ll->ev.iter,realpath);
             
                 CVector_PopTop(&ll->filesstack);
                 CStr_Free(&realpath);
             }else{
-                Compiler_ErrorHandler(&ll->ev,"module \"%s\" already included!",file->str);
+                //Compiler_ErrorHandler(&ll->ev,"module \"%s\" already included!",file->str);
             }
         }else{
             Compiler_ErrorHandler(&ll->ev,"file type of module \"%s\" is wrong: .%s, should be .%s",file->str,type,SUPERALX_TYPE);

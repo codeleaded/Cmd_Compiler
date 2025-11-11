@@ -59,6 +59,8 @@
 #define TOKEN_SUPERALX_SIZE               (TOKEN_START+54)
 #define TOKEN_SUPERALX_PUB                (TOKEN_START+55)
 #define TOKEN_SUPERALX_DEFINE             (TOKEN_START+56)
+#define TOKEN_SUPERALX_SHL                (TOKEN_START+57)
+#define TOKEN_SUPERALX_SHR                (TOKEN_START+58)
 
 #define SUPERALX_TYPE                       "salx"
 #define SUPERALX_INDENTATION                "    "

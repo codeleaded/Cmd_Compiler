@@ -18,10 +18,18 @@ Fehlt:
 // import "../code/Script.salx";
 // import "../lib/CStr.salx";
 // import "../lib/System.salx";
+
+//import "../lib/IO.salx";
+//import "../lib/Math.salx";
+//import "../lib/Memory.salx";
+
+import "../lib/System.salx";
+import "../lib/CStr.salx";
 import "../lib/IO.salx";
-import "../lib/Math.salx";
 
 i64 main(){
-    io::print("Hello World\n");
+    
+    io::print("Hello World!!!\n");
+
     return 0;
 }

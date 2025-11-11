@@ -1,5 +1,5 @@
-import "../lib/Container.salx";
-import "../lib/Memory.salx";
+import "Container.salx";
+import "Memory.salx";
 
 namespace string {
     struct String[
