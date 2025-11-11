@@ -12,6 +12,9 @@ Fehlt:
 /- casts
 - struct constructor: T[...]
 //- 1. Error at PP
+stack und struct arrays
+++,--
+
 
 */
 
@@ -27,17 +30,21 @@ Fehlt:
 import "../lib/System.salx";
 import "../lib/CStr.salx";
 import "../lib/IO.salx";
-import "../lib/Parser.salx";
+//import "../lib/Char.salx";
+//import "../lib/Parser.salx";
 //import "../lib/Memory.salx";
 
 i64 main(){
+
+    //i8* buffer = " ";
+    //io::input(buffer,100);
+    //io::print("Hello World!:\n");
+    //io::print(buffer);
+    //io::print("Hello World!:\n");
     
-    mem::Allocator alloc = mem::Allocator::new(64000);
+    //mem::Allocator alloc = mem::Allocator::new(64000);
+    //alloc.delete();
 
-
-
-    alloc.delete();
-
-    time::msleep(1000);
+    //time::msleep(1000);
     return 0;
 }
