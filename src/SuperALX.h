@@ -1146,6 +1146,9 @@ SuperALX SuperALX_New(char* dllpath,char* src,char* output,char bits) {
             OperatorRP_Make((TT_Type[]){ TOKEN_PLUS_SIGN,TOKEN_PLUS_SIGN,TOKEN_END },                       TOKEN_SUPERALX_INC,0),
             OperatorRP_Make((TT_Type[]){ TOKEN_MINUS_SIGN,TOKEN_MINUS_SIGN,TOKEN_END },                     TOKEN_SUPERALX_DEC,0),
 
+            OperatorRP_Make((TT_Type[]){ TOKEN_ANGLE_BRACKETS_L,TOKEN_ANGLE_BRACKETS_L,TOKEN_END },         TOKEN_SUPERALX_SHL,ARGS_IGNORE),
+            OperatorRP_Make((TT_Type[]){ TOKEN_ANGLE_BRACKETS_R,TOKEN_ANGLE_BRACKETS_R,TOKEN_END },         TOKEN_SUPERALX_SHR,ARGS_IGNORE),
+
             OperatorRP_Make((TT_Type[]){ TOKEN_EQUAL_SIGN,TOKEN_EQUAL_SIGN,TOKEN_END },                     TOKEN_SUPERALX_EQU,ARGS_IGNORE),
             OperatorRP_Make((TT_Type[]){ TOKEN_EXCLAMATION_MARK,TOKEN_EQUAL_SIGN,TOKEN_END },               TOKEN_SUPERALX_NEQ,ARGS_IGNORE),
             OperatorRP_Make((TT_Type[]){ TOKEN_ANGLE_BRACKETS_L,TOKEN_END },                                TOKEN_SUPERALX_LES,ARGS_IGNORE),
@@ -1277,6 +1280,9 @@ SuperALX SuperALX_New(char* dllpath,char* src,char* output,char bits) {
                 Precedencer_New(TOKEN_SUPERALX_LOR,2),
                 Precedencer_New(TOKEN_SUPERALX_LOT,1),
 
+                Precedencer_New(TOKEN_SUPERALX_SHL,5),
+                Precedencer_New(TOKEN_SUPERALX_SHR,5),
+
                 Precedencer_New(TOKEN_SUPERALX_EQU,2),
                 Precedencer_New(TOKEN_SUPERALX_NEQ,2),
                 Precedencer_New(TOKEN_SUPERALX_LES,2),
@@ -1325,6 +1331,9 @@ SuperALX SuperALX_New(char* dllpath,char* src,char* output,char bits) {
                 Executer_New(TOKEN_SUPERALX_LND,2,Scope_StdHandler),
                 Executer_New(TOKEN_SUPERALX_LOR,2,Scope_StdHandler),
                 Executer_New(TOKEN_SUPERALX_LOT,1,Scope_StdHandler),
+
+                Executer_New(TOKEN_SUPERALX_SHL,2,Scope_StdHandler),
+                Executer_New(TOKEN_SUPERALX_SHR,2,Scope_StdHandler),
 
                 Executer_New(TOKEN_SUPERALX_EQU,2,Scope_StdHandler),
                 Executer_New(TOKEN_SUPERALX_NEQ,2,Scope_StdHandler),

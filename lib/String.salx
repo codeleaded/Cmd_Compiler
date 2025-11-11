@@ -134,7 +134,7 @@ namespace string {
             mem::set(block,0,48);
             
             void** ptr = &n;
-            for i32 j = 0,j<8,j++ {
+            for i32 j = 0,j<8,j+=1 {
                 u8 ch = *((u8*)(ptr+j));
                 *(block+j*2) = char::to::hex((ch & 0xF0) >> 8);
                 *(block+j*2+1) = char::to::hex(ch & 0xF);
@@ -150,7 +150,7 @@ namespace string {
             
             mem::set(block,0,count+1);
             
-            for i32 j = 0,j<bytes,j++ {
+            for i32 j = 0,j<bytes,j+=1 {
                 u8 ch = *((u8*)(n+j));
                 *(block+j*2) = char::to::hex((ch & 0xF0) >> 8);
                 *(block+j*2+1) = char::to::hex(ch & 0xF);

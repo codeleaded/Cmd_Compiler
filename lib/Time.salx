@@ -1,27 +1,24 @@
 import "../lib/System.salx";
 
 namespace time {
-    void msleep(u64 msec){
-        //u64 msecwo = msec - msec / 1000 * 1000;
+    void msleep(i64 msec){
         sys::Timespec sp;
         sp.tv_sec = msec / 1000;
         sp.tv_nsec = (msec % 1000) * 1000000;
 
         sys::nanosleep(&sp,0);
     }
-    void usleep(u64 usec){
-        //u64 msecwo = msec - msec / 1000 * 1000;
+    void usleep(i64 usec){
         sys::Timespec sp;
-        sp.tv_sec = msec / 1000000;
-        sp.tv_nsec = (msec % 1000000) * 1000;
+        sp.tv_sec = usec / 1000000;
+        sp.tv_nsec = (usec % 1000000) * 1000;
 
         sys::nanosleep(&sp,0);
     }
-    void nsleep(u64 nsec){
-        //u64 msecwo = msec - msec / 1000 * 1000;
+    void nsleep(i64 nsec){
         sys::Timespec sp;
-        sp.tv_sec = msec / 1000000000;
-        sp.tv_nsec = (msec % 1000000000);
+        sp.tv_sec = nsec / 1000000000;
+        sp.tv_nsec = (nsec % 1000000000);
 
         sys::nanosleep(&sp,0);
     }

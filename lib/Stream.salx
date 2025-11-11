@@ -125,7 +125,7 @@ namespace ios {
             math::uint::get(cstr+30,(u64)self->data.size());
             io::print(cstr);
     
-            for u64 i = 0,i<self->data.size(),i++ {
+            for u64 i = 0,i<self->data.size(),i+=1 {
                 
                 mem::set(cstr,32,49);
                 mem::cpy(cstr,"| Element: ",11);

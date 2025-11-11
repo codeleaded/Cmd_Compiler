@@ -20,16 +20,24 @@ Fehlt:
 // import "../lib/System.salx";
 
 //import "../lib/IO.salx";
-//import "../lib/Math.salx";
 //import "../lib/Memory.salx";
+//import "../lib/Math.salx";
+//import "../lib/Time.salx";
 
 import "../lib/System.salx";
 import "../lib/CStr.salx";
 import "../lib/IO.salx";
+import "../lib/Parser.salx";
+//import "../lib/Memory.salx";
 
 i64 main(){
     
-    io::print("Hello World!!!\n");
+    mem::Allocator alloc = mem::Allocator::new(64000);
 
+
+
+    alloc.delete();
+
+    time::msleep(1000);
     return 0;
 }

@@ -7,7 +7,6 @@ bits 64
 section .bss
 
 section .data
-GLOBAL_STR0: db "Hello World!!!",10,0
 
 section .text
 global _start
@@ -353,6 +352,123 @@ f.sys.select:
     add rsp,8
     ret
 
+f.time.msleep:
+    sub rsp,16
+    mov rdx,0
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov rbx,1000
+    idiv rbx
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    mov rdx,0
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov rbx,1000
+    idiv rbx
+    mov QWORD[rsp + 0],rdx
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov rbx,1000000
+    imul rbx
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 24],rax
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    lea rax,[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    call f.sys.nanosleep
+    add rsp,8
+    add rsp,8
+    add rsp,16
+    ret
+
+f.time.usleep:
+    sub rsp,16
+    mov rdx,0
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov rbx,1000000
+    idiv rbx
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    mov rdx,0
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov rbx,1000000
+    idiv rbx
+    mov QWORD[rsp + 0],rdx
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov rbx,1000
+    imul rbx
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 24],rax
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    lea rax,[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    call f.sys.nanosleep
+    add rsp,8
+    add rsp,8
+    add rsp,16
+    ret
+
+f.time.nsleep:
+    sub rsp,16
+    mov rdx,0
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov rbx,1000000000
+    idiv rbx
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    mov rdx,0
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov rbx,1000000000
+    idiv rbx
+    mov QWORD[rsp + 0],rdx
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 16],rax
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    lea rax,[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    call f.sys.nanosleep
+    add rsp,8
+    add rsp,8
+    add rsp,16
+    ret
+
 f.cstr.len:
     sub rsp,8
     mov QWORD[rsp + 0],0
@@ -572,13 +688,176 @@ f.io.error:
     add rsp,8
     ret
 
+f.math.sin:
+    fld QWORD[rsp + 8]
+    fsin
+    fstp QWORD[rsp + 8]
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 16],rax
+    ret
+    ret
+
+f.math.cos:
+    fld QWORD[rsp + 8]
+    fcos
+    fstp QWORD[rsp + 8]
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 16],rax
+    ret
+    ret
+
+f.math.tan:
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    mov QWORD[rsp + 0],rax
+    call f.math.sin
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    call f.math.cos
+    add rsp,8
+    sub rsp,8
+    fld QWORD[rsp + 16]
+    fdiv QWORD[rsp + 8]
+    fstp QWORD[rsp + 0]
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 40],rax
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+    ret
+
+f.math.atan:
+    fld QWORD[rsp + 8]
+    fpatan
+    fstp QWORD[rsp + 8]
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 16],rax
+    ret
+    ret
+
+f.math.f2xm1:
+    fld QWORD[rsp + 8]
+    f2xm1
+    fstp QWORD[rsp + 8]
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 16],rax
+    ret
+    ret
+
+f.math.yl2x:
+    fld QWORD[rsp + 8]
+    fld QWORD[rsp + 16]
+    fyl2x
+    fstp QWORD[rsp + 16]
+    mov rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 24],rax
+    ret
+    ret
+
+f.math.yl2xp1:
+    fld QWORD[rsp + 8]
+    fld QWORD[rsp + 16]
+    fyl2xp1
+    fstp QWORD[rsp + 16]
+    mov rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 24],rax
+    ret
+    ret
+
+f.math.sqrt:
+    fld QWORD[rsp + 8]
+    fsqrt
+    fstp QWORD[rsp + 8]
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 16],rax
+    ret
+    ret
+
+f.math.ln2:
+    sub rsp,8
+    fldln2
+    fstp QWORD[rsp + 0]
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 16],rax
+    add rsp,8
+    ret
+    add rsp,8
+    ret
+
+f.math.log2_e:
+    sub rsp,8
+    fldl2e
+    fstp QWORD[rsp + 0]
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 16],rax
+    add rsp,8
+    ret
+    add rsp,8
+    ret
+
+f.math.log2_10:
+    sub rsp,8
+    fldl2t
+    fstp QWORD[rsp + 0]
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 16],rax
+    add rsp,8
+    ret
+    add rsp,8
+    ret
+
+f.math.pi:
+    sub rsp,8
+    fldpi
+    fstp QWORD[rsp + 0]
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 16],rax
+    add rsp,8
+    ret
+    add rsp,8
+    ret
+
+f.math.log10_2:
+    sub rsp,8
+    fldlg2
+    fstp QWORD[rsp + 0]
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 16],rax
+    add rsp,8
+    ret
+    add rsp,8
+    ret
+
 f.main:
     sub rsp,8
-    mov QWORD[rsp + 0],GLOBAL_STR0
-    call f.io.print
+    mov rax,4616189618054758400
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov QWORD[rsp + 0],1000
+    call f.time.msleep
     add rsp,8
-    mov QWORD[rsp + 8],0
+    sub rsp,8
+    fld QWORD[rsp + 8]
+    sub rsp,8
+    mov QWORD[rsp],4609434218613702656
+    fadd QWORD[rsp]
+    add rsp,8
+    fstp QWORD[rsp + 0]
+    sub rsp,8
+    fld QWORD[rsp + 8]
+    fistp QWORD[rsp + 0]
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 32],rax
+    add rsp,8
+    add rsp,8
+    add rsp,8
     ret
+    add rsp,8
     ret
 
 
