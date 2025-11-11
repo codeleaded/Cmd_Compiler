@@ -166,7 +166,9 @@ namespace mem {
 
         pub void print(Allocator* self){
             io::print("------------------ Allocator -----------------\n");
+            
             i8 cstr[48];
+            
             ptr::set(cstr,32,45);
             ptr::cpy(cstr,"| Memory:",9);
             math::uint::get(cstr+10,self->getMemory());

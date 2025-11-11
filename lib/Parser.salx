@@ -1,6 +1,5 @@
 import "../lib/CStr.salx";
 import "../lib/Char.salx";
-import "../lib/Memory.salx";
 
 namespace parse {
     namespace boolean {

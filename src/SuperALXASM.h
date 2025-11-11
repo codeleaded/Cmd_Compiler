@@ -266,6 +266,15 @@ CStr SuperALX_ConstStr(SuperALX* ll,CStr name){
             String_AppendNumber(&value,name[i]);
             String_AppendChar(&value,',');
         }
+
+        if(i == size - 1){
+            if(buffer.size>0){
+                String_AppendChar(&value,'\"');
+                String_AppendString(&value,&buffer);
+                String_AppendChar(&value,'\"');
+                String_AppendChar(&value,',');
+            }
+        }
     }
     String_AppendNumber(&value,0);
     
@@ -615,6 +624,12 @@ Number SuperALX_Function_Not(Number a){
 }
 Number SuperALX_Function_Neg(Number a){
     return -a;
+}
+Number SuperALX_Function_Shl(Number a,Number b){
+    return a << b;
+}
+Number SuperALX_Function_Shr(Number a,Number b){
+    return a >> b;
 }
 Boolean SuperALX_Function_Equ(Number a,Number b){
     return a == b;
@@ -1148,6 +1163,34 @@ Token SuperALX_ExecuteAR(SuperALX* ll,Token* a,Token* b,Token* op,CStr instname,
             SuperALX_IntoSet(ll,&stack_t,SuperALX_SelectRT(ll,realsize_a)[SUPERALX_REG_D]);
             return stack_t;
         }
+    }
+}
+Token SuperALX_ExecuteAR2(SuperALX* ll,Token* a,Token* b,int reg2,int reg2_size,Token* op,CStr instname,CStr instnameupper,Number (*inst)(Number,Number)){
+    //Compiler_InfoHandler(&ll->ev,"%s: %s %s %s",instnameupper,a->str,op->str,b->str);
+    
+    if(SuperALX_ErrorsInArg(ll,a)) return Token_Null();
+    if(SuperALX_ErrorsInArg(ll,b)) return Token_Null();
+
+    if(a->tt==TOKEN_NUMBER && b->tt==TOKEN_NUMBER){
+        char* resstr = Number_Get(inst(Number_Parse(a->str),Number_Parse(b->str)));
+        return Token_Move(TOKEN_NUMBER,resstr);
+    }else{
+         CStr typename_a = SuperALX_VariableType(ll,a);
+        int realsize_a = SuperALX_TypeRealSize(ll,a);
+        int realsize_b = SuperALX_TypeRealSize(ll,b);
+        
+        CStr stack_name = SuperALX_Variablename_Next(ll,".STACK",6);
+        SuperALX_Variable_Build_Decl(ll,stack_name,typename_a);
+        CStr_Free(&typename_a);
+        Token stack_t = Token_Move(TOKEN_STRING,stack_name);
+        
+        if(realsize_b>realsize_a)
+            SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,0",SUPERALX_REG_A_64);
+
+        SuperALX_IntoReg(ll,a,SuperALX_SelectRT(ll,realsize_a)[SUPERALX_REG_A]);
+        SuperALX_IntoReg(ll,b,SuperALX_SelectRT(ll,realsize_b)[SUPERALX_REG_C]);
+        SuperALX_Indentation_Appendf(ll,&ll->text,"%s %s,%s",inst,SuperALX_SelectRT(ll,realsize_a)[SUPERALX_REG_A],SuperALX_SelectRT(ll,reg2_size)[SUPERALX_REG_C]);
+        SuperALX_IntoSet(ll,&stack_t,SuperALX_SelectRT(ll,realsize_a)[SUPERALX_REG_A]);
     }
 }
 Token SuperALX_ExecuteSingle(SuperALX* ll,Token* a,Token* op,CStr instname,CStr instnameupper,Number (*inst)(Number)){

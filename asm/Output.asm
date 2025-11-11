@@ -7,6 +7,9 @@ global f.main
 global _start
 
 _start:
+	mov cl,5
+	shl rax,cl
+
 	mov rbp,rsp
 	mov rdi,0
 	mov rax,60

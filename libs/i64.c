@@ -91,6 +91,18 @@ Token I64_Handler_Not(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
     return SuperALX_ExecuteSingle(ll,a,op,"not","NOT",SuperALX_Function_Not);
 }
+
+Token I64_I64_Handler_ShL(SuperALX* ll,Token* op,Vector* args){
+    Token* a = (Token*)Vector_Get(args,0);
+    Token* b = (Token*)Vector_Get(args,1);
+    return SuperALX_ExecuteAR2(ll,a,b,SUPERALX_REG_C,1,op,"shl","SHL",SuperALX_Function_Shl);
+}
+Token I64_I64_Handler_ShR(SuperALX* ll,Token* op,Vector* args){
+    Token* a = (Token*)Vector_Get(args,0);
+    Token* b = (Token*)Vector_Get(args,1);
+    return SuperALX_ExecuteAR2(ll,a,b,SUPERALX_REG_C,1,op,"shr","SHR",SuperALX_Function_Shr);
+}
+
 Token I64_I64_Handler_Equ(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
     Token* b = (Token*)Vector_Get(args,1);
@@ -242,6 +254,8 @@ void Ex_Packer(ExternFunctionMap* Extern_Functions,Vector* funcs,Scope* s){//Vec
                 OperatorDefiner_New(TOKEN_SUPERALX_AND,(Token(*)(void*,Token*,Vector*))I64_I64_Handler_And),
                 OperatorDefiner_New(TOKEN_SUPERALX_OR,(Token(*)(void*,Token*,Vector*))I64_I64_Handler_Or),
                 OperatorDefiner_New(TOKEN_SUPERALX_XOR,(Token(*)(void*,Token*,Vector*))I64_I64_Handler_Xor),
+                OperatorDefiner_New(TOKEN_SUPERALX_SHL,(Token(*)(void*,Token*,Vector*))I64_I64_Handler_ShL),
+                OperatorDefiner_New(TOKEN_SUPERALX_SHR,(Token(*)(void*,Token*,Vector*))I64_I64_Handler_ShR),
                 OperatorDefiner_New(TOKEN_SUPERALX_EQU,(Token(*)(void*,Token*,Vector*))I64_I64_Handler_Equ),
                 OperatorDefiner_New(TOKEN_SUPERALX_NEQ,(Token(*)(void*,Token*,Vector*))I64_I64_Handler_Neq),
                 OperatorDefiner_New(TOKEN_SUPERALX_LES,(Token(*)(void*,Token*,Vector*))I64_I64_Handler_Les),
