@@ -19,13 +19,15 @@ Token Pointer_Pointer_Handler_Ass(SuperALX* ll,Token* op,Vector* args){
         CStr name = SuperALX_FunctionName(ll,b->str);
         SuperALX_IntoSet(ll,a,name);
         CStr_Free(&name);
+    }else if(b->tt==TOKEN_SUPERALX_NULL){
+        SuperALX_IntoSet(ll,a,"0");
     }else if(b->tt==TOKEN_STRING){
         int realsize_a = SuperALX_TypeRealSize(ll,a);
         int realsize_b = SuperALX_TypeRealSize(ll,b);
         SuperALX_IntoReg(ll,b,SuperALX_SelectRT(ll,realsize_b)[SUPERALX_REG_A]);
         SuperALX_IntoSet(ll,a,SuperALX_SelectRT(ll,realsize_a)[SUPERALX_REG_A]);
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"Ass: Error -> %s has no i64 type!",b->str);
+        Enviroment_ErrorHandler(&ll->ev,"Ass: Error -> %s has no pointer type!",b->str);
         return Token_Null();
     }
     return Token_Cpy(a);

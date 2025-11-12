@@ -122,8 +122,7 @@ Boolean ShutingYard_compress_subscript(SuperALX* ll,TokenMap* tm){
 
         if(subs->tt==TOKEN_SUPERALX_SUBS){
             Vector_Add(tm,(Token[]){ Token_By(TOKEN_PARENTHESES_L,"(") },i+1);
-        }
-        if(subs->tt==TOKEN_SUPERALX_SUBSR){
+        }else if(subs->tt==TOKEN_SUPERALX_SUBSR){
             subs->tt = TOKEN_PARENTHESES_R;
             CStr_Set((CStr*)&subs->str,")");
         }
@@ -1124,6 +1123,7 @@ SuperALX SuperALX_New(char* dllpath,char* src,char* output,char bits) {
             KeywordRP_New("pub",TOKEN_SUPERALX_PUB),
             KeywordRP_New("false",TOKEN_SUPERALX_BOOLEAN),
             KeywordRP_New("true",TOKEN_SUPERALX_BOOLEAN),
+            KeywordRP_New("null",TOKEN_SUPERALX_NULL),
             KEYWORD_END
         }),
         OperatorMap_Make((OperatorRP[]){
@@ -1380,6 +1380,7 @@ SuperALX SuperALX_New(char* dllpath,char* src,char* output,char bits) {
                 StdConstType_New(TOKEN_SUPERALX_BOOLEAN,BOOL_TYPE),
                 StdConstType_New(TOKEN_CONSTSTRING_DOUBLE,STR_TYPE),
                 StdConstType_New(TOKEN_FUNCTIONPOINTER,NULL_TYPE),
+                StdConstType_New(TOKEN_SUPERALX_NULL,NULL_TYPE),
                 STDCONSTTYPE_END
             },
             VariableMap_Make((Variable[]){
@@ -1567,6 +1568,7 @@ void SuperALX_Build(SuperALX* ll) {
         Files_WriteT(ll->output,output.Memory,output.size);
         String_Free(&output);
     }else{
+        Compiler_FlushLogs(&ll->ev);
         printf("%s-> %sbuild aborted because of Errors!%s\n",ANSI_FG_GRAY,ANSI_FG_RED,ANSI_FG_WHITE);
     }
 }

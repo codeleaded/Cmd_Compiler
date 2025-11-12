@@ -21,7 +21,8 @@ all:
 	mkdir -p $(BUILD_DIR)
 	$(CC) $(CFLAGS) $(INCLUDES) ./$(SRC_DIR)/Main.c -o ./$(TARGET) $(LDFLAGS) 
 
-alldebug: 
+alldebug:
+# -fsanitize=address 
 	$(CC) -g $(CFLAGS) $(INCLUDES) ./$(SRC_DIR)/Main.c -o ./$(TARGET) $(LDFLAGS) 
 
 debug:
