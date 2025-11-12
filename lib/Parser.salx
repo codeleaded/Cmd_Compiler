@@ -1,15 +1,16 @@
 import "../lib/CStr.salx";
 import "../lib/Char.salx";
+import "../lib/Math.salx";
 
 namespace parse {
     namespace boolean {
         void get(i8* out,bool b){
             if b==false {
-                ptr::cpy(out,"false",5);
+                cstr::cpy(out,"false",5);
             }elif b==true {
-                ptr::cpy(out,"true",4);
+                cstr::cpy(out,"true",4);
             }else{
-                ptr::cpy(out,"none",4);
+                cstr::cpy(out,"none",4);
             }
         }
         bool by(i8* cstr){
@@ -19,7 +20,7 @@ namespace parse {
             if cstr::cmp(cstr,"true") || cstr::cmp(cstr,"1") {
                 return true;
             }
-            return (bool)2;
+            return false;
         }
         bool by_s(i8* cstr,bool* ptr){
             if ptr==null {
@@ -78,7 +79,7 @@ namespace parse {
                 u64 size = math::uint::log10(num);
                 for i32 i = size,i>=0,i-=1 {
                     u64 dig = num % 10;
-                    *(out+i) = (i8)(dig + 48);
+                    *(out+i) = (dig + 48);
                     num /= 10;
                 }
             }
@@ -158,7 +159,7 @@ namespace parse {
             
                 for i32 i = minus+size,i>=minus,i-=1 {
                     u64 dig = num % 10;
-                    *(out+i) = (i8)(dig + 48);
+                    *(out+i) = (dig + 48);
                     num /= 10;
                 }
             }
@@ -226,6 +227,7 @@ namespace parse {
         }
     }
 
+    /*
     namespace float {
         void setmode(u16 mode){
             asm "fldcw " mode;
@@ -263,7 +265,7 @@ namespace parse {
         f64 pow(f64 x,f64 y){ // x ^ y -> 2 ^ (y * log2(x))
             f64 ex = math::lib::yl2x(x,y);
             
-            i64 ipart = (i64)ex;
+            i64 ipart = ex;
             f64 fpart = ex - ipart;
 
             f64 iout = math::float::powi(2.0,ipart);
@@ -429,6 +431,7 @@ namespace parse {
             return out;
         }
     }
+    */
 
     namespace hex {
         void get(i8* out,u64 num){

@@ -114,6 +114,8 @@ Boolean SuperALX_PointerType(SuperALX* ll,CStr name){
     return 0;
 }
 Boolean SuperALX_DrefType(SuperALX* ll,CStr name){
+    if(!name) return 0;
+    
     int size = CStr_Size(name);
     if(name[size-1]=='&') return 1;
     return 0;
@@ -387,6 +389,7 @@ CStr SuperALX_VariableType(SuperALX* ll,Token* a){
     if(a->tt==TOKEN_CONSTSTRING_DOUBLE)  return CStr_Cpy(STR_TYPE);
     if(a->tt==TOKEN_FLOAT)               return CStr_Cpy(F64_TYPE);
     if(a->tt==TOKEN_FUNCTIONPOINTER)     return CStr_Cpy(NULL_TYPE);
+    if(a->tt==TOKEN_SUPERALX_NULL)       return CStr_Cpy(NULL_TYPE);
     return NULL;
 }
 CStr SuperALX_VariablesType(SuperALX* ll,Token* a,Token* b){
@@ -533,30 +536,30 @@ void SuperALX_LogicCorrection(SuperALX* ll,TokenMap* tm){
             CStr log_label = SuperALX_Logic(ll,1,SUPERALX_LOG,ll->ev.sc.range);
             SuperALX_Indentation_Appendf(ll,&ll->text,"jmp %s",log_label);
             CStr_Free(&log_label);
-
-            CStr if_label = SuperALX_Logic(ll,1,SUPERALX_IF,ll->ev.sc.range);
-            SuperALX_Indentation_Appendf(ll,&ll->text,"%s:",if_label);
-            CStr_Free(&if_label);
         }else{
             CStr log_label = SuperALX_Logic(ll,1,SUPERALX_LOG,ll->ev.sc.range);
             SuperALX_Indentation_Appendf(ll,&ll->text,"%s:",log_label);
             CStr_Free(&log_label);
         }
+
+        CStr if_label = SuperALX_Logic(ll,1,SUPERALX_IF,ll->ev.sc.range);
+        SuperALX_Indentation_Appendf(ll,&ll->text,"%s:",if_label);
+        CStr_Free(&if_label);
     }else if(ll->logic==TOKEN_SUPERALX_ELIF){
         int lp = SuperALX_GetLogicPath(ll,ll->ev.sc.range);
         if(t->tt==TOKEN_SUPERALX_ELIF || t->tt==TOKEN_SUPERALX_ELSE){
             CStr log_label = SuperALX_Logic(ll,1,SUPERALX_LOG,ll->ev.sc.range);
             SuperALX_Indentation_Appendf(ll,&ll->text,"jmp %s",log_label);
             CStr_Free(&log_label);
-
-            CStr if_label = SuperALX_Logic(ll,1,SUPERALX_ELIF,ll->ev.sc.range);
-            SuperALX_Indentation_Appendf(ll,&ll->text,"%s:",if_label);
-            CStr_Free(&if_label);
         }else{
             CStr log_label = SuperALX_Logic(ll,1,SUPERALX_LOG,ll->ev.sc.range);
             SuperALX_Indentation_Appendf(ll,&ll->text,"%s:",log_label);
             CStr_Free(&log_label);
         }
+
+        CStr if_label = SuperALX_Logic(ll,1,SUPERALX_ELIF,ll->ev.sc.range);
+        SuperALX_Indentation_Appendf(ll,&ll->text,"%s:",if_label);
+        CStr_Free(&if_label);
     }else if(ll->logic==TOKEN_SUPERALX_ELSE){
         int lp = SuperALX_GetLogicPath(ll,ll->ev.sc.range);
         CStr log_label = SuperALX_Logic(ll,1,SUPERALX_LOG,ll->ev.sc.range);
@@ -580,7 +583,6 @@ void SuperALX_LogicCorrection(SuperALX* ll,TokenMap* tm){
         CStr_Free(&start_label);
         Scope_Pop(&ll->ev.sc);// first possible decl in for ... , 
     }
-
     ll->logic = TOKEN_NONE;
 }
 
@@ -776,7 +778,7 @@ Boolean SuperALX_ErrorsInArg(SuperALX* ll,Token* a){
         }
     }
     if(a->tt==TOKEN_FLOAT){
-        if(Double_Parse(a->str,0) == DOUBLE_PARSE_ERROR){
+        if(Double_Parse(a->str,1) == DOUBLE_PARSE_ERROR){
             Compiler_ErrorHandler(&ll->ev,"Errors -> float %s is invalid!",a->str);
             return 1;
         }
@@ -853,6 +855,8 @@ void SuperALX_IntoReg(SuperALX* ll,Token* a,CStr reg){
         }else{
             Compiler_ErrorHandler(&ll->ev,"IntoReg -> Error: %s is not a var!",a->str);
         }
+    }else if(a->tt==TOKEN_SUPERALX_NULL){
+        SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,0",reg);
     }else{
         SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,%s",reg,a->str);
     }
@@ -903,6 +907,8 @@ void SuperALX_AtReg(SuperALX* ll,Token* a,CStr reg,CStr inst){
         }else{
             Compiler_ErrorHandler(&ll->ev,"AtReg -> Error: %s is not a var!",a->str);
         }
+    }else if(a->tt==TOKEN_SUPERALX_NULL){
+        SuperALX_Indentation_Appendf(ll,&ll->text,"%s %s,0",inst,reg);
     }else{
         SuperALX_Indentation_Appendf(ll,&ll->text,"%s %s,%s",inst,reg,a->str);
     }
@@ -977,6 +983,8 @@ void SuperALX_CmpAtReg(SuperALX* ll,Token* a,CStr reg){
             SuperALX_Indentation_Appendf(ll,&ll->text,"cmp %s,%s",reg,location);
         }
         CStr_Free(&location);
+    }else if(a->tt==TOKEN_SUPERALX_NULL){
+        SuperALX_Indentation_Appendf(ll,&ll->text,"cmp %s,0",reg);
     }else{
         SuperALX_Indentation_Appendf(ll,&ll->text,"cmp %s,%s",reg,a->str);
     }
@@ -1017,6 +1025,9 @@ Token SuperALX_ExecuteAss(SuperALX* ll,Token* a,Token* b,Token* op,CStr instname
         SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,%s",SUPERALX_REG_A_64,fstr);
         SuperALX_AtSet(ll,a,SUPERALX_REG_A_64,instname);
         CStr_Free(&fstr);
+        return Token_Cpy(a);
+    }else if(b->tt==TOKEN_SUPERALX_NULL){
+        SuperALX_AtSet(ll,a,"0",instname);
         return Token_Cpy(a);
     }else{
         int realsize_a = SuperALX_TypeRealSize(ll,a);
