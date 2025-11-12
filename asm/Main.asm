@@ -603,21 +603,58 @@ f.Human.getA:
     sub rsp,8
     mov rax,QWORD[rsp + 16]
     mov QWORD[rsp + 0],rax
-    sub rsp,8
-    mov rax,QWORD[rsp + 8]
-    mov QWORD[rsp + 0],rax
     add QWORD[rsp + 0],8
     mov rcx,QWORD[rsp + 0]
     mov rax,QWORD[rcx + 0]
-    mov QWORD[rsp + 32 + 0],rax
-    add rsp,8
+    mov QWORD[rsp + 24 + 0],rax
     add rsp,8
     ret
     ret
 
 f.main:
-    mov QWORD[rsp + 8],0
+    sub rsp,16
+    sub rsp,16
+    call f.Human.new
+    mov rax,QWORD[rsp + 0 + 0]
+    mov QWORD[rsp + 16 + 0],rax
+    mov rax,QWORD[rsp + 0 + 8]
+    mov QWORD[rsp + 16 + 8],rax
+    add rsp,16
+    sub rsp,8
+    sub rsp,8
+    lea rax,[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    call f.Human.sayHello
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    lea rax,[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    call f.Human.getA
+    add rsp,8
+    mov rax,QWORD[rsp + 0 + 0]
+    mov QWORD[rsp + 8 + 0],rax
+    add rsp,8
+    sub rsp,4
+    mov eax,DWORD[rsp + 4]
+    add eax,DWORD[rsp + 8]
+    mov DWORD[rsp + 0],eax
+    mov eax,DWORD[rsp + 0]
+    mov QWORD[rsp + 36],rax
+    add rsp,4
+    add rsp,8
+    add rsp,16
     ret
+    add rsp,8
+    add rsp,16
     ret
 
 

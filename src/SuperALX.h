@@ -933,28 +933,30 @@ Boolean ShutingYard_return(SuperALX* ll,TokenMap* tm){
     return False;
 }
 Boolean ShutingYard_Decl(SuperALX* ll,TokenMap* tm){
-    Token* pottype = (Token*)Vector_Get(tm,0);
-    Token* name = (Token*)Vector_Get(tm,1);
-    
-    if(name->tt==TOKEN_STRING){
-        if(!CStr_Cmp(name->str,SUPERALX_SELF)){
-            SuperALX_Variable_Build_Decl(ll,name->str,pottype->str);
-            if(tm->size>2){
-                if(ll->ev.sc.range>0){
-                    Token* t = (Token*)Vector_Get(tm,0);
-                    Token_Free(t);
-                    Vector_Remove(tm,0);
-                    Boolean ret = Compiler_ShutingYard(&ll->ev,tm);
-                    return ret;
-                }else{
-                    Compiler_ErrorHandler(&ll->ev,"decl: global variable can't be set like this!");
-                    return False;
+    if(tm->size >= 2){
+        Token* pottype = (Token*)Vector_Get(tm,0);
+        Token* name = (Token*)Vector_Get(tm,1);
+        
+        if(name->tt==TOKEN_STRING){
+            if(!CStr_Cmp(name->str,SUPERALX_SELF)){
+                SuperALX_Variable_Build_Decl(ll,name->str,pottype->str);
+                if(tm->size>2){
+                    if(ll->ev.sc.range>0){
+                        Token* t = (Token*)Vector_Get(tm,0);
+                        Token_Free(t);
+                        Vector_Remove(tm,0);
+                        Boolean ret = Compiler_ShutingYard(&ll->ev,tm);
+                        return ret;
+                    }else{
+                        Compiler_ErrorHandler(&ll->ev,"decl: global variable can't be set like this!");
+                        return False;
+                    }
                 }
-            }
-        }else   Compiler_ErrorHandler(&ll->ev,"decl: name self is not allowed for decl!");
-    }else{
-        Compiler_ErrorHandler(&ll->ev,"decl: name of decl variable doesn't exist!");
-        return False;
+            }else   Compiler_ErrorHandler(&ll->ev,"decl: name self is not allowed for decl!");
+        }else{
+            Compiler_ErrorHandler(&ll->ev,"decl: name of decl variable doesn't exist!");
+            return False;
+        }
     }
     return False;
 }
@@ -983,52 +985,54 @@ Boolean ShutingYard_Assembly(SuperALX* ll,TokenMap* tm){
 }
 
 Boolean ShutingYard_FunctionCall_Acs(SuperALX* ll,TokenMap* tm,int i,int args,Token* tok){
-    Token* accssed = (Token*)Vector_Get(tm,i - args);
-    Token* func = (Token*)Vector_Get(tm,i - args + 1);
+    if(i - args >= 0 && i - args + 1 < tm->size){
+        Token* accssed = (Token*)Vector_Get(tm,i - args);
+        Token* func = (Token*)Vector_Get(tm,i - args + 1);
 
-    if(func->tt==TOKEN_FUNCTION){
-        Variable* v = Scope_FindVariable(&ll->ev.sc,accssed->str);
+        if(func->tt==TOKEN_FUNCTION){
+            Variable* v = Scope_FindVariable(&ll->ev.sc,accssed->str);
 
-        if(v){
-            CStr type = SuperALX_TypeOfDref(ll,v->typename);
-            CStr oldname = CStr_Cpy(func->str);
-            CStr newname = CStr_Format("%s::%s",type,func->str);
-            CStr_Set((char**)&func->str,newname);
+            if(v){
+                CStr type = SuperALX_TypeOfDref(ll,v->typename);
+                CStr oldname = CStr_Cpy(func->str);
+                CStr newname = CStr_Format("%s::%s",type,func->str);
+                CStr_Set((char**)&func->str,newname);
 
-            TT_Iter it_f = FunctionMap_Find(&ll->ev.fs,func->str);
-            if(it_f>=0){
-                TokenMap acs = TokenMap_Make((Token[]){
-                    Token_By(TOKEN_SUPERALX_ADR,"&"),
-                    Token_Cpy(accssed),
-                    Token_Null()
-                });
+                TT_Iter it_f = FunctionMap_Find(&ll->ev.fs,func->str);
+                if(it_f>=0){
+                    TokenMap acs = TokenMap_Make((Token[]){
+                        Token_By(TOKEN_SUPERALX_ADR,"&"),
+                        Token_Cpy(accssed),
+                        Token_Null()
+                    });
 
-                Vector_Add(func->args,&acs,0);
-            }else{
-                CStr_Set((char**)&func->str,oldname);
-            }
-
-            CStr_Free(&newname);
-            CStr_Free(&oldname);
-            CStr_Free(&type);
-
-            it_f = FunctionMap_Find(&ll->ev.fs,func->str);
-            if(it_f>=0){
-                Function* f = (Function*)Vector_Get(&ll->ev.fs,it_f);
-
-                if(f->access || CStr_Cmp(accssed->str,SUPERALX_SELF)){
-                    Boolean ret = Compiler_FunctionCall(&ll->ev,func);
-                    if(!ret){
-                        CStr retstr = Compiler_Variablename_This(&ll->ev,COMPILER_RETURN,7);
-                        *tok = Token_Move(TOKEN_STRING,retstr);
-                    }
-                    return ret;
+                    Vector_Add(func->args,&acs,0);
                 }else{
-                    Compiler_ErrorHandler(&ll->ev,"Function: %s isn't pub or non self %s tries to access!",func->str,accssed->str);
-                    return FUNCTIONRT_NONE;
+                    CStr_Set((char**)&func->str,oldname);
+                }
+
+                CStr_Free(&newname);
+                CStr_Free(&oldname);
+                CStr_Free(&type);
+
+                it_f = FunctionMap_Find(&ll->ev.fs,func->str);
+                if(it_f>=0){
+                    Function* f = (Function*)Vector_Get(&ll->ev.fs,it_f);
+
+                    if(f->access || CStr_Cmp(accssed->str,SUPERALX_SELF)){
+                        Boolean ret = Compiler_FunctionCall(&ll->ev,func);
+                        if(!ret){
+                            CStr retstr = Compiler_Variablename_This(&ll->ev,COMPILER_RETURN,7);
+                            *tok = Token_Move(TOKEN_STRING,retstr);
+                        }
+                        return ret;
+                    }else{
+                        Compiler_ErrorHandler(&ll->ev,"Function: %s isn't pub or non self %s tries to access!",func->str,accssed->str);
+                        return FUNCTIONRT_NONE;
+                    }
                 }
             }
-        }
+        } 
     }
         
     return FUNCTIONRT_NONE;
