@@ -941,7 +941,7 @@ Boolean ShutingYard_return(SuperALX* ll,TokenMap* tm){
         SuperALX_Indentation_Appendf(ll,&ll->text,"push rax");
     }*/
     
-    ll->stack += SuperALX_Bytes(ll);//Return Address
+    //ll->stack += SuperALX_Bytes(ll);//Return Address
     SuperALX_Indentation_Append(ll,&ll->text,"ret\n");
 
     return False;
@@ -1345,7 +1345,7 @@ SuperALX SuperALX_New(char* dllpath,char* src,char* output,char bits) {
                 Precedencer_New(TOKEN_SUPERALX_ASM,1),
                 Precedencer_New(TOKEN_SUPERALX_ASV,1),
 
-                Precedencer_New(TOKEN_CAST,9),
+                Precedencer_New(TOKEN_CAST,10),
                 Precedencer_New(TOKEN_SUPERALX_SIZE,13),
                 Precedencer_New(TOKEN_PARENTHESES_L,PRECEDENCE_BRACKL),
                 Precedencer_New(TOKEN_PARENTHESES_R,PRECEDENCE_BRACKR),

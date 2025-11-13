@@ -1,5 +1,5 @@
-import "Container.salx";
-import "Memory.salx";
+import "../lib/Container.salx";
+import "../lib/Memory.salx";
 
 namespace string {
     struct String[
@@ -8,135 +8,114 @@ namespace string {
     ];
 
     impl String {
-        pub void String::init(String* self,mem::Allocator* alloc){
-            self->vec = con::Vector::new(alloc,1);
-            self->alloc = alloc;
-        }
-        pub String String::new(mem::Allocator* alloc){
-            String cstr;
-            cstr.init(alloc);
-            return cstr;
-        }
-        pub void String::delete(String* self){
-            self->vec.delete();
-            self->alloc = null;
-        }
-
-        pub String String::make(mem::Allocator* alloc,i8* add){
-            String string;
-            string.init(alloc);
-            string.cstr(add);
-            return string;
-        }
-
-        pub u64 String::size(String* self){
+        pub u64 size(String* self){
             return self->vec.size();
         }
-        pub i8* String::data(String* self){
+        pub i8* data(String* self){
             return (i8*)self->vec.data();
         }
-        pub void String::clear(String* self){
+        pub void clear(String* self){
             self->vec.clear();
         }
 
-        pub i8* String::cpy(String* self){
+        pub i8* cpy(String* self){
             u64 size = self->vec.size();
             i8* out = self->alloc->alloc(size + 1);
-            mem::cpy(out,self->data(),size);
+            ptr::cpy(out,self->data(),size);
             out[size] = 0;
             return out;
         }
 
-        pub i8* String::get(String* self,i32 i){
+        pub i8 get(String* self,i32 i){
             return *(i8*)self->vec.get(i);
         }
-        pub void String::set(String* self,i32 i,i8 ch){
+        pub void set(String* self,i32 i,i8 ch){
             self->vec.set(i,&ch);
         }
 
-        pub String* String::String(String* self,String* ptr){
+        pub String* string(String* self,String* ptr){
             self->vec.push_c(ptr->data(),ptr->size());
             return self;
         }
-        pub String* String::char(String* self,i8 ch){
+        pub String* char(String* self,i8 ch){
             self->vec.push(&ch);
             return self;
         }
-        pub String* String::cstr(String* self,i8* ptr){
+        pub String* cstr(String* self,i8* ptr){
             u64 len = cstr::len(ptr);
             self->vec.push_c(ptr,len);
             return self;
         }
-        pub String* String::cstr_s(String* self,i8* ptr,u64 len){
+        pub String* cstr_s(String* self,i8* ptr,u64 len){
             self->vec.push_c(ptr,len);
             return self;
         }
-        pub String* String::uint(String* self,u64 n){
-            i8 block[48];
-            mem::set(block,0,48);
-            math::uint::get(block,n);
+        pub String* uint(String* self,u64 n){
+            i8[48] block;
+            ptr::set(block,0,48);
+            parse::uint::get(block,n);
             u64 len = cstr::len(block);
             self->vec.push_c(block,len);
             return self;
         }
-        pub String* String::int(String* self,i64 n){
-            i8 block[48];
-            mem::set(block,0,48);
-            math::int::get(block,n);
+        pub String* int(String* self,i64 n){
+            i8[48] block;
+            ptr::set(block,0,48);
+            parse::int::get(block,n);
             u64 len = cstr::len(block);
             self->vec.push_c(block,len);
             return self;
         }
-        pub String* String::boolean(String* self,bool b){
-            i8 block[8];
-            mem::set(block,0,8);
-            math::boolean::get(block,b);
+        pub String* boolean(String* self,bool b){
+            i8[8] block;
+            ptr::set(block,0,8);
+            parse::boolean::get(block,b);
             u64 len = cstr::len(block);
             self->vec.push_c(block,len);
             return self;
         }
-        pub String* String::float(String* self,f64 n,u64 postdigits){
-            i8 block[48];
-            mem::set(block,0,48);
-            math::float::get(block,n,postdigits);
-            u64 len = cstr::len(block);
-            self->vec.push_c(block,len);
-            return self;
-        }
-
-        pub String* String::hex(String* self,i64 n){
-            i8 block[48];
-            mem::set(block,0,48);
-            math::hex::get(block,n);
-            u64 len = cstr::len(block);
-            self->vec.push_c(block,len);
-            return self;
-        }
-        pub String* String::oct(String* self,i64 n){
-            i8 block[48];
-            mem::set(block,0,48);
-            math::oct::get(block,n);
-            u64 len = cstr::len(block);
-            self->vec.push_c(block,len);
-            return self;
-        }
-        pub String* String::bin(String* self,i64 n){
-            i8 block[48];
-            mem::set(block,0,48);
-            math::bin::get(block,n);
+        pub String* float(String* self,f64 n,u64 postdigits){
+            i8[48] block;
+            ptr::set(block,0,48);
+            parse::float::get(block,n,postdigits);
             u64 len = cstr::len(block);
             self->vec.push_c(block,len);
             return self;
         }
 
-        pub String* String::address(String* self,void* n){
-            i8 block[48];
-            mem::set(block,0,48);
+        pub String* hex(String* self,i64 n){
+            i8[48] block;
+            ptr::set(block,0,48);
+            parse::hex::get(block,n);
+            u64 len = cstr::len(block);
+            self->vec.push_c(block,len);
+            return self;
+        }
+        pub String* oct(String* self,i64 n){
+            i8[48] block;
+            ptr::set(block,0,48);
+            parse::oct::get(block,n);
+            u64 len = cstr::len(block);
+            self->vec.push_c(block,len);
+            return self;
+        }
+        pub String* bin(String* self,i64 n){
+            i8[48] block;
+            ptr::set(block,0,48);
+            parse::bin::get(block,n);
+            u64 len = cstr::len(block);
+            self->vec.push_c(block,len);
+            return self;
+        }
+
+        pub String* address(String* self,void* n){
+            i8[48] block;
+            ptr::set(block,0,48);
             
             void** ptr = &n;
             for i32 j = 0,j<8,j+=1 {
                 u8 ch = *((u8*)(ptr+j));
-                *(block+j*2) = char::to::hex((ch & 0xF0) >> 8);
+                *(block+j*2) = char::to::hex((u64)(ch & 0xF0) >> 8);
                 *(block+j*2+1) = char::to::hex(ch & 0xF);
             }
 
@@ -144,21 +123,41 @@ namespace string {
             self->vec.push_c(block,len);
             return self;
         }
-        pub String* String::mem(String* self,void* n,u64 bytes){
+        pub String* mem(String* self,void* n,u64 bytes){
             u64 count = bytes * 2;
             i8* block = self->alloc->alloc(count+1);
             
-            mem::set(block,0,count+1);
+            ptr::set(block,0,count+1);
             
             for i32 j = 0,j<bytes,j+=1 {
                 u8 ch = *((u8*)(n+j));
-                *(block+j*2) = char::to::hex((ch & 0xF0) >> 8);
+                *(block+j*2) = char::to::hex((u64)(ch & 0xF0) >> 8);
                 *(block+j*2+1) = char::to::hex(ch & 0xF);
             }
 
             self->vec.push_c(block,count);
             self->alloc->free(block);
             return self;
+        }
+
+        pub void init(String* self,mem::Allocator* alloc){
+            self->vec = con::Vector::new(alloc,1);
+            self->alloc = alloc;
+        }
+        pub String new(mem::Allocator* alloc){
+            String cstr;
+            cstr.init(alloc);
+            return cstr;
+        }
+        pub void delete(String* self){
+            self->vec.delete();
+            self->alloc = null;
+        }
+        pub String make(mem::Allocator* alloc,i8* add){
+            String string;
+            string.init(alloc);
+            string.cstr(add);
+            return string;
         }
     }
 }

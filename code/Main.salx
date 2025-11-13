@@ -34,24 +34,34 @@ import "../lib/Math.salx";
 import "../lib/Parser.salx";
 import "../lib/Pointer.salx";
 import "../lib/Memory.salx";
+import "../lib/String.salx";
+import "../lib/Stream.salx";
 
 i64 main(){
 
-    mem::Allocator alloc = mem::Allocator::make(10000);
-    alloc.print();
-
-    void* ptr = alloc.alloc(16);
-    io::print("alloced\n");
-    if(ptr != null){
-        ptr::cpy(ptr,"Hello World\n",13);
-        io::print(ptr);
-        alloc.free(ptr);
-    }else{
-        io::print("null\n");
-    }
-
-    alloc.print();
+    mem::Allocator alloc = mem::Allocator::make(64000);
+    ios::OStream stream = ios::OStream::new(&alloc,0);
+    stream.cstr("Hello World\n")->flush();
+    stream.delete();
     alloc.delete();
+
+    return 0;
+
+    // mem::Allocator alloc = mem::Allocator::make(10000);
+    // alloc.print();
+
+    // void* ptr1 = alloc.alloc(16);
+    // void* ptr2 = alloc.alloc(17);
+    // void* ptr3 = alloc.alloc(18);
+
+    // alloc.print();
+
+    // void* ptr4 = alloc.alloc(19);
+    // void* ptr5 = alloc.alloc(20);
+    // void* ptr6 = alloc.alloc(21);
+    
+    // alloc.print();
+    // alloc.delete();
 
     //i8* buffer = " ";
     //io::input(buffer,100);
