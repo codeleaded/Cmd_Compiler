@@ -1,6 +1,6 @@
 /*
 
-Types:      i8,i16,i32,i64 | u8,u16,u32,u64 | bool | void | struct
+Types:      i8,i16,i32,i64 | u8,u16,u32,u64 | bool | void | struct | * | &
 Keywords:   if, elif, else, while, for, return
 
 Fehlt:
@@ -14,7 +14,6 @@ Fehlt:
 //- 1. Error at PP
 stack und struct arrays
 ++,--
-
 
 */
 

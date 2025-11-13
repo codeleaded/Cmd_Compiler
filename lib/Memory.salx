@@ -48,10 +48,13 @@ namespace mem {
             Header* first = self->memory;
             
             while true {
-                if first+8+size>self->memory+self->length {
+                if first+8+size > self->memory+self->length {
                     return null;
-                }elif first->flags==0 && first->length>=size {
+                }else{
+                    io::print("Hello World\n");
+                    if first->flags==0 && first->length>=size {
                     u64 rem = first->length - size;
+                    
                     if rem<=8 {
                         size = first->length;
                     }
@@ -67,6 +70,7 @@ namespace mem {
                     return ptr;
                 }else{
                     first = first + 8 + first->length;
+                }
                 }
             }
             return ptr;
