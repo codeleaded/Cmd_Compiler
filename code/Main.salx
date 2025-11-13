@@ -33,10 +33,44 @@ import "../lib/IO.salx";
 import "../lib/Char.salx";
 import "../lib/Math.salx";
 import "../lib/Parser.salx";
-//import "../lib/Memory.salx";
+import "../lib/Pointer.salx";
+import "../lib/Memory.salx";
 
 i64 main(){
-    return 0;
+
+    //mem::Allocator alloc = mem::Allocator::make(10000);
+    //alloc.print();
+    //alloc.delete();
+
+    i8[48] out;
+    ptr::set(out,0,48);
+
+    u64 num = 69;
+    
+    //if num==0 {
+    //    *out = 48;
+    //}else{
+    //    u64 size = -1;
+    //    while num > 0 {
+    //        num /= 10;
+    //        size += 1;
+    //    }
+    //
+    //    for i64 i = size,i>=0,i-=1 {
+    //        u64 dig = num % 10;
+    //        out[i] = (dig + 48);
+    //        num /= 10;
+    //    }
+    //}
+
+    u64 size = -1;
+    while num > 0 {
+        num /= 10;
+        size += 1;
+    }
+
+    io::print(out);
+    return num;
 
     //i8* buffer = " ";
     //io::input(buffer,100);

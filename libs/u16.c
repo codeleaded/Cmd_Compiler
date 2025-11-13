@@ -27,6 +27,7 @@ Token U16_U16_Handler_Asm(SuperALX* ll,Token* op,Vector* args){
 Token U16_U16_Handler_Asv(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
     Token* b = (Token*)Vector_Get(args,1);
+    SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,0",SUPERALX_REG_D_64);
     return SuperALX_ExecuteAssA(ll,a,b,op,"div","ASV");
 }
 
@@ -48,13 +49,14 @@ Token U16_U16_Handler_Mul(SuperALX* ll,Token* op,Vector* args){
 Token U16_U16_Handler_Div(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
     Token* b = (Token*)Vector_Get(args,1);
-    return SuperALX_ExecuteA(ll,a,b,op,"div","IDIV",SuperALX_Function_Div);
+    SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,0",SUPERALX_REG_D_64);
+    return SuperALX_ExecuteA(ll,a,b,op,"div","DIV",SuperALX_Function_Div);
 }
 
 Token U16_U16_Handler_Mod(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
     Token* b = (Token*)Vector_Get(args,1);
-    SuperALX_Indentation_Appendf(ll,&ll->text,"mov rdx,0");
+    SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,0",SUPERALX_REG_D_64);
     return SuperALX_ExecuteAR(ll,a,b,op,"div","MOD",SuperALX_Function_Mod);
 }
 

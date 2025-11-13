@@ -1,6 +1,7 @@
 import "../lib/CStr.salx";
 import "../lib/Char.salx";
 import "../lib/Math.salx";
+import "../lib/IO.salx";
 
 namespace parse {
     namespace boolean {
@@ -39,39 +40,6 @@ namespace parse {
     }
 
     namespace uint {
-        u64 pow(u64 base,u64 ex){
-            u64 out = 1;
-            while ex>0 {
-                out *= base;
-                ex -= 1;
-            }
-            return out;
-        }
-        u64 logb(u64 base,u64 res){// BASE ab 16, res, out
-            u64 out = -1;
-            while res > 0 {
-                res /= base;
-                out += 1;
-            }
-            return out;
-        }
-        u64 log10(u64 res){
-            return math::uint::logb(10,res);
-        }
-        
-        u64 min(u64 a,u64 b){
-            if a<b {
-                return a;
-            }
-            return b;
-        }
-        u64 max(u64 a,u64 b){
-            if a>b {
-                return a;
-            }
-            return b;
-        }
-    
         void get(i8* out,u64 num){
             if num==0 {
                 *out = 48;
@@ -79,7 +47,7 @@ namespace parse {
                 u64 size = math::uint::log10(num);
                 for i64 i = size,i>=0,i-=1 {
                     u64 dig = num % 10;
-                    *(out+i) = (dig + 48);
+                    out[i] = (dig + 48);
                     num /= 10;
                 }
             }
@@ -132,19 +100,6 @@ namespace parse {
     }
     
     namespace int {
-        i64 min(i64 a,i64 b){
-            if a<b {
-                return a;
-            }
-            return b;
-        }
-        i64 max(i64 a,i64 b){
-            if a>b {
-                return a;
-            }
-            return b;
-        }
-        
         void get(i8* out,i64 num){
             if num==0 {
                 *out = 48;

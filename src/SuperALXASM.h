@@ -171,6 +171,32 @@ int SuperALX_Size(SuperALX* ll,CStr name){
     return 0;
 }
 
+char SuperALX_CompressStackType(SuperALX* ll,TokenMap* tm,int start){
+    Token* type = (Token*)Vector_Get(tm,start);
+    
+    int pret = 0;
+
+    for(int i = start + 1;i<tm->size;i++){
+        Token* tok = (Token*)Vector_Get(tm,i);
+        
+        if(tok->tt == TOKEN_SUPERALX_SUBS) pret++;
+        if(tok->tt == TOKEN_SUPERALX_SUBSR){
+            pret--;
+
+            if(pret == 0){
+                type->args = (Vector*)malloc(sizeof(Vector));
+                *type->args = Vector_New(sizeof(TokenMap));
+                Vector_Push(type->args,(TokenMap[]){ TokenMap_Sub(tm,start + 2,i) });
+                TokenMap_Remove(tm,start + 2,i + 1);
+                return 1;
+            }else if(pret < 0){
+                return 0;
+            }
+        }
+    }
+    return 0;
+}
+
 CStr SuperALX_TypeSelector(SuperALX* ll,int size){
     if(size==1) return CStr_Cpy(SUPERALX_DREF_8);
     if(size==2) return CStr_Cpy(SUPERALX_DREF_16);
@@ -308,6 +334,9 @@ void SuperALX_Variable_BuildX(SuperALX* ll,CStr name,CStr type,int sizeonstack,c
         ll->stack += SuperALX_Size(ll,type);
     }
     Scope_BuildInitVariable(&ll->ev.sc,name,type,(SuperALXVariable[]){ SuperALXVariable_New(ll->stack,sizeonstack,destroy,ll) });
+    if(ll->ev.sc.range>0){
+        ll->stack += sizeonstack;
+    }
 }
 void SuperALX_Variable_Build(SuperALX* ll,CStr name,CStr type){
     SuperALX_Variable_BuildX(ll,name,type,0,1);
@@ -318,6 +347,7 @@ void SuperALX_Variable_BuildRange(SuperALX* ll,CStr name,CStr type,Range r,int s
     }
     Scope_BuildInitVariableRange(&ll->ev.sc,name,type,r,(SuperALXVariable[]){ SuperALXVariable_New(ll->stack,sizeonstack,destroy,ll) });
 }
+
 void SuperALX_Variable_Build_Decl(SuperALX* ll,CStr name,CStr type){
     SuperALX_Variable_Build(ll,name,type);
     
@@ -328,6 +358,20 @@ void SuperALX_Variable_Build_Decl(SuperALX* ll,CStr name,CStr type){
         sv->global = g_value;
     }else{
         SuperALX_Indentation_Appendf(ll,&ll->text,"sub rsp,%d",SuperALX_Size(ll,type));
+    }
+}
+void SuperALX_Variable_Build_DeclStack(SuperALX* ll,CStr name,CStr type,int stacksize){
+    SuperALX_Variable_BuildX(ll,name,type,stacksize,1);
+    
+    if(ll->ev.sc.range==0){
+        CStr g_value = SuperALX_BuildGlobal(ll,name,SuperALX_Size(ll,type));
+        Variable* v = Scope_FindVariable(&ll->ev.sc,name);
+        SuperALXVariable* sv = (SuperALXVariable*)Variable_Data(v);
+        sv->global = g_value;
+    }else{
+        SuperALX_Indentation_Appendf(ll,&ll->text,"sub rsp,%d",SuperALX_Size(ll,type));
+        SuperALX_Indentation_Appendf(ll,&ll->text,"sub rsp,%d",stacksize);
+        SuperALX_Indentation_Appendf(ll,&ll->text,"mov QWORD[rsp + %d],rsp",stacksize);
     }
 }
 void SuperALX_Variable_Build_Ref(SuperALX* ll,CStr name,CStr type){
@@ -360,26 +404,49 @@ void SuperALX_Variable_Build_Ref_Decl(SuperALX* ll,CStr name,CStr type){
 void SuperALX_Variable_Build_Use(SuperALX* ll,CStr name,CStr type,int stack){
     SuperALX_Variable_BuildXX(ll,name,type,0,stack,2);
 }
+
 void SuperALX_Variable_Destroy_Decl(SuperALX* ll,CStr name){
     Variable* v = Scope_FindVariable(&ll->ev.sc,name);
+    SuperALXVariable* sv = (SuperALXVariable*)Variable_Data(v);
+    
     if(v->range>0){
         int size = SuperALX_Size(ll,v->typename);
-        if(size>0) SuperALX_Indentation_Appendf(ll,&ll->text,"add rsp,%d",size);
-        ll->stack -= size;
+        if(size>0){
+            SuperALX_Indentation_Appendf(ll,&ll->text,"add rsp,%d",size);
+            ll->stack -= size;
+        }
+        if(sv->sizeonstack > 0){
+            SuperALX_Indentation_Appendf(ll,&ll->text,"add rsp,%d",sv->sizeonstack);
+            ll->stack -= sv->sizeonstack;
+        }
     }
 }
 void SuperALX_Variable_Destroy_Only(SuperALX* ll,CStr name){
     Variable* v = Scope_FindVariable(&ll->ev.sc,name);
+    SuperALXVariable* sv = (SuperALXVariable*)Variable_Data(v);
+    
     if(v->range>0){
         int size = SuperALX_Size(ll,v->typename);
-        if(size>0) SuperALX_Indentation_Appendf(ll,&ll->text,"add rsp,%d",size);
+        if(size>0){
+            SuperALX_Indentation_Appendf(ll,&ll->text,"add rsp,%d",size);
+        }
+        if(sv->sizeonstack > 0){
+            SuperALX_Indentation_Appendf(ll,&ll->text,"add rsp,%d",sv->sizeonstack);
+        }
     }
 }
 void SuperALX_Variable_Destroy_Ref_Decl(SuperALX* ll,CStr name){
     Variable* v = Scope_FindVariable(&ll->ev.sc,name);
+    SuperALXVariable* sv = (SuperALXVariable*)Variable_Data(v);
+    
     if(v->range>0){
-        //SuperALX_Indentation_Appendf(ll,&ll->text,"add rsp,%d",SuperALX_Size(ll,v->typename));
-        ll->stack -= SuperALX_Size(ll,v->typename);
+        int size = SuperALX_Size(ll,v->typename);
+        if(size>0){
+            ll->stack -= size;
+        }
+        if(sv->sizeonstack > 0){
+            ll->stack -= sv->sizeonstack;
+        }
     }
 }
 void SuperALX_Variable_Destroy_Use(SuperALX* ll,CStr name){
@@ -875,11 +942,11 @@ void SuperALX_IntoReg(SuperALX* ll,Token* a,CStr reg){
             CStr location = SuperALX_Location(ll,a->str);
         
             if(SuperALX_DrefType(ll,v->typename)){
-                SuperALX_DrefIntoReg(ll,a,SUPERALX_REG_D_64);
+                SuperALX_DrefIntoReg(ll,a,SUPERALX_REG_10_64);
                 
                 CStr typename = SuperALX_TypeOfDref(ll,v->typename);
                 CStr typeselector = SuperALX_TypeSelector_T(ll,typename);
-                SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,%s[%s]",reg,typeselector,SUPERALX_REG_D_64);
+                SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,%s[%s]",reg,typeselector,SUPERALX_REG_10_64);
                 CStr_Free(&typename);
                 CStr_Free(&typeselector);
             }else{
@@ -889,15 +956,22 @@ void SuperALX_IntoReg(SuperALX* ll,Token* a,CStr reg){
         }else{
             Compiler_ErrorHandler(&ll->ev,"IntoReg -> Error: %s is not a var!",a->str);
         }
+    }else if(a->tt==TOKEN_FLOAT){
+        CStr fstr = SuperALX_GetFloatStr(ll,a->str);
+        SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,%s",reg,fstr);
+        CStr_Free(&fstr);
+    }else if(a->tt==TOKEN_SUPERALX_BOOLEAN){
+        Boolean b = Boolean_Parse(a->str);
+        SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,%d",reg,b);
     }else if(a->tt==TOKEN_SUPERALX_NULL){
         SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,0",reg);
     }else if(a->tt==TOKEN_CONSTSTRING_SINGLE){
-        int val = 0;
+        Number val = 0;
         const int size = CStr_Size(a->str);
         for(int i = 0;i<size;i++){
             val += a->str[i] << (i * 8);
         }
-        SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,%ld",reg,val);
+        SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,%d",reg,val);
     }else{
         SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,%s",reg,a->str);
     }
@@ -909,11 +983,11 @@ void SuperALX_IntoSet(SuperALX* ll,Token* a,CStr reg){
             CStr location = SuperALX_Location(ll,a->str);
         
             if(SuperALX_DrefType(ll,v->typename)){
-                SuperALX_DrefIntoReg(ll,a,SUPERALX_REG_D_64);
+                SuperALX_DrefIntoReg(ll,a,SUPERALX_REG_10_64);
                 
                 CStr typename = SuperALX_TypeOfDref(ll,v->typename);
                 CStr typeselector = SuperALX_TypeSelector_T(ll,typename);
-                SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s[%s],%s",typeselector,SUPERALX_REG_D_64,reg);
+                SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s[%s],%s",typeselector,SUPERALX_REG_10_64,reg);
                 CStr_Free(&typename);
                 CStr_Free(&typeselector);
             }else{
@@ -934,11 +1008,11 @@ void SuperALX_AtReg(SuperALX* ll,Token* a,CStr reg,CStr inst){
             CStr location = SuperALX_Location(ll,a->str);
             
             if(SuperALX_DrefType(ll,v->typename)){
-                SuperALX_DrefIntoReg(ll,a,SUPERALX_REG_D_64);
+                SuperALX_DrefIntoReg(ll,a,SUPERALX_REG_10_64);
                 
                 CStr typename = SuperALX_TypeOfDref(ll,v->typename);
                 CStr typeselector = SuperALX_TypeSelector_T(ll,typename);
-                SuperALX_Indentation_Appendf(ll,&ll->text,"%s %s[%s],%s",inst,typeselector,SUPERALX_REG_D_64,reg);
+                SuperALX_Indentation_Appendf(ll,&ll->text,"%s %s[%s],%s",inst,typeselector,SUPERALX_REG_10_64,reg);
                 CStr_Free(&typename);
                 CStr_Free(&typeselector);
             }else{
@@ -948,15 +1022,22 @@ void SuperALX_AtReg(SuperALX* ll,Token* a,CStr reg,CStr inst){
         }else{
             Compiler_ErrorHandler(&ll->ev,"AtReg -> Error: %s is not a var!",a->str);
         }
+    }else if(a->tt==TOKEN_FLOAT){
+        CStr fstr = SuperALX_GetFloatStr(ll,a->str);
+        SuperALX_Indentation_Appendf(ll,&ll->text,"%s %s,%s",inst,reg,fstr);
+        CStr_Free(&fstr);
+    }else if(a->tt==TOKEN_SUPERALX_BOOLEAN){
+        Boolean b = Boolean_Parse(a->str);
+        SuperALX_Indentation_Appendf(ll,&ll->text,"%s %s,%d",inst,reg,b);
     }else if(a->tt==TOKEN_SUPERALX_NULL){
         SuperALX_Indentation_Appendf(ll,&ll->text,"%s %s,0",inst,reg);
     }else if(a->tt==TOKEN_CONSTSTRING_SINGLE){
-        int val = 0;
+        Number val = 0;
         const int size = CStr_Size(a->str);
         for(int i = 0;i<size;i++){
             val += a->str[i] << (i * 8);
         }
-        SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,%ld",reg,val);
+        SuperALX_Indentation_Appendf(ll,&ll->text,"%s %s,%d",inst,reg,val);
     }else{
         SuperALX_Indentation_Appendf(ll,&ll->text,"%s %s,%s",inst,reg,a->str);
     }
@@ -968,11 +1049,11 @@ void SuperALX_AtRegSingle(SuperALX* ll,Token* a,CStr inst){//Always A ex: mul,di
             CStr location = SuperALX_Location(ll,a->str);
             
             if(SuperALX_DrefType(ll,v->typename)){
-                SuperALX_DrefIntoReg(ll,a,SUPERALX_REG_D_64);
+                SuperALX_DrefIntoReg(ll,a,SUPERALX_REG_10_64);
                 
                 CStr typename = SuperALX_TypeOfDref(ll,v->typename);
                 CStr typeselector = SuperALX_TypeSelector_T(ll,typename);
-                SuperALX_Indentation_Appendf(ll,&ll->text,"%s %s[%s]",inst,typeselector,SUPERALX_REG_D_64);
+                SuperALX_Indentation_Appendf(ll,&ll->text,"%s %s[%s]",inst,typeselector,SUPERALX_REG_10_64);
                 CStr_Free(&typename);
                 CStr_Free(&typeselector);
             }else{
@@ -982,15 +1063,22 @@ void SuperALX_AtRegSingle(SuperALX* ll,Token* a,CStr inst){//Always A ex: mul,di
         }else{
             Compiler_ErrorHandler(&ll->ev,"AtRegSingle -> Error: %s is not a var!",a->str);
         }
+    }else if(a->tt==TOKEN_FLOAT){
+        CStr fstr = SuperALX_GetFloatStr(ll,a->str);
+        SuperALX_Indentation_Appendf(ll,&ll->text,"%s %s",inst,fstr);
+        CStr_Free(&fstr);
+    }else if(a->tt==TOKEN_SUPERALX_BOOLEAN){
+        Boolean b = Boolean_Parse(a->str);
+        SuperALX_Indentation_Appendf(ll,&ll->text,"%s %d",inst,b);
     }else if(a->tt==TOKEN_SUPERALX_NULL){
         SuperALX_Indentation_Appendf(ll,&ll->text,"%s 0",inst);
     }else if(a->tt==TOKEN_CONSTSTRING_SINGLE){
-        int val = 0;
+        Number val = 0;
         const int size = CStr_Size(a->str);
         for(int i = 0;i<size;i++){
             val += a->str[i] << (i * 8);
         }
-        SuperALX_Indentation_Appendf(ll,&ll->text,"mov %ld",val);
+        SuperALX_Indentation_Appendf(ll,&ll->text,"mov %d",val);
     }else{
         SuperALX_Indentation_Appendf(ll,&ll->text,"%s %s",inst,a->str);
     }
@@ -1005,11 +1093,11 @@ void SuperALX_AtSet(SuperALX* ll,Token* a,CStr reg,CStr inst){
             CStr location = SuperALX_Location(ll,a->str);
             
             if(SuperALX_DrefType(ll,v->typename)){
-                SuperALX_DrefIntoReg(ll,a,SUPERALX_REG_D_64);
+                SuperALX_DrefIntoReg(ll,a,SUPERALX_REG_10_64);
                 
                 CStr typename = SuperALX_TypeOfDref(ll,v->typename);
                 CStr typeselector = SuperALX_TypeSelector_T(ll,typename);
-                SuperALX_Indentation_Appendf(ll,&ll->text,"%s %s[%s],%s",inst,typeselector,SUPERALX_REG_D_64,reg);
+                SuperALX_Indentation_Appendf(ll,&ll->text,"%s %s[%s],%s",inst,typeselector,SUPERALX_REG_10_64,reg);
                 CStr_Free(&typename);
                 CStr_Free(&typeselector);
             }else{
@@ -1029,26 +1117,33 @@ void SuperALX_CmpAtReg(SuperALX* ll,Token* a,CStr reg){
         CStr location = SuperALX_Location(ll,a->str);
         
         if(SuperALX_DrefType(ll,v->typename)){
-            SuperALX_DrefIntoReg(ll,a,SUPERALX_REG_D_64);
+            SuperALX_DrefIntoReg(ll,a,SUPERALX_REG_10_64);
                 
             CStr typename = SuperALX_TypeOfDref(ll,v->typename);
             CStr typeselector = SuperALX_TypeSelector_T(ll,typename);
-            SuperALX_Indentation_Appendf(ll,&ll->text,"cmp %s[%s],%s",typeselector,SUPERALX_REG_D_64,reg);
+            SuperALX_Indentation_Appendf(ll,&ll->text,"cmp %s[%s],%s",typeselector,SUPERALX_REG_10_64,reg);
             CStr_Free(&typename);
             CStr_Free(&typeselector);
         }else{
             SuperALX_Indentation_Appendf(ll,&ll->text,"cmp %s,%s",reg,location);
         }
         CStr_Free(&location);
+    }else if(a->tt==TOKEN_FLOAT){
+        CStr fstr = SuperALX_GetFloatStr(ll,a->str);
+        SuperALX_Indentation_Appendf(ll,&ll->text,"cmp %s,%s",reg,fstr);
+        CStr_Free(&fstr);
+    }else if(a->tt==TOKEN_SUPERALX_BOOLEAN){
+        Boolean b = Boolean_Parse(a->str);
+        SuperALX_Indentation_Appendf(ll,&ll->text,"cmp %s,%d",reg,b);
     }else if(a->tt==TOKEN_SUPERALX_NULL){
         SuperALX_Indentation_Appendf(ll,&ll->text,"cmp %s,0",reg);
     }else if(a->tt==TOKEN_CONSTSTRING_SINGLE){
-        int val = 0;
+        Number val = 0;
         const int size = CStr_Size(a->str);
         for(int i = 0;i<size;i++){
             val += a->str[i] << (i * 8);
         }
-        SuperALX_Indentation_Appendf(ll,&ll->text,"cmp %s,%ld",val);
+        SuperALX_Indentation_Appendf(ll,&ll->text,"cmp %s,%d",reg,val);
     }else{
         SuperALX_Indentation_Appendf(ll,&ll->text,"cmp %s,%s",reg,a->str);
     }
@@ -1059,11 +1154,11 @@ void SuperALX_CmpAtSet(SuperALX* ll,Token* a,CStr inst){
         CStr location = SuperALX_Location(ll,a->str);
         
         if(SuperALX_DrefType(ll,v->typename)){
-            SuperALX_DrefIntoReg(ll,a,SUPERALX_REG_D_64);
+            SuperALX_DrefIntoReg(ll,a,SUPERALX_REG_10_64);
                 
             CStr typename = SuperALX_TypeOfDref(ll,v->typename);
             CStr typeselector = SuperALX_TypeSelector_T(ll,typename);
-            SuperALX_Indentation_Appendf(ll,&ll->text,"%s %s[%s]",inst,typeselector,SUPERALX_REG_D_64);
+            SuperALX_Indentation_Appendf(ll,&ll->text,"%s %s[%s]",inst,typeselector,SUPERALX_REG_10_64);
             CStr_Free(&typename);
             CStr_Free(&typeselector);
         }else{
@@ -1246,11 +1341,13 @@ Token SuperALX_ExecuteAR2(SuperALX* ll,Token* a,Token* b,int reg2,int reg2_size,
     if(SuperALX_ErrorsInArg(ll,a)) return Token_Null();
     if(SuperALX_ErrorsInArg(ll,b)) return Token_Null();
 
+    if(reg2 < 0 || reg2_size < 0) return Token_Null();
+
     if(a->tt==TOKEN_NUMBER && b->tt==TOKEN_NUMBER){
         char* resstr = Number_Get(inst(Number_Parse(a->str),Number_Parse(b->str)));
         return Token_Move(TOKEN_NUMBER,resstr);
     }else{
-         CStr typename_a = SuperALX_VariableType(ll,a);
+        CStr typename_a = SuperALX_VariableType(ll,a);
         int realsize_a = SuperALX_TypeRealSize(ll,a);
         int realsize_b = SuperALX_TypeRealSize(ll,b);
         
@@ -1264,8 +1361,9 @@ Token SuperALX_ExecuteAR2(SuperALX* ll,Token* a,Token* b,int reg2,int reg2_size,
 
         SuperALX_IntoReg(ll,a,SuperALX_SelectRT(ll,realsize_a)[SUPERALX_REG_A]);
         SuperALX_IntoReg(ll,b,SuperALX_SelectRT(ll,realsize_b)[SUPERALX_REG_C]);
-        SuperALX_Indentation_Appendf(ll,&ll->text,"%s %s,%s",inst,SuperALX_SelectRT(ll,realsize_a)[SUPERALX_REG_A],SuperALX_SelectRT(ll,reg2_size)[SUPERALX_REG_C]);
+        SuperALX_Indentation_Appendf(ll,&ll->text,"%s %s,%s",instname,SuperALX_SelectRT(ll,realsize_a)[SUPERALX_REG_A],SuperALX_SelectRT(ll,reg2_size)[SUPERALX_REG_C]);
         SuperALX_IntoSet(ll,&stack_t,SuperALX_SelectRT(ll,realsize_a)[SUPERALX_REG_A]);
+        return stack_t;
     }
 }
 Token SuperALX_ExecuteSingle(SuperALX* ll,Token* a,Token* op,CStr instname,CStr instnameupper,Number (*inst)(Number)){

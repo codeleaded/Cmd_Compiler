@@ -7,6 +7,26 @@ bits 64
 section .bss
 
 section .data
+GLOBAL_STR0: db "false",0
+GLOBAL_STR1: db "true",0
+GLOBAL_STR2: db "none",0
+GLOBAL_STR3: db "false",0
+GLOBAL_STR4: db "0",0
+GLOBAL_STR5: db "true",0
+GLOBAL_STR6: db "1",0
+GLOBAL_STR7: db "false",0
+GLOBAL_STR8: db "0",0
+GLOBAL_STR9: db "true",0
+GLOBAL_STR10: db "1",0
+GLOBAL_STR11: db "------------------ Allocator -----------------",10,0
+GLOBAL_STR12: db "| Memory:",0
+GLOBAL_STR13: db 10,0
+GLOBAL_STR14: db "| Length:",0
+GLOBAL_STR15: db 10,0
+GLOBAL_STR16: db "| Block:",0
+GLOBAL_STR17: db "|",0
+GLOBAL_STR18: db 10,0
+GLOBAL_STR19: db "----------------------------------------------",10,0
 
 section .text
 global _start
@@ -363,8 +383,8 @@ f.cstr.len:
     sub rsp,8
     mov rax,QWORD[rsp + 8]
     mov QWORD[rsp + 0],rax
-    mov rdx,QWORD[rsp + 0]
-    mov al,BYTE[rdx]
+    mov r10,QWORD[rsp + 0]
+    mov al,BYTE[r10]
     mov BYTE[rsp + 16],al
     add rsp,8
     add rsp,8
@@ -396,8 +416,8 @@ f.cstr.len:
     sub rsp,8
     mov rax,QWORD[rsp + 8]
     mov QWORD[rsp + 0],rax
-    mov rdx,QWORD[rsp + 0]
-    mov al,BYTE[rdx]
+    mov r10,QWORD[rsp + 0]
+    mov al,BYTE[r10]
     mov BYTE[rsp + 16],al
     add rsp,8
     add rsp,8
@@ -436,8 +456,8 @@ f.cstr.set:
     mov rax,QWORD[rsp + 8]
     mov QWORD[rsp + 0],rax
     mov al,BYTE[rsp + 40]
-    mov rdx,QWORD[rsp + 0]
-    mov BYTE[rdx],al
+    mov r10,QWORD[rsp + 0]
+    mov BYTE[r10],al
     add rsp,8
     add rsp,8
     sub rsp,8
@@ -482,10 +502,10 @@ f.cstr.cpy:
     sub rsp,8
     mov rax,QWORD[rsp + 8]
     mov QWORD[rsp + 0],rax
-    mov rdx,QWORD[rsp + 0]
-    mov al,BYTE[rdx]
-    mov rdx,QWORD[rsp + 16]
-    mov BYTE[rdx],al
+    mov r10,QWORD[rsp + 0]
+    mov al,BYTE[r10]
+    mov r10,QWORD[rsp + 16]
+    mov BYTE[r10],al
     add rsp,8
     add rsp,8
     add rsp,8
@@ -532,10 +552,10 @@ f.cstr.mov:
     sub rsp,8
     mov rax,QWORD[rsp + 8]
     mov QWORD[rsp + 0],rax
-    mov rdx,QWORD[rsp + 0]
-    mov al,BYTE[rdx]
-    mov rdx,QWORD[rsp + 16]
-    mov BYTE[rdx],al
+    mov r10,QWORD[rsp + 0]
+    mov al,BYTE[r10]
+    mov r10,QWORD[rsp + 16]
+    mov BYTE[r10],al
     add rsp,8
     add rsp,8
     add rsp,8
@@ -547,10 +567,11 @@ f.cstr.mov:
     sub rsp,8
     mov rax,QWORD[rsp + 8]
     mov QWORD[rsp + 0],rax
-    mov rdx,QWORD[rsp + 0]
-    mov BYTE[rdx],0
+    mov r10,QWORD[rsp + 0]
+    mov BYTE[r10],0
     add rsp,8
     add rsp,8
+    add QWORD[rsp + 0],1
     jmp l.0_FOR3_0
     l.1_FOR3_0:
     add rsp,8
@@ -627,10 +648,10 @@ f.cstr.cmp:
     mov rax,QWORD[rsp + 8]
     mov QWORD[rsp + 0],rax
     sub rsp,1
-    mov rdx,QWORD[rsp + 17]
-    mov al,BYTE[rdx]
-    mov rdx,QWORD[rsp + 1]
-    cmp BYTE[rdx],al
+    mov r10,QWORD[rsp + 17]
+    mov al,BYTE[r10]
+    mov r10,QWORD[rsp + 1]
+    cmp BYTE[r10],al
     setne BYTE[rsp + 0]
     mov al,BYTE[rsp + 0]
     mov BYTE[rsp + 33],al
@@ -651,6 +672,7 @@ f.cstr.cmp:
     ret
     l.1_LOG4_0:
     l.1_IF4_0:
+    add QWORD[rsp + 8],1
     jmp l.0_FOR3_1
     l.1_FOR3_1:
     add rsp,8
@@ -697,8 +719,8 @@ f.cstr.find:
     mov rax,QWORD[rsp + 8]
     mov QWORD[rsp + 0],rax
     sub rsp,1
-    mov rdx,QWORD[rsp + 1]
-    mov al,BYTE[rdx]
+    mov r10,QWORD[rsp + 1]
+    mov al,BYTE[r10]
     cmp al,BYTE[rsp + 42]
     sete BYTE[rsp + 0]
     mov al,BYTE[rsp + 0]
@@ -718,6 +740,7 @@ f.cstr.find:
     ret
     l.1_LOG4_1:
     l.1_IF4_1:
+    add QWORD[rsp + 8],1
     jmp l.0_FOR3_2
     l.1_FOR3_2:
     add rsp,8
@@ -772,8 +795,8 @@ f.cstr.findc:
     sub rsp,8
     mov rax,QWORD[rsp + 8]
     mov QWORD[rsp + 0],rax
-    mov rdx,QWORD[rsp + 0]
-    mov al,BYTE[rdx]
+    mov r10,QWORD[rsp + 0]
+    mov al,BYTE[r10]
     mov BYTE[rsp + 16],al
     add rsp,8
     add rsp,8
@@ -802,8 +825,8 @@ f.cstr.findc:
     mov QWORD[rsp + 0],rax
     sub rsp,1
     mov al,BYTE[rsp + 26]
-    mov rdx,QWORD[rsp + 1]
-    cmp BYTE[rdx],al
+    mov r10,QWORD[rsp + 1]
+    cmp BYTE[r10],al
     sete BYTE[rsp + 0]
     mov al,BYTE[rsp + 0]
     mov BYTE[rsp + 17],al
@@ -825,10 +848,11 @@ f.cstr.findc:
     ret
     l.1_LOG6_0:
     l.1_IF6_0:
-    add QWORD[rsp + 17],1
+    add QWORD[rsp + 8],1
     jmp l.0_FOR5_0
     l.1_FOR5_0:
     add rsp,8
+    add QWORD[rsp + 9],1
     add rsp,1
     jmp l.0_FOR3_3
     l.1_FOR3_3:
@@ -1621,6 +1645,7 @@ f.math.uint.logb:
     add rsp,1
     cmp al,0
     je l.1_WHILE2_16
+    mov rdx,0
     mov rax,QWORD[rsp + 16]
     mov rbx,QWORD[rsp + 24]
     div rbx
@@ -2022,9 +2047,5070 @@ f.math.float.ex:
     ret
     ret
 
-f.main:
-    mov QWORD[rsp + 8],0
+f.parse.boolean.get:
+    sub rsp,1
+    sub rsp,1
+    mov al,BYTE[rsp + 10]
+    cmp al,0
+    sete BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF2_24
+    l.0_IF2_24:
+    sub rsp,8
+    mov rax,QWORD[rsp + 17]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov QWORD[rsp + 0],GLOBAL_STR0
+    sub rsp,8
+    mov QWORD[rsp + 0],5
+    call f.cstr.cpy
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    jmp l.1_LOG2_24
+    l.1_IF2_24:
+    sub rsp,1
+    sub rsp,1
+    mov al,BYTE[rsp + 10]
+    cmp al,1
+    sete BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_ELIF2_24_2
+    l.0_ELIF2_24_2:
+    sub rsp,8
+    mov rax,QWORD[rsp + 17]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov QWORD[rsp + 0],GLOBAL_STR1
+    sub rsp,8
+    mov QWORD[rsp + 0],4
+    call f.cstr.cpy
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    jmp l.1_LOG2_24
+    l.1_ELIF2_24_2:
+    l.0_ELSE2_24:
+    sub rsp,8
+    mov rax,QWORD[rsp + 17]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov QWORD[rsp + 0],GLOBAL_STR2
+    sub rsp,8
+    mov QWORD[rsp + 0],4
+    call f.cstr.cpy
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    l.1_LOG2_24:
     ret
+
+f.parse.boolean.by:
+    sub rsp,1
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 18]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov QWORD[rsp + 0],GLOBAL_STR3
+    call f.cstr.cmp
+    add rsp,8
+    add rsp,8
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 19]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov QWORD[rsp + 0],GLOBAL_STR4
+    call f.cstr.cmp
+    add rsp,8
+    add rsp,8
+    sub rsp,1
+    mov al,BYTE[rsp + 2]
+    or al,BYTE[rsp + 1]
+    mov BYTE[rsp + 0],al
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 3],al
+    add rsp,1
+    add rsp,1
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF2_25
+    l.0_IF2_25:
+    mov BYTE[rsp + 16],0
+    ret
+    l.1_LOG2_25:
+    l.1_IF2_25:
+    sub rsp,1
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 26]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov QWORD[rsp + 0],GLOBAL_STR5
+    call f.cstr.cmp
+    add rsp,8
+    add rsp,8
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 27]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov QWORD[rsp + 0],GLOBAL_STR6
+    call f.cstr.cmp
+    add rsp,8
+    add rsp,8
+    sub rsp,1
+    mov al,BYTE[rsp + 2]
+    or al,BYTE[rsp + 1]
+    mov BYTE[rsp + 0],al
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 3],al
+    add rsp,1
+    add rsp,1
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF2_26
+    l.0_IF2_26:
+    mov BYTE[rsp + 24],1
+    ret
+    l.1_LOG2_26:
+    l.1_IF2_26:
+    mov BYTE[rsp + 32],0
+    ret
+    ret
+
+f.parse.boolean.by_s:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 10]
+    cmp rax,0
+    sete BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF2_27
+    l.0_IF2_27:
+    mov BYTE[rsp + 24],0
+    ret
+    l.1_LOG2_27:
+    l.1_IF2_27:
+    sub rsp,1
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 34]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov QWORD[rsp + 0],GLOBAL_STR7
+    call f.cstr.cmp
+    add rsp,8
+    add rsp,8
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 35]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov QWORD[rsp + 0],GLOBAL_STR8
+    call f.cstr.cmp
+    add rsp,8
+    add rsp,8
+    sub rsp,1
+    mov al,BYTE[rsp + 2]
+    or al,BYTE[rsp + 1]
+    mov BYTE[rsp + 0],al
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 3],al
+    add rsp,1
+    add rsp,1
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF2_28
+    l.0_IF2_28:
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    mov QWORD[rsp + 0],rax
+    mov r10,QWORD[rsp + 0]
+    mov BYTE[r10],0
+    add rsp,8
+    mov BYTE[rsp + 32],1
+    ret
+    l.1_LOG2_28:
+    l.1_IF2_28:
+    sub rsp,1
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 42]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov QWORD[rsp + 0],GLOBAL_STR9
+    call f.cstr.cmp
+    add rsp,8
+    add rsp,8
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 43]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov QWORD[rsp + 0],GLOBAL_STR10
+    call f.cstr.cmp
+    add rsp,8
+    add rsp,8
+    sub rsp,1
+    mov al,BYTE[rsp + 2]
+    or al,BYTE[rsp + 1]
+    mov BYTE[rsp + 0],al
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 3],al
+    add rsp,1
+    add rsp,1
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF2_29
+    l.0_IF2_29:
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    mov r10,QWORD[rsp + 0]
+    mov BYTE[r10],1
+    add rsp,8
+    mov BYTE[rsp + 40],1
+    ret
+    l.1_LOG2_29:
+    l.1_IF2_29:
+    mov BYTE[rsp + 48],0
+    ret
+    ret
+
+f.parse.uint.get:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 10]
+    cmp rax,0
+    sete BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF2_30
+    l.0_IF2_30:
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    mov QWORD[rsp + 0],rax
+    mov r10,QWORD[rsp + 0]
+    mov BYTE[r10],48
+    add rsp,8
+    jmp l.1_LOG2_30
+    l.1_IF2_30:
+    l.0_ELSE2_30:
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    call f.math.uint.log10
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    l.0_FOR4_2:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 2]
+    cmp rax,0
+    setge BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_FOR4_2
+    sub rsp,8
+    mov rdx,0
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    mov rbx,10
+    div rbx
+    mov QWORD[rsp + 0],rdx
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 48]
+    add rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    add rax,48
+    mov QWORD[rsp + 0],rax
+    mov rax,0
+    mov rax,QWORD[rsp + 0]
+    mov r10,QWORD[rsp + 8]
+    mov BYTE[r10],al
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    mov rdx,0
+    mov rax,QWORD[rsp + 32]
+    mov rbx,10
+    div rbx
+    mov QWORD[rsp + 32],rax
+    sub QWORD[rsp + 8],1
+    add rsp,8
+    jmp l.0_FOR4_2
+    l.1_FOR4_2:
+    add rsp,8
+    add rsp,8
+    l.1_LOG2_30:
+    ret
+
+f.parse.uint.by:
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    call f.cstr.len
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    sub rax,1
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    l.0_WHILE2_31:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 2]
+    cmp rax,0
+    setge BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_WHILE2_31
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 57]
+    add rax,QWORD[rsp + 9]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov r10,QWORD[rsp + 0]
+    mov al,BYTE[r10]
+    mov BYTE[rsp + 16],al
+    add rsp,8
+    add rsp,8
+    sub rsp,1
+    sub rsp,1
+    mov rax,0
+    mov al,BYTE[rsp + 2]
+    cmp rax,48
+    setge BYTE[rsp + 0]
+    sub rsp,1
+    mov rax,0
+    mov al,BYTE[rsp + 3]
+    cmp rax,57
+    setle BYTE[rsp + 0]
+    sub rsp,1
+    mov al,BYTE[rsp + 2]
+    and al,BYTE[rsp + 1]
+    mov BYTE[rsp + 0],al
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 3],al
+    add rsp,1
+    add rsp,1
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF3_4
+    l.0_IF3_4:
+    sub rsp,1
+    mov rax,0
+    mov al,BYTE[rsp + 1]
+    sub rax,48
+    mov BYTE[rsp + 0],al
+    sub rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],10
+    sub rsp,8
+    mov rax,QWORD[rsp + 34]
+    mov QWORD[rsp + 0],rax
+    call f.math.uint.pow
+    add rsp,8
+    add rsp,8
+    sub rsp,1
+    mov al,BYTE[rsp + 9]
+    imul QWORD[rsp + 1]
+    mov BYTE[rsp + 0],al
+    mov al,BYTE[rsp + 0]
+    add QWORD[rsp + 35],rax
+    add rsp,1
+    add rsp,8
+    add rsp,1
+    add QWORD[rsp + 9],1
+    sub QWORD[rsp + 1],1
+    jmp l.1_LOG3_4
+    l.1_IF3_4:
+    l.0_ELSE3_4:
+    mov QWORD[rsp + 57],0
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+    l.1_LOG3_4:
+    add rsp,1
+    jmp l.0_WHILE2_31
+    l.1_WHILE2_31:
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 64],rax
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+
+f.parse.uint.by_s:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 10]
+    cmp rax,0
+    sete BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF2_32
+    l.0_IF2_32:
+    mov BYTE[rsp + 24],0
+    ret
+    l.1_LOG2_32:
+    l.1_IF2_32:
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 48]
+    mov QWORD[rsp + 0],rax
+    call f.cstr.len
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    sub rax,1
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    l.0_WHILE2_33:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 2]
+    cmp rax,0
+    setge BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_WHILE2_33
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 73]
+    add rax,QWORD[rsp + 9]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov r10,QWORD[rsp + 0]
+    mov al,BYTE[r10]
+    mov BYTE[rsp + 16],al
+    add rsp,8
+    add rsp,8
+    sub rsp,1
+    sub rsp,1
+    mov rax,0
+    mov al,BYTE[rsp + 2]
+    cmp rax,48
+    setge BYTE[rsp + 0]
+    sub rsp,1
+    mov rax,0
+    mov al,BYTE[rsp + 3]
+    cmp rax,57
+    setle BYTE[rsp + 0]
+    sub rsp,1
+    mov al,BYTE[rsp + 2]
+    and al,BYTE[rsp + 1]
+    mov BYTE[rsp + 0],al
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 3],al
+    add rsp,1
+    add rsp,1
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF3_5
+    l.0_IF3_5:
+    sub rsp,1
+    mov rax,0
+    mov al,BYTE[rsp + 1]
+    sub rax,48
+    mov BYTE[rsp + 0],al
+    sub rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],10
+    sub rsp,8
+    mov rax,QWORD[rsp + 34]
+    mov QWORD[rsp + 0],rax
+    call f.math.uint.pow
+    add rsp,8
+    add rsp,8
+    sub rsp,1
+    mov al,BYTE[rsp + 9]
+    imul QWORD[rsp + 1]
+    mov BYTE[rsp + 0],al
+    mov al,BYTE[rsp + 0]
+    add QWORD[rsp + 35],rax
+    add rsp,1
+    add rsp,8
+    add rsp,1
+    add QWORD[rsp + 9],1
+    sub QWORD[rsp + 1],1
+    jmp l.1_LOG3_5
+    l.1_IF3_5:
+    l.0_ELSE3_5:
+    mov BYTE[rsp + 73],0
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+    l.1_LOG3_5:
+    add rsp,1
+    jmp l.0_WHILE2_33
+    l.1_WHILE2_33:
+    sub rsp,8
+    mov rax,QWORD[rsp + 72]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 40]
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],rax
+    add rsp,8
+    mov BYTE[rsp + 80],1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+
+f.parse.int.get:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 10]
+    cmp rax,0
+    sete BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF2_34
+    l.0_IF2_34:
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    mov QWORD[rsp + 0],rax
+    mov r10,QWORD[rsp + 0]
+    mov BYTE[r10],48
+    add rsp,8
+    jmp l.1_LOG2_34
+    l.1_IF2_34:
+    l.0_ELSE2_34:
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 18]
+    cmp rax,0
+    setl BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF3_6
+    l.0_IF3_6:
+    mov QWORD[rsp + 0],1
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    add rax,0
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov rax,0
+    mov eax,45
+    mov r10,QWORD[rsp + 0]
+    mov BYTE[r10],al
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    neg rax
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 24],rax
+    add rsp,8
+    l.1_LOG3_6:
+    l.1_IF3_6:
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    mov QWORD[rsp + 0],rax
+    call f.math.uint.log10
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    add rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    l.0_FOR4_3:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 2]
+    cmp rax,QWORD[rsp + 18]
+    setge BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_FOR4_3
+    sub rsp,8
+    mov rdx,0
+    sub rsp,8
+    mov rax,QWORD[rsp + 48]
+    mov rbx,10
+    idiv rbx
+    mov QWORD[rsp + 0],rdx
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 56]
+    add rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    add rax,48
+    mov QWORD[rsp + 0],rax
+    mov rax,0
+    mov rax,QWORD[rsp + 0]
+    mov r10,QWORD[rsp + 8]
+    mov BYTE[r10],al
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    mov rdx,0
+    mov rax,QWORD[rsp + 40]
+    mov rbx,10
+    idiv rbx
+    mov QWORD[rsp + 40],rax
+    sub QWORD[rsp + 8],1
+    add rsp,8
+    jmp l.0_FOR4_3
+    l.1_FOR4_3:
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    l.1_LOG2_34:
+    ret
+
+f.parse.int.by:
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    call f.cstr.len
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 57]
+    add rax,0
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    mov rax,0
+    mov r10,QWORD[rsp + 1]
+    mov al,BYTE[r10]
+    cmp eax,45
+    sete BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 17],al
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF2_35
+    l.0_IF2_35:
+    mov QWORD[rsp + 0],1
+    l.1_LOG2_35:
+    l.1_IF2_35:
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 48]
+    sub rax,1
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    l.0_WHILE2_36:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 2]
+    cmp rax,QWORD[rsp + 10]
+    setge BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_WHILE2_36
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 65]
+    add rax,QWORD[rsp + 9]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov r10,QWORD[rsp + 0]
+    mov al,BYTE[r10]
+    mov BYTE[rsp + 16],al
+    add rsp,8
+    add rsp,8
+    sub rsp,1
+    sub rsp,1
+    mov rax,0
+    mov al,BYTE[rsp + 2]
+    cmp rax,48
+    setge BYTE[rsp + 0]
+    sub rsp,1
+    mov rax,0
+    mov al,BYTE[rsp + 3]
+    cmp rax,57
+    setle BYTE[rsp + 0]
+    sub rsp,1
+    mov al,BYTE[rsp + 2]
+    and al,BYTE[rsp + 1]
+    mov BYTE[rsp + 0],al
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 3],al
+    add rsp,1
+    add rsp,1
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF3_7
+    l.0_IF3_7:
+    sub rsp,1
+    mov rax,0
+    mov al,BYTE[rsp + 1]
+    sub rax,48
+    mov BYTE[rsp + 0],al
+    sub rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],10
+    sub rsp,8
+    mov rax,QWORD[rsp + 42]
+    mov QWORD[rsp + 0],rax
+    call f.math.uint.pow
+    add rsp,8
+    add rsp,8
+    sub rsp,1
+    mov al,BYTE[rsp + 9]
+    imul QWORD[rsp + 1]
+    mov BYTE[rsp + 0],al
+    mov al,BYTE[rsp + 0]
+    add QWORD[rsp + 43],rax
+    add rsp,1
+    add rsp,8
+    add rsp,1
+    add QWORD[rsp + 17],1
+    sub QWORD[rsp + 1],1
+    jmp l.1_LOG3_7
+    l.1_IF3_7:
+    l.0_ELSE3_7:
+    mov QWORD[rsp + 65],0
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+    l.1_LOG3_7:
+    add rsp,1
+    jmp l.0_WHILE2_36
+    l.1_WHILE2_36:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 18]
+    cmp rax,0
+    setg BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF2_37
+    l.0_IF2_37:
+    sub rsp,8
+    mov rax,QWORD[rsp + 48]
+    neg rax
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 48],rax
+    add rsp,8
+    l.1_LOG2_37:
+    l.1_IF2_37:
+    mov rax,QWORD[rsp + 40]
+    mov QWORD[rsp + 72],rax
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+
+f.parse.int.by_s:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 10]
+    cmp rax,0
+    sete BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF2_38
+    l.0_IF2_38:
+    mov BYTE[rsp + 24],0
+    ret
+    l.1_LOG2_38:
+    l.1_IF2_38:
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 48]
+    mov QWORD[rsp + 0],rax
+    call f.cstr.len
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 73]
+    add rax,0
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    mov rax,0
+    mov r10,QWORD[rsp + 1]
+    mov al,BYTE[r10]
+    cmp eax,45
+    sete BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 17],al
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF2_39
+    l.0_IF2_39:
+    mov QWORD[rsp + 0],1
+    l.1_LOG2_39:
+    l.1_IF2_39:
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 48]
+    sub rax,1
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    l.0_WHILE2_40:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 2]
+    cmp rax,QWORD[rsp + 10]
+    setge BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_WHILE2_40
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 81]
+    add rax,QWORD[rsp + 9]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov r10,QWORD[rsp + 0]
+    mov al,BYTE[r10]
+    mov BYTE[rsp + 16],al
+    add rsp,8
+    add rsp,8
+    sub rsp,1
+    sub rsp,1
+    mov rax,0
+    mov al,BYTE[rsp + 2]
+    cmp rax,48
+    setge BYTE[rsp + 0]
+    sub rsp,1
+    mov rax,0
+    mov al,BYTE[rsp + 3]
+    cmp rax,57
+    setle BYTE[rsp + 0]
+    sub rsp,1
+    mov al,BYTE[rsp + 2]
+    and al,BYTE[rsp + 1]
+    mov BYTE[rsp + 0],al
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 3],al
+    add rsp,1
+    add rsp,1
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF3_8
+    l.0_IF3_8:
+    sub rsp,1
+    mov rax,0
+    mov al,BYTE[rsp + 1]
+    sub rax,48
+    mov BYTE[rsp + 0],al
+    sub rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],10
+    sub rsp,8
+    mov rax,QWORD[rsp + 42]
+    mov QWORD[rsp + 0],rax
+    call f.math.uint.pow
+    add rsp,8
+    add rsp,8
+    sub rsp,1
+    mov al,BYTE[rsp + 9]
+    imul QWORD[rsp + 1]
+    mov BYTE[rsp + 0],al
+    mov al,BYTE[rsp + 0]
+    add QWORD[rsp + 43],rax
+    add rsp,1
+    add rsp,8
+    add rsp,1
+    add QWORD[rsp + 17],1
+    sub QWORD[rsp + 1],1
+    jmp l.1_LOG3_8
+    l.1_IF3_8:
+    l.0_ELSE3_8:
+    mov BYTE[rsp + 81],0
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+    l.1_LOG3_8:
+    add rsp,1
+    jmp l.0_WHILE2_40
+    l.1_WHILE2_40:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 18]
+    cmp rax,0
+    setg BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF2_41
+    l.0_IF2_41:
+    sub rsp,8
+    mov rax,QWORD[rsp + 48]
+    neg rax
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 48],rax
+    add rsp,8
+    l.1_LOG2_41:
+    l.1_IF2_41:
+    sub rsp,8
+    mov rax,QWORD[rsp + 80]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 48]
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],rax
+    add rsp,8
+    mov BYTE[rsp + 88],1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+
+f.parse.hex.get:
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    mov QWORD[rsp + 0],rax
+    mov rax,0
+    mov eax,48
+    mov r10,QWORD[rsp + 0]
+    mov BYTE[r10],al
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    add rax,1
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov rax,0
+    mov eax,120
+    mov r10,QWORD[rsp + 0]
+    mov BYTE[r10],al
+    add rsp,8
+    add rsp,8
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 10]
+    cmp rax,0
+    sete BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF2_42
+    l.0_IF2_42:
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    add rax,2
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov r10,QWORD[rsp + 0]
+    mov BYTE[r10],48
+    add rsp,8
+    add rsp,8
+    jmp l.1_LOG2_42
+    l.1_IF2_42:
+    l.0_ELSE2_42:
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],16
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    mov QWORD[rsp + 0],rax
+    call f.math.uint.logb
+    add rsp,8
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    l.0_FOR4_4:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 2]
+    cmp rax,0
+    setge BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_FOR4_4
+    sub rsp,8
+    mov rdx,0
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    mov rbx,16
+    div rbx
+    mov QWORD[rsp + 0],rdx
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 48]
+    add rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    add rax,2
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 33]
+    mov QWORD[rsp + 0],rax
+    call f.char.to.hex
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    mov r10,QWORD[rsp + 1]
+    mov BYTE[r10],al
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    mov rdx,0
+    mov rax,QWORD[rsp + 32]
+    mov rbx,16
+    div rbx
+    mov QWORD[rsp + 32],rax
+    sub QWORD[rsp + 8],1
+    add rsp,8
+    jmp l.0_FOR4_4
+    l.1_FOR4_4:
+    add rsp,8
+    add rsp,8
+    l.1_LOG2_42:
+    ret
+
+f.parse.hex.by:
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 17]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    mov rax,0
+    mov r10,QWORD[rsp + 1]
+    mov al,BYTE[r10]
+    cmp eax,48
+    setne BYTE[rsp + 0]
+    sub rsp,8
+    mov rax,QWORD[rsp + 26]
+    add rax,1
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    mov rax,0
+    mov r10,QWORD[rsp + 1]
+    mov al,BYTE[r10]
+    cmp eax,120
+    setne BYTE[rsp + 0]
+    sub rsp,1
+    mov al,BYTE[rsp + 18]
+    or al,BYTE[rsp + 1]
+    mov BYTE[rsp + 0],al
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 27],al
+    add rsp,1
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF2_43
+    l.0_IF2_43:
+    mov QWORD[rsp + 16],0
+    ret
+    l.1_LOG2_43:
+    l.1_IF2_43:
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    mov QWORD[rsp + 0],rax
+    call f.cstr.len
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    sub rax,1
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    l.0_WHILE2_44:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 2]
+    cmp rax,2
+    setge BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_WHILE2_44
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 65]
+    add rax,QWORD[rsp + 9]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov r10,QWORD[rsp + 0]
+    mov al,BYTE[r10]
+    mov BYTE[rsp + 16],al
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    sub rsp,1
+    mov al,BYTE[rsp + 17]
+    mov BYTE[rsp + 0],al
+    call f.char.by.hex
+    add rsp,1
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 2]
+    cmp rax,0
+    setge BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF3_9
+    l.0_IF3_9:
+    sub rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],16
+    sub rsp,8
+    mov rax,QWORD[rsp + 41]
+    mov QWORD[rsp + 0],rax
+    call f.math.uint.pow
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    imul QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    add QWORD[rsp + 49],rax
+    add rsp,8
+    add rsp,8
+    add QWORD[rsp + 17],1
+    sub QWORD[rsp + 9],1
+    jmp l.1_LOG3_9
+    l.1_IF3_9:
+    l.0_ELSE3_9:
+    mov QWORD[rsp + 73],0
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+    l.1_LOG3_9:
+    add rsp,8
+    add rsp,1
+    jmp l.0_WHILE2_44
+    l.1_WHILE2_44:
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 72],rax
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+
+f.parse.hex.by_s:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 10]
+    cmp rax,0
+    sete BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF2_45
+    l.0_IF2_45:
+    mov BYTE[rsp + 24],0
+    ret
+    l.1_LOG2_45:
+    l.1_IF2_45:
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 33]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    mov rax,0
+    mov r10,QWORD[rsp + 1]
+    mov al,BYTE[r10]
+    cmp eax,48
+    setne BYTE[rsp + 0]
+    sub rsp,8
+    mov rax,QWORD[rsp + 42]
+    add rax,1
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    mov rax,0
+    mov r10,QWORD[rsp + 1]
+    mov al,BYTE[r10]
+    cmp eax,120
+    setne BYTE[rsp + 0]
+    sub rsp,1
+    mov al,BYTE[rsp + 18]
+    or al,BYTE[rsp + 1]
+    mov BYTE[rsp + 0],al
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 27],al
+    add rsp,1
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF2_46
+    l.0_IF2_46:
+    mov BYTE[rsp + 32],0
+    ret
+    l.1_LOG2_46:
+    l.1_IF2_46:
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 56]
+    mov QWORD[rsp + 0],rax
+    call f.cstr.len
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    sub rax,1
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    l.0_WHILE2_47:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 2]
+    cmp rax,2
+    setge BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_WHILE2_47
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 81]
+    add rax,QWORD[rsp + 9]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov r10,QWORD[rsp + 0]
+    mov al,BYTE[r10]
+    mov BYTE[rsp + 16],al
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    sub rsp,1
+    mov al,BYTE[rsp + 17]
+    mov BYTE[rsp + 0],al
+    call f.char.by.hex
+    add rsp,1
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 2]
+    cmp rax,0
+    setge BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF3_10
+    l.0_IF3_10:
+    sub rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],16
+    sub rsp,8
+    mov rax,QWORD[rsp + 41]
+    mov QWORD[rsp + 0],rax
+    call f.math.uint.pow
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    imul QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    add QWORD[rsp + 49],rax
+    add rsp,8
+    add rsp,8
+    add QWORD[rsp + 17],1
+    sub QWORD[rsp + 9],1
+    jmp l.1_LOG3_10
+    l.1_IF3_10:
+    l.0_ELSE3_10:
+    mov BYTE[rsp + 89],0
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+    l.1_LOG3_10:
+    add rsp,8
+    add rsp,1
+    jmp l.0_WHILE2_47
+    l.1_WHILE2_47:
+    sub rsp,8
+    mov rax,QWORD[rsp + 80]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 40]
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],rax
+    add rsp,8
+    mov BYTE[rsp + 88],1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+
+f.parse.oct.get:
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    mov QWORD[rsp + 0],rax
+    mov rax,0
+    mov eax,48
+    mov r10,QWORD[rsp + 0]
+    mov BYTE[r10],al
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    add rax,1
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov rax,0
+    mov eax,111
+    mov r10,QWORD[rsp + 0]
+    mov BYTE[r10],al
+    add rsp,8
+    add rsp,8
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 10]
+    cmp rax,0
+    sete BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF2_48
+    l.0_IF2_48:
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    add rax,2
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov r10,QWORD[rsp + 0]
+    mov BYTE[r10],48
+    add rsp,8
+    add rsp,8
+    jmp l.1_LOG2_48
+    l.1_IF2_48:
+    l.0_ELSE2_48:
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],8
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    mov QWORD[rsp + 0],rax
+    call f.math.uint.logb
+    add rsp,8
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    l.0_FOR4_5:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 2]
+    cmp rax,0
+    setge BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_FOR4_5
+    sub rsp,8
+    mov rdx,0
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    mov rbx,8
+    div rbx
+    mov QWORD[rsp + 0],rdx
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 48]
+    add rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    add rax,2
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 33]
+    mov QWORD[rsp + 0],rax
+    call f.char.to.oct
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    mov r10,QWORD[rsp + 1]
+    mov BYTE[r10],al
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    mov rdx,0
+    mov rax,QWORD[rsp + 32]
+    mov rbx,8
+    div rbx
+    mov QWORD[rsp + 32],rax
+    sub QWORD[rsp + 8],1
+    add rsp,8
+    jmp l.0_FOR4_5
+    l.1_FOR4_5:
+    add rsp,8
+    add rsp,8
+    l.1_LOG2_48:
+    ret
+
+f.parse.oct.by:
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 17]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    mov rax,0
+    mov r10,QWORD[rsp + 1]
+    mov al,BYTE[r10]
+    cmp eax,48
+    setne BYTE[rsp + 0]
+    sub rsp,8
+    mov rax,QWORD[rsp + 26]
+    add rax,1
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    mov rax,0
+    mov r10,QWORD[rsp + 1]
+    mov al,BYTE[r10]
+    cmp eax,111
+    setne BYTE[rsp + 0]
+    sub rsp,1
+    mov al,BYTE[rsp + 18]
+    or al,BYTE[rsp + 1]
+    mov BYTE[rsp + 0],al
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 27],al
+    add rsp,1
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF2_49
+    l.0_IF2_49:
+    mov QWORD[rsp + 16],0
+    ret
+    l.1_LOG2_49:
+    l.1_IF2_49:
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    mov QWORD[rsp + 0],rax
+    call f.cstr.len
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    sub rax,1
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    l.0_WHILE2_50:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 2]
+    cmp rax,2
+    setge BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_WHILE2_50
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 65]
+    add rax,QWORD[rsp + 9]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov r10,QWORD[rsp + 0]
+    mov al,BYTE[r10]
+    mov BYTE[rsp + 16],al
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    sub rsp,1
+    mov al,BYTE[rsp + 17]
+    mov BYTE[rsp + 0],al
+    call f.char.by.oct
+    add rsp,1
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 2]
+    cmp rax,0
+    setge BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF3_11
+    l.0_IF3_11:
+    sub rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],8
+    sub rsp,8
+    mov rax,QWORD[rsp + 41]
+    mov QWORD[rsp + 0],rax
+    call f.math.uint.pow
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    imul QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    add QWORD[rsp + 49],rax
+    add rsp,8
+    add rsp,8
+    add QWORD[rsp + 17],1
+    sub QWORD[rsp + 9],1
+    jmp l.1_LOG3_11
+    l.1_IF3_11:
+    l.0_ELSE3_11:
+    mov QWORD[rsp + 73],0
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+    l.1_LOG3_11:
+    add rsp,8
+    add rsp,1
+    jmp l.0_WHILE2_50
+    l.1_WHILE2_50:
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 72],rax
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+
+f.parse.oct.by_s:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 10]
+    cmp rax,0
+    sete BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF2_51
+    l.0_IF2_51:
+    mov BYTE[rsp + 24],0
+    ret
+    l.1_LOG2_51:
+    l.1_IF2_51:
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 33]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    mov rax,0
+    mov r10,QWORD[rsp + 1]
+    mov al,BYTE[r10]
+    cmp eax,48
+    setne BYTE[rsp + 0]
+    sub rsp,8
+    mov rax,QWORD[rsp + 42]
+    add rax,1
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    mov rax,0
+    mov r10,QWORD[rsp + 1]
+    mov al,BYTE[r10]
+    cmp eax,111
+    setne BYTE[rsp + 0]
+    sub rsp,1
+    mov al,BYTE[rsp + 18]
+    or al,BYTE[rsp + 1]
+    mov BYTE[rsp + 0],al
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 27],al
+    add rsp,1
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF2_52
+    l.0_IF2_52:
+    mov BYTE[rsp + 32],0
+    ret
+    l.1_LOG2_52:
+    l.1_IF2_52:
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 56]
+    mov QWORD[rsp + 0],rax
+    call f.cstr.len
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    sub rax,1
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    l.0_WHILE2_53:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 2]
+    cmp rax,2
+    setge BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_WHILE2_53
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 81]
+    add rax,QWORD[rsp + 9]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov r10,QWORD[rsp + 0]
+    mov al,BYTE[r10]
+    mov BYTE[rsp + 16],al
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    sub rsp,1
+    mov al,BYTE[rsp + 17]
+    mov BYTE[rsp + 0],al
+    call f.char.by.oct
+    add rsp,1
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 2]
+    cmp rax,0
+    setge BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF3_12
+    l.0_IF3_12:
+    sub rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],8
+    sub rsp,8
+    mov rax,QWORD[rsp + 41]
+    mov QWORD[rsp + 0],rax
+    call f.math.uint.pow
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    imul QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    add QWORD[rsp + 49],rax
+    add rsp,8
+    add rsp,8
+    add QWORD[rsp + 17],1
+    sub QWORD[rsp + 9],1
+    jmp l.1_LOG3_12
+    l.1_IF3_12:
+    l.0_ELSE3_12:
+    mov BYTE[rsp + 89],0
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+    l.1_LOG3_12:
+    add rsp,8
+    add rsp,1
+    jmp l.0_WHILE2_53
+    l.1_WHILE2_53:
+    sub rsp,8
+    mov rax,QWORD[rsp + 80]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 40]
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],rax
+    add rsp,8
+    mov BYTE[rsp + 88],1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+
+f.parse.bin.get:
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    mov QWORD[rsp + 0],rax
+    mov rax,0
+    mov eax,48
+    mov r10,QWORD[rsp + 0]
+    mov BYTE[r10],al
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    add rax,1
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov rax,0
+    mov eax,98
+    mov r10,QWORD[rsp + 0]
+    mov BYTE[r10],al
+    add rsp,8
+    add rsp,8
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 10]
+    cmp rax,0
+    sete BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF2_54
+    l.0_IF2_54:
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    add rax,2
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov r10,QWORD[rsp + 0]
+    mov BYTE[r10],48
+    add rsp,8
+    add rsp,8
+    jmp l.1_LOG2_54
+    l.1_IF2_54:
+    l.0_ELSE2_54:
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],2
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    mov QWORD[rsp + 0],rax
+    call f.math.uint.logb
+    add rsp,8
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    l.0_FOR4_6:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 2]
+    cmp rax,0
+    setge BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_FOR4_6
+    sub rsp,8
+    mov rdx,0
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    mov rbx,2
+    div rbx
+    mov QWORD[rsp + 0],rdx
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 48]
+    add rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    add rax,2
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 33]
+    mov QWORD[rsp + 0],rax
+    call f.char.to.bin
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    mov r10,QWORD[rsp + 1]
+    mov BYTE[r10],al
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    mov rdx,0
+    mov rax,QWORD[rsp + 32]
+    mov rbx,2
+    div rbx
+    mov QWORD[rsp + 32],rax
+    sub QWORD[rsp + 8],1
+    add rsp,8
+    jmp l.0_FOR4_6
+    l.1_FOR4_6:
+    add rsp,8
+    add rsp,8
+    l.1_LOG2_54:
+    ret
+
+f.parse.bin.by:
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 17]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    mov rax,0
+    mov r10,QWORD[rsp + 1]
+    mov al,BYTE[r10]
+    cmp eax,48
+    setne BYTE[rsp + 0]
+    sub rsp,8
+    mov rax,QWORD[rsp + 26]
+    add rax,1
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    mov rax,0
+    mov r10,QWORD[rsp + 1]
+    mov al,BYTE[r10]
+    cmp eax,98
+    setne BYTE[rsp + 0]
+    sub rsp,1
+    mov al,BYTE[rsp + 18]
+    or al,BYTE[rsp + 1]
+    mov BYTE[rsp + 0],al
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 27],al
+    add rsp,1
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF2_55
+    l.0_IF2_55:
+    mov QWORD[rsp + 16],0
+    ret
+    l.1_LOG2_55:
+    l.1_IF2_55:
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    mov QWORD[rsp + 0],rax
+    call f.cstr.len
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    sub rax,1
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    l.0_WHILE2_56:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 2]
+    cmp rax,2
+    setge BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_WHILE2_56
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 65]
+    add rax,QWORD[rsp + 9]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov r10,QWORD[rsp + 0]
+    mov al,BYTE[r10]
+    mov BYTE[rsp + 16],al
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    sub rsp,1
+    mov al,BYTE[rsp + 17]
+    mov BYTE[rsp + 0],al
+    call f.char.by.bin
+    add rsp,1
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 2]
+    cmp rax,0
+    setge BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF3_13
+    l.0_IF3_13:
+    sub rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],2
+    sub rsp,8
+    mov rax,QWORD[rsp + 41]
+    mov QWORD[rsp + 0],rax
+    call f.math.uint.pow
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    imul QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    add QWORD[rsp + 49],rax
+    add rsp,8
+    add rsp,8
+    add QWORD[rsp + 17],1
+    sub QWORD[rsp + 9],1
+    jmp l.1_LOG3_13
+    l.1_IF3_13:
+    l.0_ELSE3_13:
+    mov QWORD[rsp + 73],0
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+    l.1_LOG3_13:
+    add rsp,8
+    add rsp,1
+    jmp l.0_WHILE2_56
+    l.1_WHILE2_56:
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 72],rax
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+
+f.parse.bin.by_s:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 10]
+    cmp rax,0
+    sete BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF2_57
+    l.0_IF2_57:
+    mov BYTE[rsp + 24],0
+    ret
+    l.1_LOG2_57:
+    l.1_IF2_57:
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 33]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    mov rax,0
+    mov r10,QWORD[rsp + 1]
+    mov al,BYTE[r10]
+    cmp eax,48
+    setne BYTE[rsp + 0]
+    sub rsp,8
+    mov rax,QWORD[rsp + 42]
+    add rax,1
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    mov rax,0
+    mov r10,QWORD[rsp + 1]
+    mov al,BYTE[r10]
+    cmp eax,98
+    setne BYTE[rsp + 0]
+    sub rsp,1
+    mov al,BYTE[rsp + 18]
+    or al,BYTE[rsp + 1]
+    mov BYTE[rsp + 0],al
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 27],al
+    add rsp,1
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF2_58
+    l.0_IF2_58:
+    mov BYTE[rsp + 32],0
+    ret
+    l.1_LOG2_58:
+    l.1_IF2_58:
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 56]
+    mov QWORD[rsp + 0],rax
+    call f.cstr.len
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    sub rax,1
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    l.0_WHILE2_59:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 2]
+    cmp rax,2
+    setge BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_WHILE2_59
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 81]
+    add rax,QWORD[rsp + 9]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov r10,QWORD[rsp + 0]
+    mov al,BYTE[r10]
+    mov BYTE[rsp + 16],al
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    sub rsp,1
+    mov al,BYTE[rsp + 17]
+    mov BYTE[rsp + 0],al
+    call f.char.by.bin
+    add rsp,1
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 2]
+    cmp rax,0
+    setge BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF3_14
+    l.0_IF3_14:
+    sub rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],2
+    sub rsp,8
+    mov rax,QWORD[rsp + 41]
+    mov QWORD[rsp + 0],rax
+    call f.math.uint.pow
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    imul QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    add QWORD[rsp + 49],rax
+    add rsp,8
+    add rsp,8
+    add QWORD[rsp + 17],1
+    sub QWORD[rsp + 9],1
+    jmp l.1_LOG3_14
+    l.1_IF3_14:
+    l.0_ELSE3_14:
+    mov BYTE[rsp + 89],0
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+    l.1_LOG3_14:
+    add rsp,8
+    add rsp,1
+    jmp l.0_WHILE2_59
+    l.1_WHILE2_59:
+    sub rsp,8
+    mov rax,QWORD[rsp + 80]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 40]
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],rax
+    add rsp,8
+    mov BYTE[rsp + 88],1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+
+f.ptr.set:
+    sub rsp,8
+    mov rax,QWORD[rsp + 25]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rdx,0
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov rbx,8
+    idiv rbx
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov rbx,8
+    imul rbx
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 16],rax
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    sub rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov al,BYTE[rsp + 56]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    mov rcx,8
+    shl rax,cl
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    or rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov rcx,16
+    shl rax,cl
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    or rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 48]
+    mov rcx,24
+    shl rax,cl
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    or rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 64]
+    mov rcx,32
+    shl rax,cl
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    or rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 80]
+    mov rcx,40
+    shl rax,cl
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    or rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 96]
+    mov rcx,48
+    shl rax,cl
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    or rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 112]
+    mov rcx,56
+    shl rax,cl
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    or rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 112],rax
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    l.0_FOR3_15:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 2]
+    cmp rax,QWORD[rsp + 42]
+    setl BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_FOR3_15
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    add rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 24]
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],rax
+    add rsp,8
+    add rsp,8
+    add QWORD[rsp + 0],8
+    jmp l.0_FOR3_15
+    l.1_FOR3_15:
+    l.0_FOR3_16:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 2]
+    cmp rax,QWORD[rsp + 66]
+    setl BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_FOR3_16
+    sub rsp,8
+    mov rax,QWORD[rsp + 56]
+    add rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov al,BYTE[rsp + 88]
+    mov r10,QWORD[rsp + 0]
+    mov BYTE[r10],al
+    add rsp,8
+    add rsp,8
+    add QWORD[rsp + 0],1
+    jmp l.0_FOR3_16
+    l.1_FOR3_16:
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+
+f.ptr.cpy:
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    l.0_FOR3_17:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 2]
+    cmp rax,QWORD[rsp + 34]
+    setl BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_FOR3_17
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    add rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    add rax,QWORD[rsp + 24]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov r10,QWORD[rsp + 0]
+    mov al,BYTE[r10]
+    mov r10,QWORD[rsp + 16]
+    mov BYTE[r10],al
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add QWORD[rsp + 0],1
+    jmp l.0_FOR3_17
+    l.1_FOR3_17:
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+
+f.ptr.mov:
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rdx,0
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    mov rbx,8
+    idiv rbx
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov rbx,8
+    imul rbx
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 16],rax
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 48]
+    sub rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 64]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 64]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    l.0_FOR3_18:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 2]
+    cmp rax,QWORD[rsp + 34]
+    setl BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_FOR3_18
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    add rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    add rax,QWORD[rsp + 24]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov r10,QWORD[rsp + 0]
+    mov rax,QWORD[r10]
+    mov r10,QWORD[rsp + 16]
+    mov QWORD[r10],rax
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    add rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],0
+    add rsp,8
+    add rsp,8
+    add QWORD[rsp + 0],8
+    jmp l.0_FOR3_18
+    l.1_FOR3_18:
+    l.0_FOR3_19:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 2]
+    cmp rax,QWORD[rsp + 66]
+    setl BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_FOR3_19
+    sub rsp,8
+    mov rax,QWORD[rsp + 56]
+    add rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 64]
+    add rax,QWORD[rsp + 24]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov r10,QWORD[rsp + 0]
+    mov al,BYTE[r10]
+    mov r10,QWORD[rsp + 16]
+    mov BYTE[r10],al
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 48]
+    add rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov r10,QWORD[rsp + 0]
+    mov BYTE[r10],0
+    add rsp,8
+    add rsp,8
+    add QWORD[rsp + 0],1
+    jmp l.0_FOR3_19
+    l.1_FOR3_19:
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+
+f.ptr.shl:
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rdx,0
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov rbx,8
+    idiv rbx
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov rbx,8
+    imul rbx
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 16],rax
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    sub rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 64]
+    sub rax,QWORD[rsp + 56]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 72]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    l.0_FOR3_20:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 2]
+    cmp rax,QWORD[rsp + 42]
+    setl BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_FOR3_20
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    add rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    add rax,QWORD[rsp + 24]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov r10,QWORD[rsp + 0]
+    mov rax,QWORD[r10]
+    mov r10,QWORD[rsp + 16]
+    mov QWORD[r10],rax
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add QWORD[rsp + 0],8
+    jmp l.0_FOR3_20
+    l.1_FOR3_20:
+    l.0_FOR3_21:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 2]
+    cmp rax,QWORD[rsp + 66]
+    setl BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_FOR3_21
+    sub rsp,8
+    mov rax,QWORD[rsp + 56]
+    add rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 48]
+    add rax,QWORD[rsp + 24]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov r10,QWORD[rsp + 0]
+    mov al,BYTE[r10]
+    mov r10,QWORD[rsp + 16]
+    mov BYTE[r10],al
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add QWORD[rsp + 0],1
+    jmp l.0_FOR3_21
+    l.1_FOR3_21:
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+
+f.ptr.shr:
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rdx,0
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov rbx,8
+    idiv rbx
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov rbx,8
+    imul rbx
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 16],rax
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    sub rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 64]
+    add rax,QWORD[rsp + 56]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 72]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 72]
+    sub rax,1
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    l.0_FOR3_22:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 2]
+    cmp rax,QWORD[rsp + 42]
+    setg BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_FOR3_22
+    sub rsp,8
+    mov rax,QWORD[rsp + 56]
+    add rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 48]
+    add rax,QWORD[rsp + 24]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov r10,QWORD[rsp + 0]
+    mov al,BYTE[r10]
+    mov r10,QWORD[rsp + 16]
+    mov BYTE[r10],al
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    sub QWORD[rsp + 0],1
+    jmp l.0_FOR3_22
+    l.1_FOR3_22:
+    l.0_FOR3_23:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 2]
+    cmp rax,0
+    setge BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_FOR3_23
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    add rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    add rax,QWORD[rsp + 24]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov r10,QWORD[rsp + 0]
+    mov rax,QWORD[r10]
+    mov r10,QWORD[rsp + 16]
+    mov QWORD[r10],rax
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    sub QWORD[rsp + 0],8
+    jmp l.0_FOR3_23
+    l.1_FOR3_23:
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+
+f.mem.Allocator.init:
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    call f.sys.mmap
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov r10,QWORD[rsp + 8]
+    mov QWORD[r10],rax
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],8
+    mov rax,QWORD[rsp + 16]
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],rax
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    mov r10,QWORD[rsp + 0]
+    mov rax,QWORD[r10]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,1
+    mov BYTE[rsp + 0],0
+    sub rsp,8
+    mov rax,QWORD[rsp + 25]
+    mov QWORD[rsp + 0],rax
+    call f.ptr.set
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    mov r10,QWORD[rsp + 0]
+    mov rax,QWORD[r10]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    sub rax,5
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov r10,QWORD[rsp + 8]
+    mov QWORD[r10],rax
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+
+f.mem.Allocator.delete:
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 17]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,1
+    mov r10,QWORD[rsp + 1]
+    mov rax,QWORD[r10]
+    cmp rax,0
+    setne BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 9],al
+    add rsp,1
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF2_60
+    l.0_IF2_60:
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    mov r10,QWORD[rsp + 0]
+    mov rax,QWORD[r10]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],8
+    mov r10,QWORD[rsp + 0]
+    mov rax,QWORD[r10]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    call f.sys.munmap
+    add rsp,8
+    add rsp,8
+    l.1_LOG2_60:
+    l.1_IF2_60:
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],0
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],8
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],0
+    add rsp,8
+    ret
+
+f.mem.Allocator.new:
+    sub rsp,16
+    sub rsp,8
+    sub rsp,8
+    lea rax,[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],10000
+    call f.mem.Allocator.init
+    add rsp,8
+    add rsp,8
+    mov rax,QWORD[rsp + 0 + 0]
+    mov QWORD[rsp + 24 + 0],rax
+    mov rax,QWORD[rsp + 0 + 8]
+    mov QWORD[rsp + 24 + 8],rax
+    add rsp,16
+    ret
+    add rsp,16
+    ret
+
+f.mem.Allocator.make:
+    sub rsp,16
+    sub rsp,8
+    sub rsp,8
+    lea rax,[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    mov QWORD[rsp + 0],rax
+    call f.mem.Allocator.init
+    add rsp,8
+    add rsp,8
+    mov rax,QWORD[rsp + 0 + 0]
+    mov QWORD[rsp + 32 + 0],rax
+    mov rax,QWORD[rsp + 0 + 8]
+    mov QWORD[rsp + 32 + 8],rax
+    add rsp,16
+    ret
+    add rsp,16
+    ret
+
+f.mem.Allocator.alloc:
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    mov r10,QWORD[rsp + 0]
+    mov rax,QWORD[r10]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    l.0_WHILE2_61:
+    sub rsp,1
+    mov BYTE[rsp + 0],1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_WHILE2_61
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 9]
+    add rax,5
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    add rax,QWORD[rsp + 41]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 57]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov rax,QWORD[rsp + 65]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],8
+    sub rsp,8
+    mov r10,QWORD[rsp + 16]
+    mov rax,QWORD[r10]
+    mov r10,QWORD[rsp + 8]
+    add QWORD[r10],rax
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],rax
+    sub rsp,1
+    mov rax,QWORD[rsp + 25]
+    mov r10,QWORD[rsp + 1]
+    cmp QWORD[r10],rax
+    setg BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 41],al
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF3_24
+    l.0_IF3_24:
+    mov QWORD[rsp + 40],0
+    add rsp,8
+    add rsp,8
+    ret
+    jmp l.1_LOG3_24
+    l.1_IF3_24:
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 17]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],8
+    sub rsp,1
+    mov rax,0
+    mov r10,QWORD[rsp + 1]
+    mov al,BYTE[r10]
+    cmp rax,0
+    sete BYTE[rsp + 0]
+    sub rsp,8
+    mov rax,QWORD[rsp + 26]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,1
+    mov r10,QWORD[rsp + 1]
+    mov rax,QWORD[r10]
+    cmp rax,QWORD[rsp + 51]
+    setge BYTE[rsp + 0]
+    sub rsp,1
+    mov al,BYTE[rsp + 10]
+    and al,BYTE[rsp + 1]
+    mov BYTE[rsp + 0],al
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 19],al
+    add rsp,1
+    add rsp,1
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_ELIF3_24_1
+    l.0_ELIF3_24_1:
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov r10,QWORD[rsp + 8]
+    mov rax,QWORD[r10]
+    sub rax,QWORD[rsp + 56]
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],rax
+    mov r10,QWORD[rsp + 0]
+    mov rax,QWORD[r10]
+    mov QWORD[rsp + 16],rax
+    add rsp,8
+    add rsp,8
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 2]
+    cmp rax,5
+    setle BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF4_7
+    l.0_IF4_7:
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    mov r10,QWORD[rsp + 0]
+    mov rax,QWORD[r10]
+    mov QWORD[rsp + 48],rax
+    add rsp,8
+    l.1_LOG4_7:
+    l.1_IF4_7:
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],8
+    mov r10,QWORD[rsp + 0]
+    mov BYTE[r10],1
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    mov rax,QWORD[rsp + 48]
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    add rax,5
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 32],rax
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    add rax,QWORD[rsp + 56]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 10]
+    cmp rax,5
+    setg BYTE[rsp + 0]
+    sub rsp,8
+    mov rax,QWORD[rsp + 10]
+    add rax,QWORD[rsp + 18]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 74]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov rax,QWORD[rsp + 82]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],8
+    sub rsp,8
+    mov r10,QWORD[rsp + 16]
+    mov rax,QWORD[r10]
+    mov r10,QWORD[rsp + 8]
+    add QWORD[r10],rax
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],rax
+    sub rsp,1
+    mov rax,QWORD[rsp + 25]
+    mov r10,QWORD[rsp + 1]
+    cmp QWORD[r10],rax
+    setle BYTE[rsp + 0]
+    sub rsp,1
+    mov al,BYTE[rsp + 34]
+    and al,BYTE[rsp + 1]
+    mov BYTE[rsp + 0],al
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 35],al
+    add rsp,1
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF4_8
+    l.0_IF4_8:
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    sub rax,5
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov r10,QWORD[rsp + 8]
+    mov QWORD[r10],rax
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],8
+    mov r10,QWORD[rsp + 0]
+    mov BYTE[r10],0
+    add rsp,8
+    l.1_LOG4_8:
+    l.1_IF4_8:
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 64],rax
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+    add rsp,8
+    add rsp,8
+    jmp l.1_LOG3_24
+    l.1_ELIF3_24_1:
+    l.0_ELSE3_24:
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    add rax,5
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    mov r10,QWORD[rsp + 8]
+    add QWORD[r10],rax
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 40],rax
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    l.1_LOG3_24:
+    jmp l.0_WHILE2_61
+    l.1_WHILE2_61:
+    mov rax,QWORD[rsp + 24]
+    mov QWORD[rsp + 56],rax
+    add rsp,8
+    add rsp,8
+    ret
+    add rsp,8
+    add rsp,8
+    ret
+
+f.mem.Allocator.free:
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 25]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,1
+    mov rax,QWORD[rsp + 18]
+    mov r10,QWORD[rsp + 1]
+    cmp QWORD[r10],rax
+    setl BYTE[rsp + 0]
+    sub rsp,8
+    mov rax,QWORD[rsp + 34]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov rax,QWORD[rsp + 42]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],8
+    sub rsp,8
+    mov r10,QWORD[rsp + 16]
+    mov rax,QWORD[r10]
+    mov r10,QWORD[rsp + 8]
+    add QWORD[r10],rax
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],rax
+    sub rsp,1
+    mov rax,QWORD[rsp + 43]
+    mov r10,QWORD[rsp + 1]
+    cmp QWORD[r10],rax
+    setg BYTE[rsp + 0]
+    sub rsp,1
+    mov al,BYTE[rsp + 26]
+    or al,BYTE[rsp + 1]
+    mov BYTE[rsp + 0],al
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 35],al
+    add rsp,1
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF2_62
+    l.0_IF2_62:
+    ret
+    l.1_LOG2_62:
+    l.1_IF2_62:
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 48]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    mov r10,QWORD[rsp + 0]
+    mov rax,QWORD[r10]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    l.0_WHILE2_63:
+    sub rsp,1
+    mov BYTE[rsp + 0],1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_WHILE2_63
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 9]
+    add rax,5
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 17]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    mov r10,QWORD[rsp + 8]
+    add QWORD[r10],rax
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 73]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov rax,QWORD[rsp + 81]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],8
+    sub rsp,8
+    mov r10,QWORD[rsp + 16]
+    mov rax,QWORD[r10]
+    mov r10,QWORD[rsp + 8]
+    add QWORD[r10],rax
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],rax
+    sub rsp,1
+    mov rax,QWORD[rsp + 25]
+    mov r10,QWORD[rsp + 1]
+    cmp QWORD[r10],rax
+    setg BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 49],al
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF3_25
+    l.0_IF3_25:
+    add rsp,8
+    add rsp,8
+    ret
+    jmp l.1_LOG3_25
+    l.1_IF3_25:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 42]
+    cmp rax,QWORD[rsp + 10]
+    setge BYTE[rsp + 0]
+    sub rsp,8
+    mov rax,QWORD[rsp + 18]
+    add rax,5
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 26]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    mov r10,QWORD[rsp + 8]
+    add QWORD[r10],rax
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    mov rax,QWORD[rsp + 67]
+    cmp rax,QWORD[rsp + 1]
+    setl BYTE[rsp + 0]
+    sub rsp,1
+    mov al,BYTE[rsp + 26]
+    and al,BYTE[rsp + 1]
+    mov BYTE[rsp + 0],al
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 27],al
+    add rsp,1
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_ELIF3_25_2
+    l.0_ELIF3_25_2:
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],8
+    mov r10,QWORD[rsp + 0]
+    mov BYTE[r10],0
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    add rax,5
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    mov r10,QWORD[rsp + 8]
+    add QWORD[r10],rax
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 24],rax
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 65]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov rax,QWORD[rsp + 73]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],8
+    sub rsp,8
+    mov r10,QWORD[rsp + 16]
+    mov rax,QWORD[r10]
+    mov r10,QWORD[rsp + 8]
+    add QWORD[r10],rax
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],rax
+    sub rsp,1
+    mov rax,QWORD[rsp + 26]
+    mov r10,QWORD[rsp + 1]
+    cmp QWORD[r10],rax
+    setle BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 25],al
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF4_9
+    l.0_IF4_9:
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 9]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],8
+    sub rsp,1
+    mov rax,0
+    mov r10,QWORD[rsp + 1]
+    mov al,BYTE[r10]
+    cmp rax,0
+    sete BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 9],al
+    add rsp,1
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF5_1
+    l.0_IF5_1:
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov rax,5
+    mov r10,QWORD[rsp + 8]
+    add QWORD[r10],rax
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov r10,QWORD[rsp + 16]
+    add QWORD[r10],rax
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    l.1_LOG5_1:
+    l.1_IF5_1:
+    l.1_LOG4_9:
+    l.1_IF4_9:
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 65]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,1
+    mov rax,QWORD[rsp + 34]
+    mov r10,QWORD[rsp + 1]
+    cmp QWORD[r10],rax
+    setge BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 9],al
+    add rsp,1
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF4_10
+    l.0_IF4_10:
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 33]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],8
+    sub rsp,1
+    mov rax,0
+    mov r10,QWORD[rsp + 1]
+    mov al,BYTE[r10]
+    cmp rax,0
+    sete BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 9],al
+    add rsp,1
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF5_2
+    l.0_IF5_2:
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov rax,5
+    mov r10,QWORD[rsp + 8]
+    add QWORD[r10],rax
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov r10,QWORD[rsp + 16]
+    add QWORD[r10],rax
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    l.1_LOG5_2:
+    l.1_IF5_2:
+    l.1_LOG4_10:
+    l.1_IF4_10:
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+    add rsp,8
+    jmp l.1_LOG3_25
+    l.1_ELIF3_25_2:
+    l.0_ELSE3_25:
+    mov rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 24],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    add rax,5
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    mov r10,QWORD[rsp + 8]
+    add QWORD[r10],rax
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 40],rax
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    l.1_LOG3_25:
+    jmp l.0_WHILE2_63
+    l.1_WHILE2_63:
+    add rsp,8
+    add rsp,8
+    ret
+
+f.mem.Allocator.realloc:
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 33]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,1
+    mov rax,QWORD[rsp + 26]
+    mov r10,QWORD[rsp + 1]
+    cmp QWORD[r10],rax
+    setl BYTE[rsp + 0]
+    sub rsp,8
+    mov rax,QWORD[rsp + 42]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov rax,QWORD[rsp + 50]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],8
+    sub rsp,8
+    mov r10,QWORD[rsp + 16]
+    mov rax,QWORD[r10]
+    mov r10,QWORD[rsp + 8]
+    add QWORD[r10],rax
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],rax
+    sub rsp,1
+    mov rax,QWORD[rsp + 51]
+    mov r10,QWORD[rsp + 1]
+    cmp QWORD[r10],rax
+    setg BYTE[rsp + 0]
+    sub rsp,1
+    mov al,BYTE[rsp + 26]
+    or al,BYTE[rsp + 1]
+    mov BYTE[rsp + 0],al
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 35],al
+    add rsp,1
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF2_64
+    l.0_IF2_64:
+    mov QWORD[rsp + 32],0
+    ret
+    l.1_LOG2_64:
+    l.1_IF2_64:
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 48]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    mov r10,QWORD[rsp + 0]
+    mov rax,QWORD[r10]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    l.0_WHILE2_65:
+    sub rsp,1
+    mov BYTE[rsp + 0],1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_WHILE2_65
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 9]
+    add rax,5
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 17]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    mov r10,QWORD[rsp + 8]
+    add QWORD[r10],rax
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 73]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov rax,QWORD[rsp + 81]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],8
+    sub rsp,8
+    mov r10,QWORD[rsp + 16]
+    mov rax,QWORD[r10]
+    mov r10,QWORD[rsp + 8]
+    add QWORD[r10],rax
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],rax
+    sub rsp,1
+    mov rax,QWORD[rsp + 25]
+    mov r10,QWORD[rsp + 1]
+    cmp QWORD[r10],rax
+    setg BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 49],al
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF3_26
+    l.0_IF3_26:
+    mov QWORD[rsp + 48],0
+    add rsp,8
+    ret
+    jmp l.1_LOG3_26
+    l.1_IF3_26:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 42]
+    cmp rax,QWORD[rsp + 10]
+    setge BYTE[rsp + 0]
+    sub rsp,8
+    mov rax,QWORD[rsp + 18]
+    add rax,5
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 26]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    mov r10,QWORD[rsp + 8]
+    add QWORD[r10],rax
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    mov rax,QWORD[rsp + 67]
+    cmp rax,QWORD[rsp + 1]
+    setl BYTE[rsp + 0]
+    sub rsp,1
+    mov al,BYTE[rsp + 26]
+    and al,BYTE[rsp + 1]
+    mov BYTE[rsp + 0],al
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 27],al
+    add rsp,1
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_ELIF3_26_3
+    l.0_ELIF3_26_3:
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    add rax,5
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    mov r10,QWORD[rsp + 8]
+    add QWORD[r10],rax
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 24],rax
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 25]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,1
+    mov r10,QWORD[rsp + 1]
+    mov rax,QWORD[r10]
+    cmp rax,QWORD[rsp + 50]
+    setg BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 9],al
+    add rsp,1
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF4_11
+    l.0_IF4_11:
+    sub rsp,4
+    sub rsp,8
+    mov rax,QWORD[rsp + 28]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov r10,QWORD[rsp + 8]
+    mov rax,QWORD[r10]
+    sub rax,QWORD[rsp + 60]
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],rax
+    sub rsp,8
+    mov r10,QWORD[rsp + 8]
+    mov rax,QWORD[r10]
+    sub rax,5
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],rax
+    mov rax,0
+    mov r10,QWORD[rsp + 0]
+    mov rax,QWORD[r10]
+    mov DWORD[rsp + 24],eax
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    sub rsp,1
+    sub rsp,1
+    mov rax,0
+    mov eax,DWORD[rsp + 2]
+    cmp rax,0
+    setg BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF5_3
+    l.0_IF5_3:
+    sub rsp,8
+    mov rax,QWORD[rsp + 28]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    mov rax,QWORD[rsp + 52]
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],rax
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 36]
+    add rax,5
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 44]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    mov r10,QWORD[rsp + 8]
+    add QWORD[r10],rax
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 24],rax
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],8
+    mov r10,QWORD[rsp + 0]
+    mov BYTE[r10],0
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    mov eax,DWORD[rsp + 16]
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],rax
+    add rsp,8
+    add rsp,8
+    l.1_LOG5_3:
+    l.1_IF5_3:
+    mov rax,QWORD[rsp + 52]
+    mov QWORD[rsp + 68],rax
+    add rsp,4
+    add rsp,8
+    add rsp,8
+    ret
+    add rsp,4
+    jmp l.1_LOG4_11
+    l.1_IF4_11:
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 17]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],8
+    sub rsp,1
+    mov rax,0
+    mov r10,QWORD[rsp + 1]
+    mov al,BYTE[r10]
+    cmp rax,0
+    sete BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 9],al
+    add rsp,1
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_ELIF4_11_1
+    l.0_ELIF4_11_1:
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 33]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov r10,QWORD[rsp + 8]
+    mov rax,QWORD[r10]
+    add rax,5
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 33]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov r10,QWORD[rsp + 16]
+    mov rax,QWORD[r10]
+    mov r10,QWORD[rsp + 8]
+    add QWORD[r10],rax
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],rax
+    sub rsp,1
+    mov r10,QWORD[rsp + 1]
+    mov rax,QWORD[r10]
+    cmp rax,QWORD[rsp + 82]
+    setg BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 33],al
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF5_4
+    l.0_IF5_4:
+    sub rsp,4
+    sub rsp,8
+    mov rax,QWORD[rsp + 36]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov rax,QWORD[rsp + 28]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov r10,QWORD[rsp + 16]
+    mov rax,QWORD[r10]
+    mov r10,QWORD[rsp + 8]
+    add QWORD[r10],rax
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],rax
+    sub rsp,8
+    mov r10,QWORD[rsp + 8]
+    mov rax,QWORD[r10]
+    sub rax,QWORD[rsp + 84]
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],rax
+    mov rax,0
+    mov r10,QWORD[rsp + 0]
+    mov rax,QWORD[r10]
+    mov DWORD[rsp + 32],eax
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    sub rsp,1
+    sub rsp,1
+    mov rax,0
+    mov eax,DWORD[rsp + 2]
+    cmp rax,0
+    setg BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF6_1
+    l.0_IF6_1:
+    sub rsp,8
+    mov rax,QWORD[rsp + 36]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    mov rax,QWORD[rsp + 60]
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],rax
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 44]
+    add rax,5
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 52]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    mov r10,QWORD[rsp + 8]
+    add QWORD[r10],rax
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 24],rax
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],8
+    mov r10,QWORD[rsp + 0]
+    mov BYTE[r10],0
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    mov eax,DWORD[rsp + 16]
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],rax
+    add rsp,8
+    add rsp,8
+    jmp l.1_LOG6_1
+    l.1_IF6_1:
+    l.0_ELSE6_1:
+    sub rsp,8
+    mov rax,QWORD[rsp + 36]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov rax,QWORD[rsp + 28]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov rax,5
+    mov r10,QWORD[rsp + 8]
+    add QWORD[r10],rax
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov r10,QWORD[rsp + 16]
+    add QWORD[r10],rax
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    l.1_LOG6_1:
+    mov rax,QWORD[rsp + 60]
+    mov QWORD[rsp + 76],rax
+    add rsp,4
+    add rsp,8
+    add rsp,8
+    ret
+    add rsp,4
+    l.1_LOG5_4:
+    l.1_IF5_4:
+    l.1_LOG4_11:
+    l.1_ELIF4_11_1:
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 96]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 88]
+    mov QWORD[rsp + 0],rax
+    call f.mem.Allocator.alloc
+    add rsp,8
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 88]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 72]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    mov r10,QWORD[rsp + 0]
+    mov rax,QWORD[r10]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    call f.ptr.cpy
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 88]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 88]
+    mov QWORD[rsp + 0],rax
+    call f.mem.Allocator.free
+    add rsp,8
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 88],rax
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+    add rsp,8
+    add rsp,8
+    jmp l.1_LOG3_26
+    l.1_ELIF3_26_3:
+    l.0_ELSE3_26:
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    add rax,5
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 48]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    mov r10,QWORD[rsp + 8]
+    add QWORD[r10],rax
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 56],rax
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    l.1_LOG3_26:
+    jmp l.0_WHILE2_65
+    l.1_WHILE2_65:
+    mov rax,QWORD[rsp + 64]
+    mov QWORD[rsp + 80],rax
+    add rsp,8
+    ret
+    add rsp,8
+    ret
+
+f.mem.Allocator.calloc:
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 48]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 56]
+    imul QWORD[rsp + 48]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    call f.mem.Allocator.alloc
+    add rsp,8
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    mov BYTE[rsp + 0],0
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 49]
+    imul QWORD[rsp + 41]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    call f.ptr.set
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 40],rax
+    add rsp,8
+    ret
+    add rsp,8
+    ret
+
+f.mem.Allocator.print:
+    sub rsp,8
+    mov QWORD[rsp + 0],GLOBAL_STR11
+    call f.io.print
+    add rsp,8
+    sub rsp,8
+    sub rsp,48
+    mov QWORD[rsp + 48],rsp
+    sub rsp,8
+    mov rax,QWORD[rsp + 56]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    mov BYTE[rsp + 0],32
+    sub rsp,8
+    mov QWORD[rsp + 0],45
+    call f.ptr.set
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 56]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov QWORD[rsp + 0],GLOBAL_STR12
+    sub rsp,8
+    mov QWORD[rsp + 0],9
+    call f.ptr.cpy
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 64]
+    add rax,10
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 88]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    mov r10,QWORD[rsp + 0]
+    mov rax,QWORD[r10]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    call f.parse.uint.get
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 64]
+    add rax,45
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],GLOBAL_STR13
+    sub rsp,8
+    mov QWORD[rsp + 0],2
+    call f.ptr.cpy
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 56]
+    mov QWORD[rsp + 0],rax
+    call f.io.print
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 56]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    mov BYTE[rsp + 0],32
+    sub rsp,8
+    mov QWORD[rsp + 0],45
+    call f.ptr.set
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 56]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov QWORD[rsp + 0],GLOBAL_STR14
+    sub rsp,8
+    mov QWORD[rsp + 0],9
+    call f.ptr.cpy
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 64]
+    add rax,10
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 88]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],8
+    mov r10,QWORD[rsp + 0]
+    mov rax,QWORD[r10]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    call f.parse.uint.get
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 64]
+    add rax,45
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],GLOBAL_STR15
+    sub rsp,8
+    mov QWORD[rsp + 0],2
+    call f.ptr.cpy
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 56]
+    mov QWORD[rsp + 0],rax
+    call f.io.print
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 80]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    mov r10,QWORD[rsp + 0]
+    mov rax,QWORD[r10]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    l.0_WHILE2_66:
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 81]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,1
+    mov rax,QWORD[rsp + 10]
+    mov r10,QWORD[rsp + 1]
+    cmp QWORD[r10],rax
+    setge BYTE[rsp + 0]
+    sub rsp,8
+    mov rax,QWORD[rsp + 90]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov rax,QWORD[rsp + 98]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],8
+    sub rsp,8
+    mov r10,QWORD[rsp + 16]
+    mov rax,QWORD[r10]
+    mov r10,QWORD[rsp + 8]
+    add QWORD[r10],rax
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],rax
+    sub rsp,1
+    mov rax,QWORD[rsp + 35]
+    mov r10,QWORD[rsp + 1]
+    cmp QWORD[r10],rax
+    setl BYTE[rsp + 0]
+    sub rsp,1
+    mov al,BYTE[rsp + 26]
+    and al,BYTE[rsp + 1]
+    mov BYTE[rsp + 0],al
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 35],al
+    add rsp,1
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_WHILE2_66
+    sub rsp,8
+    mov rax,QWORD[rsp + 64]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    mov BYTE[rsp + 0],32
+    sub rsp,8
+    mov QWORD[rsp + 0],45
+    call f.ptr.set
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 64]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov QWORD[rsp + 0],GLOBAL_STR16
+    sub rsp,8
+    mov QWORD[rsp + 0],8
+    call f.ptr.cpy
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 72]
+    add rax,9
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    call f.parse.uint.get
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 72]
+    add rax,28
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    mov r10,QWORD[rsp + 0]
+    mov rax,QWORD[r10]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    call f.parse.uint.get
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 72]
+    add rax,35
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],8
+    mov r10,QWORD[rsp + 0]
+    mov al,BYTE[r10]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    call f.parse.uint.get
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 72]
+    add rax,45
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],GLOBAL_STR17
+    sub rsp,8
+    mov QWORD[rsp + 0],1
+    call f.ptr.cpy
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 72]
+    add rax,46
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],GLOBAL_STR18
+    sub rsp,8
+    mov QWORD[rsp + 0],2
+    call f.ptr.cpy
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 64]
+    mov QWORD[rsp + 0],rax
+    call f.io.print
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    add rax,5
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    mov r10,QWORD[rsp + 8]
+    add QWORD[r10],rax
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 24],rax
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    jmp l.0_WHILE2_66
+    l.1_WHILE2_66:
+    sub rsp,8
+    mov QWORD[rsp + 0],GLOBAL_STR19
+    call f.io.print
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,48
+    ret
+
+f.main:
+    sub rsp,8
+    sub rsp,48
+    mov QWORD[rsp + 48],rsp
+    sub rsp,8
+    mov rax,QWORD[rsp + 56]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    mov BYTE[rsp + 0],0
+    sub rsp,8
+    mov QWORD[rsp + 0],48
+    call f.ptr.set
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],69
+    sub rsp,8
+    mov QWORD[rsp + 0],-1
+    l.0_WHILE2_67:
+    sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 10]
+    cmp rax,0
+    setg BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_WHILE2_67
+    mov rdx,0
+    mov rax,QWORD[rsp + 8]
+    mov rbx,10
+    div rbx
+    mov QWORD[rsp + 8],rax
+    add QWORD[rsp + 0],1
+    jmp l.0_WHILE2_67
+    l.1_WHILE2_67:
+    sub rsp,8
+    mov rax,QWORD[rsp + 72]
+    mov QWORD[rsp + 0],rax
+    call f.io.print
+    add rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 80],rax
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,48
+    ret
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,48
     ret
 
 

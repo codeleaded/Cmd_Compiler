@@ -48,7 +48,8 @@ Token U32_U32_Handler_Mul(SuperALX* ll,Token* op,Vector* args){
 Token U32_U32_Handler_Div(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
     Token* b = (Token*)Vector_Get(args,1);
-    return SuperALX_ExecuteA(ll,a,b,op,"idiv","IDIV",SuperALX_Function_Div);
+    SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,0",SUPERALX_REG_D_64);
+    return SuperALX_ExecuteA(ll,a,b,op,"div","DIV",SuperALX_Function_Div);
 }
 
 Token U32_U32_Handler_Mod(SuperALX* ll,Token* op,Vector* args){

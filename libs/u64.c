@@ -27,6 +27,7 @@ Token U64_U64_Handler_Asm(SuperALX* ll,Token* op,Vector* args){
 Token U64_U64_Handler_Asv(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
     Token* b = (Token*)Vector_Get(args,1);
+    SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,0",SUPERALX_REG_D_64);
     return SuperALX_ExecuteAssA(ll,a,b,op,"div","ASV");
 }
 
@@ -48,13 +49,14 @@ Token U64_U64_Handler_Mul(SuperALX* ll,Token* op,Vector* args){
 Token U64_U64_Handler_Div(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
     Token* b = (Token*)Vector_Get(args,1);
-    return SuperALX_ExecuteA(ll,a,b,op,"idiv","IDIV",SuperALX_Function_Div);
+    SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,0",SUPERALX_REG_D_64);
+    return SuperALX_ExecuteA(ll,a,b,op,"div","DIV",SuperALX_Function_Div);
 }
 
 Token U64_U64_Handler_Mod(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
     Token* b = (Token*)Vector_Get(args,1);
-    SuperALX_Indentation_Appendf(ll,&ll->text,"mov rdx,0");
+    SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,0",SUPERALX_REG_D_64);
     return SuperALX_ExecuteAR(ll,a,b,op,"div","MOD",SuperALX_Function_Mod);
 }
 
@@ -360,6 +362,28 @@ void Ex_Packer(ExternFunctionMap* Extern_Functions,Vector* funcs,Scope* s){//Vec
                 OPERATORDEFINER_END
             })),
             OperatorInterater_Make((CStr[]){ I64_TYPE,NULL },OperatorDefineMap_Make((OperatorDefiner[]){
+                OperatorDefiner_New(TOKEN_SUPERALX_ASS,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Ass),
+                OperatorDefiner_New(TOKEN_SUPERALX_ASD,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Asd),
+                OperatorDefiner_New(TOKEN_SUPERALX_ASU,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Asu),
+                OperatorDefiner_New(TOKEN_SUPERALX_ASM,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Asm),
+                OperatorDefiner_New(TOKEN_SUPERALX_ASV,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Asv),
+                OperatorDefiner_New(TOKEN_SUPERALX_ADD,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Add),
+                OperatorDefiner_New(TOKEN_SUPERALX_SUB,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Sub),
+                OperatorDefiner_New(TOKEN_SUPERALX_MUL,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Mul),
+                OperatorDefiner_New(TOKEN_SUPERALX_DIV,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Div),
+                OperatorDefiner_New(TOKEN_SUPERALX_MOD,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Mod),
+                OperatorDefiner_New(TOKEN_SUPERALX_AND,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_And),
+                OperatorDefiner_New(TOKEN_SUPERALX_OR,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Or),
+                OperatorDefiner_New(TOKEN_SUPERALX_XOR,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Xor),
+                OperatorDefiner_New(TOKEN_SUPERALX_EQU,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Equ),
+                OperatorDefiner_New(TOKEN_SUPERALX_NEQ,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Neq),
+                OperatorDefiner_New(TOKEN_SUPERALX_LES,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Les),
+                OperatorDefiner_New(TOKEN_SUPERALX_GRT,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Grt),
+                OperatorDefiner_New(TOKEN_SUPERALX_LEQ,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Leq),
+                OperatorDefiner_New(TOKEN_SUPERALX_GRQ,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Grq),
+                OPERATORDEFINER_END
+            })),
+            OperatorInterater_Make((CStr[]){ POINTER_TYPE,NULL },OperatorDefineMap_Make((OperatorDefiner[]){
                 OperatorDefiner_New(TOKEN_SUPERALX_ASS,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Ass),
                 OperatorDefiner_New(TOKEN_SUPERALX_ASD,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Asd),
                 OperatorDefiner_New(TOKEN_SUPERALX_ASU,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Asu),
