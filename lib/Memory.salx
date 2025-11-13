@@ -5,8 +5,8 @@ import "../lib/Parser.salx";
 
 namespace mem {
     struct Header[
-        pub u64 length,
-        pub u8 flags
+        pub u32 length,
+        pub u32 flags
     ];
 
     struct Allocator[
@@ -21,7 +21,8 @@ namespace mem {
             ptr::set(self->memory,0,size);
 
             Header* first = self->memory;
-            first->length = size - 5;
+            first->length = size - 8;
+            first->flags = 0;
         }
         pub void delete(Allocator* self){
             if self->memory != 0 {
@@ -47,25 +48,25 @@ namespace mem {
             Header* first = self->memory;
             
             while true {
-                if first+5+size>self->memory+self->length {
+                if first+8+size>self->memory+self->length {
                     return null;
                 }elif first->flags==0 && first->length>=size {
                     u64 rem = first->length - size;
-                    if rem<=5 {
+                    if rem<=8 {
                         size = first->length;
                     }
                     first->flags = 1;
                     first->length = size;
-                    ptr = first + 5;
+                    ptr = first + 8;
 
                     Header* next = ptr + size;
-                    if rem>5 && next+rem<=self->memory+self->length {
-                        next->length = rem - 5;
+                    if rem>8 && next+rem<=self->memory+self->length {
+                        next->length = rem - 8;
                         next->flags = 0;
                     }
                     return ptr;
                 }else{
-                    first = first + 5 + first->length;
+                    first = first + 8 + first->length;
                 }
             }
             return ptr;
@@ -79,27 +80,27 @@ namespace mem {
             Header* first = self->memory;
             
             while true {
-                if first+5+first->length > self->memory+self->length {
+                if first+8+first->length > self->memory+self->length {
                     return;
-                }elif ptr >= first && ptr < first+5+first->length {
+                }elif ptr >= first && ptr < first+8+first->length {
                     first->flags = 0;
                     
-                    Header* next = first+5+first->length;
+                    Header* next = first+8+first->length;
                     if next<=self->memory+self->length {
                         if next->flags==0 {
-                            first->length += 5 + next->length;
+                            first->length += 8 + next->length;
                         }
                     }
 
                     if prev>=self->memory {
                         if prev->flags==0 {
-                            prev->length += 5 + first->length;
+                            prev->length += 8 + first->length;
                         }
                     }
                     return;
                 }else{
                     prev = first;
-                    first = first + 5 + first->length;
+                    first = first + 8 + first->length;
                 }
             }
         }
@@ -112,30 +113,30 @@ namespace mem {
             Header* first = self->memory;
             
             while true {
-                if first+5+first->length > self->memory+self->length {
+                if first+8+first->length > self->memory+self->length {
                     return null;
-                }elif ptr >= first && ptr < first+5+first->length {
-                    Header* next = first+5+first->length;
+                }elif ptr >= first && ptr < first+8+first->length {
+                    Header* next = first+8+first->length;
                     
                     if first->length>size {
-                        i32 diff = first->length - size - 5;
+                        i32 diff = first->length - size - 8;
                         if diff>0 {
                             first->length = size;
-                            Header* renext = first+5+first->length;
+                            Header* renext = first+8+first->length;
                             renext->flags = 0;
                             renext->length = diff;
                         }
                         return ptr;
                     }elif next->flags==0 {
-                        if first->length+5+next->length>size {
-                            i32 diff = first->length + next->length - size;// + 5 & - 5 => 0
+                        if first->length+8+next->length>size {
+                            i32 diff = first->length + next->length - size;// + 8 & - 8 => 0
                             if diff>0 {
                                 first->length = size;
-                                Header* renext = first+5+first->length;
+                                Header* renext = first+8+first->length;
                                 renext->flags = 0;
                                 renext->length = diff;
                             }else{
-                                first->length += 5 + next->length;
+                                first->length += 8 + next->length;
                             }
                             return ptr;
                         }
@@ -146,7 +147,7 @@ namespace mem {
                     self->free(ptr);
                     return newptr;
                 }else{
-                    first = first + 5 + first->length;
+                    first = first + 8 + first->length;
                 }
             }
             return ptr;
@@ -158,38 +159,40 @@ namespace mem {
         }
 
         pub void print(Allocator* self){
-            io::print("------------------ Allocator -----------------\n");
+            io::print("---------------------- Allocator ---------------------\n");
             
-            i8[48] cstr;
+            i8[128] cstr;
             
-            ptr::set(cstr,32,45);
+            ptr::set(cstr,32,128);
             ptr::cpy(cstr,"| Memory:",9);
-            parse::uint::get(cstr+10,self->memory);
-            ptr::cpy(cstr+45,"\n",2);
+            parse::hex::get(cstr+10,self->memory);
+            ptr::cpy(cstr+125,"\n",2);
             io::print(cstr);
 
-            ptr::set(cstr,32,45);
+            ptr::set(cstr,32,128);
             ptr::cpy(cstr,"| Length:",9);
             parse::uint::get(cstr+10,self->length);
-            ptr::cpy(cstr+45,"\n",2);
+            ptr::cpy(cstr+125,"\n",2);
             io::print(cstr);
 
             Header* first = self->memory;
-            while first>=self->memory && first<self->memory + self->length {
-                
-                ptr::set(cstr,32,45);
+            while first >= self->memory && first < self->memory + self->length {
+                ptr::set(cstr,32,128);
                 ptr::cpy(cstr,"| Block:",8);
-                parse::uint::get(cstr+9,first);
-                parse::uint::get(cstr+28,first->length);
-                parse::uint::get(cstr+35,first->flags);
-                ptr::cpy(cstr+45,"|",1);
-                ptr::cpy(cstr+46,"\n",2);
+                
+                parse::hex::get(cstr+9,first);
+                parse::uint::get(cstr+28,(u64)first->length);
+                parse::hex::get(cstr+35,(u64)first->flags);
+                
+                cstr[53] = '|';
+                ptr::cpy(cstr+125,"\n",2);
+
                 io::print(cstr);
             
-                first = first + 5 + first->length;
+                first = first + 8 + first->length;
             }
 
-            io::print("----------------------------------------------\n");
+            io::print("------------------------------------------------------\n");
         }
     }
 }

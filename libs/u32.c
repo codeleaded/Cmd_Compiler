@@ -178,11 +178,19 @@ Token U32_Null_Handler_Cast(SuperALX* ll,Token* op,Vector* args){
     String_Free(&ret);
     return Token_Move(TOKEN_CONSTSTRING_DOUBLE,out);
 }
-
 Token U32_Handler_Cast(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
 
-    if(op->str==NULL) return U32_Null_Handler_Cast(ll,op,args);
+    if(op->str==NULL)                   return U32_Null_Handler_Cast(ll,op,args);
+    if(CStr_Cmp(op->str,I8_TYPE))       return Int_Int_Handler_Cast(ll,op,args,I8_TYPE);
+    if(CStr_Cmp(op->str,I16_TYPE))      return Int_Int_Handler_Cast(ll,op,args,I16_TYPE);
+    if(CStr_Cmp(op->str,I32_TYPE))      return Int_Int_Handler_Cast(ll,op,args,I32_TYPE);
+    if(CStr_Cmp(op->str,I64_TYPE))      return Int_Int_Handler_Cast(ll,op,args,I64_TYPE);
+    if(CStr_Cmp(op->str,U8_TYPE))       return Int_Int_Handler_Cast(ll,op,args,U8_TYPE);
+    if(CStr_Cmp(op->str,U16_TYPE))      return Int_Int_Handler_Cast(ll,op,args,U16_TYPE);
+    if(CStr_Cmp(op->str,U32_TYPE))      return Int_Int_Handler_Cast(ll,op,args,U32_TYPE);
+    if(CStr_Cmp(op->str,U64_TYPE))      return Int_Int_Handler_Cast(ll,op,args,U64_TYPE);
+    if(CStr_Cmp(op->str,POINTER_TYPE))  return Int_Int_Handler_Cast(ll,op,args,POINTER_TYPE);
     return Token_Null();
 }
 Token U32_Handler_Size(SuperALX* ll,Token* op,Vector* args){
