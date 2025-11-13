@@ -182,65 +182,13 @@ namespace parse {
         }
     }
 
-    /*
     namespace float {
-        void setmode(u16 mode){
-            asm "fldcw " mode;
-        }
-        void setstd(){
-            u16 std = 0x037F;
-            asm "fldcw " std;
-        }
-
-        f64 powi(f64 base,i64 ex){
-            f64 out = 1.0;
-            if ex<0 {
-                base = 1.0 / base;
-                ex = -ex;
-            }
-            while ex>0 {
-                out *= base;
-                ex -= 1;
-            }
-            return out;
-        }
-
-        f64 sign(f64 num){
-            if num>0.0 {
-                return 1.0;
-            }elif num<0.0 {
-                return -1.0;
-            }
-            return 0.0;
-        }
-
-        f64 ylnx(f64 x,f64 y){ // y * ln(x)
-            return math::lib::yl2x(x,y) * math::lib::ln2();
-        }
-        f64 pow(f64 x,f64 y){ // x ^ y -> 2 ^ (y * log2(x))
-            f64 ex = math::lib::yl2x(x,y);
-            
-            i64 ipart = ex;
-            f64 fpart = ex - ipart;
-
-            f64 iout = math::float::powi(2.0,ipart);
-            f64 fout = math::lib::f2xm1(fpart) + 1.0;
-            return iout * fout;
-        }
-
-        f64 ln(f64 x){ 
-            return math::float::ylnx(x,1.0);
-        }
-        f64 ex(f64 x){ 
-            return math::float::pow(math::e,x);
-        }
-
         void get(i8* out,f64 n,u64 postdigits){ // f32 -> 7-9  |  f64 -> 15-17
             if n<0.0 && (i64)n==0 {
                 *out = '-';
-                out+=1;
+                out = out + 1;
             }
-            math::int::get(out,(i64)n);
+            parse::int::get(out,(i64)n);
             u64 len = cstr::len(out);
             *(out+len) = '.';
             len+=1;
@@ -248,26 +196,26 @@ namespace parse {
             u64 max = 15 - math::uint::min(15,len-1);
             postdigits = math::uint::min(postdigits,max);
 
-            n = n - (i64)n;
+            n = n - (f64)((i64)n);
             if n<0.0 {
                 n = -n;
             }
             n *= math::float::powi(10.0,postdigits);
-            math::uint::get(out+len,(u64)n);
+            parse::uint::get(out + len,(i64)n);
         }
         f64 by(i8* cstr){
             u64 len = cstr::len(cstr);
-            i64 dot = cstr::findc(cstr,'.');
+            i64 dot = cstr::find(cstr,'.');
             if dot>=0 {
                 *(cstr+dot) = '\0';
             }
 
-            f64 out = (f64)math::int::by(cstr);
+            f64 out = (f64)parse::int::by(cstr);
 
             u64 max = math::uint::min(15,len) - dot; // MAXIMUS otherwise errors because of precision
             *(cstr+dot+1+max) = '\0';
             if dot>=0 {
-                f64 comma = (f64)math::uint::by(cstr+dot+1) * math::float::powi(0.1,max);
+                f64 comma = (f64)parse::int::by(cstr+dot+1) * math::float::powi(0.1,max);
                 if out != 0.0 {
                     comma *= math::float::sign(out);
                 }elif (*cstr)=='-' {
@@ -283,13 +231,13 @@ namespace parse {
             }
             
             u64 len = cstr::len(cstr);
-            i64 dot = cstr::findc(cstr,'.');
+            i64 dot = cstr::find(cstr,'.');
             if dot>=0 {
                 *(cstr+dot) = '\0';
             }
 
-            u64 n;
-            if math::uint::by_s(cstr,&n)!=true {
+            i64 n;
+            if parse::int::by_s(cstr,&n)!=true {
                 return false;
             }
             f64 out = (f64)n;
@@ -297,7 +245,7 @@ namespace parse {
             u64 max = math::uint::min(15,len) - dot; // MAXIMUS otherwise errors because of precision
             *(cstr+dot+1+max) = '\0';
             if dot>=0 {
-                if math::uint::by_s(cstr+dot+1,&n)!=true {
+                if parse::int::by_s(cstr+dot+1,&n)!=true {
                     return false;
                 }
                 f64 comma = (f64)n * math::float::powi(0.1,max);
@@ -312,82 +260,7 @@ namespace parse {
             return true;
         }
     }
-
-    namespace aprox {
-        f64 sin_tp19(f64 x){
-            x = x - 6.283185307179586476925286766559 * (f64)((i64)(x * 0.15915494309189533576888376337251));
-            f64 x3 = x * x * x    * 0.16666666666666666666666666666667; // / 6.0;  
-            f64 x5 = x3 * x * x   * 0.05000000000000000000000000000000; // / 20.0; 
-            f64 x7 = x5 * x * x   * 0.02380952380952380952380952380952; // / 42.0; 
-            f64 x9 = x7 * x * x   * 0.01388888888888888888888888888889; // / 72.0; 
-            f64 x11 = x9 * x * x  * 0.00909090909090909090909090909091; // / 110;  
-            f64 x13 = x11 * x * x * 0.00641025641025641025641025641026; // / 156;  
-            f64 x15 = x13 * x * x * 0.00476190476190476190476190476190; // / 210;  
-            f64 x17 = x15 * x * x * 0.00367647058823529411764705882353; // / 272;  
-            f64 x19 = x17 * x * x * 0.00292397660818713450292397660819; // / 342;  
-            return x - x3 + x5 - x7 + x9 - x11 + x13 - x15 + x17 - x19;
-        }
-        f64 sin_sq(f64 x){
-            f64 y = x * 0.15915494309189533576888376337251;// / (2*PI);
-            y = y - (f64)(i64)y;
-            y = y + 1.0;
-            y = y - (f64)(i64)y;
-            if y<0.5 {
-                return -16.0*y*y+8.0*y; 
-            }
-            return 16.0*y*y-16.0*y-8.0*y+8.0;
-        }
-
-        f64 ex_tp10(f64 x){
-            f64 xe = x;
-            f64 out = 1.0 + xe;
-            xe *= x;
-            out += xe * 0.5; // / 2.0;
-            xe *= x;
-            out += xe * 0.166666666;
-            xe *= x;
-            out += xe * 0.041666666;
-            xe *= x;
-            out += xe * 0.008333333;// 5
-            xe *= x;
-            out += xe * 0.001388888;
-            xe *= x;
-            out += xe * 0.000198413;
-            xe *= x;
-            out += xe * 0.000024802;
-            xe *= x;
-            out += xe * 0.000002756;
-            xe *= x;
-            out += xe * 0.000000276;// 10
-            return out;
-        }
-        f64 ln_tp10(f64 x){
-            x = x - 1.0;
-            f64 xe = x;
-            f64 out = xe;
-            xe *= x;
-            out -= xe * 0.5; // / 2.0;
-            xe *= x;
-            out += xe * 0.333333333;
-            xe *= x;
-            out -= xe * 0.25;
-            xe *= x;
-            out += xe * 0.2;// 5
-            xe *= x;
-            out -= xe * 0.166666667;
-            xe *= x;
-            out += xe * 0.142857143;
-            xe *= x;
-            out -= xe * 0.125;
-            xe *= x;
-            out += xe * 0.111111111;
-            xe *= x;
-            out -= xe * 0.1;// 10
-            return out;
-        }
-    }
-    */
-
+    
     namespace hex {
         void get(i8* out,u64 num){
             *(out) = '0';

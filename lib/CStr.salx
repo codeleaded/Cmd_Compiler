@@ -70,4 +70,22 @@ namespace cstr {
         }
         return ssize;
     }
+    i64 findnot(i8* src,i8* paddern){
+        u64 psize = cstr::len(paddern);
+        u64 ssize = cstr::len(src);
+
+        for u64 i = 0,i<ssize,i+=1 {
+            i8 ch = src[i];
+            
+            for u64 j = 0,j<psize,j+=1 {
+                if ch==paddern[j] {
+                    j = psize;
+                }
+                if j==psize-1 {
+                    return i;
+                }
+            }
+        }
+        return ssize;
+    }
 }

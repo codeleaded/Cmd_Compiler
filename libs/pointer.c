@@ -276,6 +276,10 @@ Token Pointer_Handler_Cast(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
 
     if(op->str==NULL) return Pointer_Null_Handler_Cast(ll,op,args);
+    if(CStr_Cmp(op->str,I8_TYPE) || CStr_Cmp(op->str,I16_TYPE) || CStr_Cmp(op->str,I32_TYPE) || CStr_Cmp(op->str,I64_TYPE) ||
+       CStr_Cmp(op->str,U8_TYPE) || CStr_Cmp(op->str,U16_TYPE) || CStr_Cmp(op->str,U32_TYPE) || CStr_Cmp(op->str,U64_TYPE) ||
+       SuperALX_PointerType(ll,op->str))
+        return Int_Int_Handler_Cast(ll,op,args,op->str);
     return Token_Null();
 }
 Token Pointer_Handler_Size(SuperALX* ll,Token* op,Vector* args){

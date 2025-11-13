@@ -50,14 +50,12 @@ namespace mem {
             while true {
                 if first+8+size > self->memory+self->length {
                     return null;
-                }else{
-                    io::print("Hello World\n");
-                    if first->flags==0 && first->length>=size {
+                }elif first->flags==0 && first->length>=size {
                     u64 rem = first->length - size;
-                    
                     if rem<=8 {
                         size = first->length;
                     }
+                    
                     first->flags = 1;
                     first->length = size;
                     ptr = first + 8;
@@ -67,10 +65,10 @@ namespace mem {
                         next->length = rem - 8;
                         next->flags = 0;
                     }
+
                     return ptr;
                 }else{
-                    first = first + 8 + first->length;
-                }
+                    first = first + 8 + (u64)first->length;
                 }
             }
             return ptr;
@@ -84,12 +82,12 @@ namespace mem {
             Header* first = self->memory;
             
             while true {
-                if first+8+first->length > self->memory+self->length {
+                if first + 8 + (u64)first->length > self->memory+self->length {
                     return;
-                }elif ptr >= first && ptr < first+8+first->length {
+                }elif ptr >= first && ptr < first + 8 + (u64)first->length {
                     first->flags = 0;
                     
-                    Header* next = first+8+first->length;
+                    Header* next = first + 8 + (u64)first->length;
                     if next<=self->memory+self->length {
                         if next->flags==0 {
                             first->length += 8 + next->length;
@@ -98,13 +96,13 @@ namespace mem {
 
                     if prev>=self->memory {
                         if prev->flags==0 {
-                            prev->length += 8 + first->length;
+                            prev->length += 8 + (u64)first->length;
                         }
                     }
                     return;
                 }else{
                     prev = first;
-                    first = first + 8 + first->length;
+                    first = first + 8 + (u64)first->length;
                 }
             }
         }
@@ -117,26 +115,26 @@ namespace mem {
             Header* first = self->memory;
             
             while true {
-                if first+8+first->length > self->memory+self->length {
+                if first + 8 + (u64)first->length > self->memory+self->length {
                     return null;
                 }elif ptr >= first && ptr < first+8+first->length {
-                    Header* next = first+8+first->length;
+                    Header* next = first + 8 + (u64)first->length;
                     
                     if first->length>size {
-                        i32 diff = first->length - size - 8;
+                        u64 diff = (u64)first->length - size - 8;
                         if diff>0 {
                             first->length = size;
-                            Header* renext = first+8+first->length;
+                            Header* renext = first + 8 + (u64)first->length;
                             renext->flags = 0;
                             renext->length = diff;
                         }
                         return ptr;
                     }elif next->flags==0 {
-                        if first->length+8+next->length>size {
-                            i32 diff = first->length + next->length - size;// + 8 & - 8 => 0
+                        if first->length + 8 + next->length>size {
+                            u64 diff = (u64)first->length + (u64)next->length - size;// + 8 & - 8 => 0
                             if diff>0 {
                                 first->length = size;
-                                Header* renext = first+8+first->length;
+                                Header* renext = first + 8 + (u64)first->length;
                                 renext->flags = 0;
                                 renext->length = diff;
                             }else{
@@ -151,7 +149,7 @@ namespace mem {
                     self->free(ptr);
                     return newptr;
                 }else{
-                    first = first + 8 + first->length;
+                    first = first + 8 + (u64)first->length;
                 }
             }
             return ptr;
@@ -186,14 +184,14 @@ namespace mem {
                 
                 parse::hex::get(cstr+9,first);
                 parse::uint::get(cstr+28,(u64)first->length);
-                parse::hex::get(cstr+35,(u64)first->flags);
+                parse::hex::get(cstr+45,(u64)first->flags);
                 
                 cstr[53] = '|';
                 ptr::cpy(cstr+125,"\n",2);
 
                 io::print(cstr);
             
-                first = first + 8 + first->length;
+                first = first + 8 + (u64)first->length;
             }
 
             io::print("------------------------------------------------------\n");

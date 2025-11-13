@@ -60,6 +60,17 @@ Token U64_U64_Handler_Mod(SuperALX* ll,Token* op,Vector* args){
     return SuperALX_ExecuteAR(ll,a,b,op,"div","MOD",SuperALX_Function_Mod);
 }
 
+Token U64_U64_Handler_ShL(SuperALX* ll,Token* op,Vector* args){
+    Token* a = (Token*)Vector_Get(args,0);
+    Token* b = (Token*)Vector_Get(args,1);
+    return SuperALX_ExecuteAR2(ll,a,b,SUPERALX_REG_C,1,op,"shl","SHL",SuperALX_Function_Shl);
+}
+Token U64_U64_Handler_ShR(SuperALX* ll,Token* op,Vector* args){
+    Token* a = (Token*)Vector_Get(args,0);
+    Token* b = (Token*)Vector_Get(args,1);
+    return SuperALX_ExecuteAR2(ll,a,b,SUPERALX_REG_C,1,op,"shr","SHR",SuperALX_Function_Shr);
+}
+
 Token U64_Handler_Neg(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
     return SuperALX_ExecuteSingle(ll,a,op,"neg","NEG",SuperALX_Function_Neg);
@@ -183,15 +194,10 @@ Token U64_Handler_Cast(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
 
     if(op->str==NULL)                   return U64_Null_Handler_Cast(ll,op,args);
-    if(CStr_Cmp(op->str,I8_TYPE))       return Int_Int_Handler_Cast(ll,op,args,I8_TYPE);
-    if(CStr_Cmp(op->str,I16_TYPE))      return Int_Int_Handler_Cast(ll,op,args,I16_TYPE);
-    if(CStr_Cmp(op->str,I32_TYPE))      return Int_Int_Handler_Cast(ll,op,args,I32_TYPE);
-    if(CStr_Cmp(op->str,I64_TYPE))      return Int_Int_Handler_Cast(ll,op,args,I64_TYPE);
-    if(CStr_Cmp(op->str,U8_TYPE))       return Int_Int_Handler_Cast(ll,op,args,U8_TYPE);
-    if(CStr_Cmp(op->str,U16_TYPE))      return Int_Int_Handler_Cast(ll,op,args,U16_TYPE);
-    if(CStr_Cmp(op->str,U32_TYPE))      return Int_Int_Handler_Cast(ll,op,args,U32_TYPE);
-    if(CStr_Cmp(op->str,U64_TYPE))      return Int_Int_Handler_Cast(ll,op,args,U64_TYPE);
-    if(CStr_Cmp(op->str,POINTER_TYPE))  return Int_Int_Handler_Cast(ll,op,args,POINTER_TYPE);
+    if(CStr_Cmp(op->str,I8_TYPE) || CStr_Cmp(op->str,I16_TYPE) || CStr_Cmp(op->str,I32_TYPE) || CStr_Cmp(op->str,I64_TYPE) ||
+       CStr_Cmp(op->str,U8_TYPE) || CStr_Cmp(op->str,U16_TYPE) || CStr_Cmp(op->str,U32_TYPE) || CStr_Cmp(op->str,U64_TYPE) ||
+       SuperALX_PointerType(ll,op->str))
+        return Int_Int_Handler_Cast(ll,op,args,op->str);
     return Token_Null();
 }
 Token U64_Handler_Size(SuperALX* ll,Token* op,Vector* args){
@@ -229,6 +235,8 @@ void Ex_Packer(ExternFunctionMap* Extern_Functions,Vector* funcs,Scope* s){//Vec
                 OperatorDefiner_New(TOKEN_SUPERALX_AND,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_And),
                 OperatorDefiner_New(TOKEN_SUPERALX_OR,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Or),
                 OperatorDefiner_New(TOKEN_SUPERALX_XOR,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Xor),
+                OperatorDefiner_New(TOKEN_SUPERALX_SHL,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_ShL),
+                OperatorDefiner_New(TOKEN_SUPERALX_SHR,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_ShR),
                 OperatorDefiner_New(TOKEN_SUPERALX_EQU,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Equ),
                 OperatorDefiner_New(TOKEN_SUPERALX_NEQ,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Neq),
                 OperatorDefiner_New(TOKEN_SUPERALX_LES,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Les),
@@ -251,6 +259,8 @@ void Ex_Packer(ExternFunctionMap* Extern_Functions,Vector* funcs,Scope* s){//Vec
                 OperatorDefiner_New(TOKEN_SUPERALX_AND,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_And),
                 OperatorDefiner_New(TOKEN_SUPERALX_OR,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Or),
                 OperatorDefiner_New(TOKEN_SUPERALX_XOR,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Xor),
+                OperatorDefiner_New(TOKEN_SUPERALX_SHL,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_ShL),
+                OperatorDefiner_New(TOKEN_SUPERALX_SHR,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_ShR),
                 OperatorDefiner_New(TOKEN_SUPERALX_EQU,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Equ),
                 OperatorDefiner_New(TOKEN_SUPERALX_NEQ,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Neq),
                 OperatorDefiner_New(TOKEN_SUPERALX_LES,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Les),
@@ -273,6 +283,8 @@ void Ex_Packer(ExternFunctionMap* Extern_Functions,Vector* funcs,Scope* s){//Vec
                 OperatorDefiner_New(TOKEN_SUPERALX_AND,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_And),
                 OperatorDefiner_New(TOKEN_SUPERALX_OR,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Or),
                 OperatorDefiner_New(TOKEN_SUPERALX_XOR,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Xor),
+                OperatorDefiner_New(TOKEN_SUPERALX_SHL,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_ShL),
+                OperatorDefiner_New(TOKEN_SUPERALX_SHR,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_ShR),
                 OperatorDefiner_New(TOKEN_SUPERALX_EQU,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Equ),
                 OperatorDefiner_New(TOKEN_SUPERALX_NEQ,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Neq),
                 OperatorDefiner_New(TOKEN_SUPERALX_LES,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Les),
@@ -295,6 +307,8 @@ void Ex_Packer(ExternFunctionMap* Extern_Functions,Vector* funcs,Scope* s){//Vec
                 OperatorDefiner_New(TOKEN_SUPERALX_AND,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_And),
                 OperatorDefiner_New(TOKEN_SUPERALX_OR,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Or),
                 OperatorDefiner_New(TOKEN_SUPERALX_XOR,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Xor),
+                OperatorDefiner_New(TOKEN_SUPERALX_SHL,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_ShL),
+                OperatorDefiner_New(TOKEN_SUPERALX_SHR,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_ShR),
                 OperatorDefiner_New(TOKEN_SUPERALX_EQU,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Equ),
                 OperatorDefiner_New(TOKEN_SUPERALX_NEQ,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Neq),
                 OperatorDefiner_New(TOKEN_SUPERALX_LES,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Les),
@@ -317,6 +331,8 @@ void Ex_Packer(ExternFunctionMap* Extern_Functions,Vector* funcs,Scope* s){//Vec
                 OperatorDefiner_New(TOKEN_SUPERALX_AND,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_And),
                 OperatorDefiner_New(TOKEN_SUPERALX_OR,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Or),
                 OperatorDefiner_New(TOKEN_SUPERALX_XOR,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Xor),
+                OperatorDefiner_New(TOKEN_SUPERALX_SHL,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_ShL),
+                OperatorDefiner_New(TOKEN_SUPERALX_SHR,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_ShR),
                 OperatorDefiner_New(TOKEN_SUPERALX_EQU,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Equ),
                 OperatorDefiner_New(TOKEN_SUPERALX_NEQ,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Neq),
                 OperatorDefiner_New(TOKEN_SUPERALX_LES,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Les),
@@ -339,6 +355,8 @@ void Ex_Packer(ExternFunctionMap* Extern_Functions,Vector* funcs,Scope* s){//Vec
                 OperatorDefiner_New(TOKEN_SUPERALX_AND,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_And),
                 OperatorDefiner_New(TOKEN_SUPERALX_OR,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Or),
                 OperatorDefiner_New(TOKEN_SUPERALX_XOR,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Xor),
+                OperatorDefiner_New(TOKEN_SUPERALX_SHL,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_ShL),
+                OperatorDefiner_New(TOKEN_SUPERALX_SHR,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_ShR),
                 OperatorDefiner_New(TOKEN_SUPERALX_EQU,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Equ),
                 OperatorDefiner_New(TOKEN_SUPERALX_NEQ,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Neq),
                 OperatorDefiner_New(TOKEN_SUPERALX_LES,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Les),
@@ -361,6 +379,8 @@ void Ex_Packer(ExternFunctionMap* Extern_Functions,Vector* funcs,Scope* s){//Vec
                 OperatorDefiner_New(TOKEN_SUPERALX_AND,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_And),
                 OperatorDefiner_New(TOKEN_SUPERALX_OR,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Or),
                 OperatorDefiner_New(TOKEN_SUPERALX_XOR,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Xor),
+                OperatorDefiner_New(TOKEN_SUPERALX_SHL,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_ShL),
+                OperatorDefiner_New(TOKEN_SUPERALX_SHR,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_ShR),
                 OperatorDefiner_New(TOKEN_SUPERALX_EQU,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Equ),
                 OperatorDefiner_New(TOKEN_SUPERALX_NEQ,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Neq),
                 OperatorDefiner_New(TOKEN_SUPERALX_LES,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Les),
@@ -383,6 +403,8 @@ void Ex_Packer(ExternFunctionMap* Extern_Functions,Vector* funcs,Scope* s){//Vec
                 OperatorDefiner_New(TOKEN_SUPERALX_AND,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_And),
                 OperatorDefiner_New(TOKEN_SUPERALX_OR,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Or),
                 OperatorDefiner_New(TOKEN_SUPERALX_XOR,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Xor),
+                OperatorDefiner_New(TOKEN_SUPERALX_SHL,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_ShL),
+                OperatorDefiner_New(TOKEN_SUPERALX_SHR,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_ShR),
                 OperatorDefiner_New(TOKEN_SUPERALX_EQU,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Equ),
                 OperatorDefiner_New(TOKEN_SUPERALX_NEQ,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Neq),
                 OperatorDefiner_New(TOKEN_SUPERALX_LES,(Token(*)(void*,Token*,Vector*))U64_U64_Handler_Les),
