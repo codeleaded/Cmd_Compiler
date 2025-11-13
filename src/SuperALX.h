@@ -914,7 +914,7 @@ Boolean ShutingYard_return(SuperALX* ll,TokenMap* tm){
         TokenMap_Free(&cpy);
     }
 
-    Scope_FromTo_DestroyOnly(&ll->ev.sc,1,ll->ev.sc.range);
+    SuperALX_FromTo_DestroyOnly(ll,1,ll->ev.sc.range);
     
     /*Function* f = Compiler_FunctionIn(&ll->ev);
     if(f && f->params.size>0){

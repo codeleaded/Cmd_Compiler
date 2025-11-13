@@ -368,6 +368,13 @@ void SuperALX_Variable_Destroy_Decl(SuperALX* ll,CStr name){
         ll->stack -= size;
     }
 }
+void SuperALX_Variable_Destroy_Only(SuperALX* ll,CStr name){
+    Variable* v = Scope_FindVariable(&ll->ev.sc,name);
+    if(v->range>0){
+        int size = SuperALX_Size(ll,v->typename);
+        if(size>0) SuperALX_Indentation_Appendf(ll,&ll->text,"add rsp,%d",size);
+    }
+}
 void SuperALX_Variable_Destroy_Ref_Decl(SuperALX* ll,CStr name){
     Variable* v = Scope_FindVariable(&ll->ev.sc,name);
     if(v->range>0){
@@ -664,6 +671,7 @@ Boolean SuperALX_Function_Lot(Boolean a){
 void SuperALX_Destroyer(Variable* v){
     //printf("[SuperALX]: Destroyer: %s -> ",v->typename);
     SuperALXVariable* v_sv = (SuperALXVariable*)Variable_Data(v);
+    
     if(v_sv->destroy==0){
         SuperALX_Variable_Destroy_Ref_Decl(v_sv->parent,v->name);
         //printf("Ref -> %s -> %d\n",v->name,((SuperALX*)v_sv->parent)->stack);
@@ -673,8 +681,13 @@ void SuperALX_Destroyer(Variable* v){
     }else if(v_sv->destroy==2){
         SuperALX_Variable_Destroy_Use(v_sv->parent,v->name);
         //printf("Use -> %s -> %d -> %d\n",v->name,v_sv->stack,((SuperALX*)v_sv->parent)->stack);
+    }else if(v_sv->destroy==3){
+        SuperALX_Variable_Destroy_Only(v_sv->parent,v->name);
+        //printf("Only -> %s -> %d -> %d\n",v->name,v_sv->stack,((SuperALX*)v_sv->parent)->stack);
     }
-    SuperALXVariable_Free(v_sv);
+
+    if(v_sv->destroy != 3)
+        SuperALXVariable_Free(v_sv);
 }
 void SuperALX_Cpyer(Variable* src,Variable* dst){
     //printf("[SuperALX]: Cpyer!\n");
@@ -705,6 +718,20 @@ Token SuperALX_Init(SuperALX* ll,Token* op,Vector* args){
         }
     }
     return Token_Cpy(a);
+}
+
+void SuperALX_FromTo_DestroyOnly(SuperALX* ll,Range start,Range end) {
+    for(int i = ll->ev.sc.vars.size-1;i>=0;i--){
+        Variable* v = (Variable*)PVector_Get(&ll->ev.sc.vars,i);
+        
+        if(v->range > start && v->range<=end){
+            SuperALXVariable* v_sv = (SuperALXVariable*)Variable_Data(v);
+            char destroy = v_sv->destroy;
+            v_sv->destroy = 3;
+            Variable_Destroyer(v);
+            v_sv->destroy = destroy;
+        }
+    }
 }
 
 Double SuperALX_GetFloat(SuperALX* ll,CStr fstr){
