@@ -38,39 +38,21 @@ import "../lib/Memory.salx";
 
 i64 main(){
 
-    //mem::Allocator alloc = mem::Allocator::make(10000);
-    //alloc.print();
-    //alloc.delete();
+    mem::Allocator alloc = mem::Allocator::make(10000);
+    alloc.print();
 
-    i8[48] out;
-    ptr::set(out,0,48);
-
-    u64 num = 69;
-    
-    //if num==0 {
-    //    *out = 48;
-    //}else{
-    //    u64 size = -1;
-    //    while num > 0 {
-    //        num /= 10;
-    //        size += 1;
-    //    }
-    //
-    //    for i64 i = size,i>=0,i-=1 {
-    //        u64 dig = num % 10;
-    //        out[i] = (dig + 48);
-    //        num /= 10;
-    //    }
-    //}
-
-    u64 size = -1;
-    while num > 0 {
-        num /= 10;
-        size += 1;
+    void* ptr = alloc.alloc(16);
+    io::print("alloced\n");
+    if(ptr != null){
+        ptr::cpy(ptr,"Hello World\n",13);
+        io::print(ptr);
+        alloc.free(ptr);
+    }else{
+        io::print("null\n");
     }
 
-    io::print(out);
-    return num;
+    alloc.print();
+    alloc.delete();
 
     //i8* buffer = " ";
     //io::input(buffer,100);

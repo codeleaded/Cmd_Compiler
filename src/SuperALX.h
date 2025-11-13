@@ -1241,7 +1241,8 @@ SuperALX SuperALX_New(char* dllpath,char* src,char* output,char bits) {
     
             { TOKEN_COMMA,RESETER_RST },
 
-            { TOKEN_PARENTHESES_R,RESETER_TO1 },
+            //{ TOKEN_PARENTHESES_R,RESETER_TO1 },
+            { TOKEN_PARENTHESES_R,RESETER_NONE },
             { TOKEN_SUPERALX_SUBSR,RESETER_NONE },
             { TOKEN_CURLY_BRACES_R,RESETER_NONE },
             //{ TOKEN_ANGLE_BRACKETS_R,RESETER_NONE }, //also < and > operator
@@ -1292,7 +1293,7 @@ SuperALX SuperALX_New(char* dllpath,char* src,char* output,char bits) {
             { TOKEN_INTERROBANG,RESETER_RST },
             { TOKEN_BULLET_POINT,RESETER_RST },
     
-            { TOKEN_CAST,RESETER_ADD1 },
+            { TOKEN_CAST,RESETER_NONE },
             { TOKEN_FUNCTION,RESETER_ADD1 },
             { TOKEN_CONSTSTRING_SINGLE,RESETER_ADD1 },
             { TOKEN_CONSTSTRING_DOUBLE,RESETER_ADD1 },

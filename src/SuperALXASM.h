@@ -456,7 +456,7 @@ void SuperALX_Variable_Destroy_Use(SuperALX* ll,CStr name){
 CStr SuperALX_VariableType(SuperALX* ll,Token* a){
     if(a->tt==TOKEN_STRING){
         Variable* v_a = Scope_FindVariable(&ll->ev.sc,a->str);
-        if(v_a) return CStr_Cpy(v_a->typename);
+        if(v_a) return SuperALX_TypeOfDref(ll,v_a->typename);
     }
     if(a->tt==TOKEN_SUPERALX_BOOLEAN)    return CStr_Cpy(BOOL_TYPE);
     if(a->tt==TOKEN_NUMBER)              return CStr_Cpy(I64_TYPE);
@@ -1012,7 +1012,7 @@ void SuperALX_AtReg(SuperALX* ll,Token* a,CStr reg,CStr inst){
                 
                 CStr typename = SuperALX_TypeOfDref(ll,v->typename);
                 CStr typeselector = SuperALX_TypeSelector_T(ll,typename);
-                SuperALX_Indentation_Appendf(ll,&ll->text,"%s %s[%s],%s",inst,typeselector,SUPERALX_REG_10_64,reg);
+                SuperALX_Indentation_Appendf(ll,&ll->text,"%s %s,%s[%s]",inst,reg,typeselector,SUPERALX_REG_10_64);
                 CStr_Free(&typename);
                 CStr_Free(&typeselector);
             }else{
@@ -1121,7 +1121,7 @@ void SuperALX_CmpAtReg(SuperALX* ll,Token* a,CStr reg){
                 
             CStr typename = SuperALX_TypeOfDref(ll,v->typename);
             CStr typeselector = SuperALX_TypeSelector_T(ll,typename);
-            SuperALX_Indentation_Appendf(ll,&ll->text,"cmp %s[%s],%s",typeselector,SUPERALX_REG_10_64,reg);
+            SuperALX_Indentation_Appendf(ll,&ll->text,"cmp %s,%s[%s]",reg,typeselector,SUPERALX_REG_10_64);
             CStr_Free(&typename);
             CStr_Free(&typeselector);
         }else{
@@ -1414,6 +1414,26 @@ Token SuperALX_ExecuteCmp(SuperALX* ll,Token* a,Token* b,Token* op,CStr instname
         SuperALX_CmpAtReg(ll,b,SuperALX_SelectRT(ll,realsize_b)[SUPERALX_REG_A]);
         SuperALX_CmpAtSet(ll,&stack_t,instname);
         return stack_t;
+    }
+}
+
+Token Int_Int_Handler_Cast(SuperALX* ll,Token* op,Vector* args,CStr type){
+    Token* a = (Token*)Vector_Get(args,0);
+
+    if(a->tt==TOKEN_NUMBER){
+        return Token_Cpy(a);
+    }else if(a->tt==TOKEN_STRING){
+        Variable* v = Scope_FindVariable(&ll->ev.sc,a->str);
+        CStr stack_name = SuperALX_Variablename_Next(ll,".STACK",6);
+        
+        SuperALX_Variable_Build_Decl(ll,stack_name,type);
+        
+        Token stack_t = Token_Move(TOKEN_STRING,stack_name);
+        SuperALX_ExecuteAss(ll,&stack_t,a,(Token[]){ Token_Move(TOKEN_SUPERALX_ASS,NULL) },"mov","ASS");
+        return stack_t;
+    }else{
+        Enviroment_ErrorHandler(&ll->ev,"Cast(f64 -> i64): Error -> %s is from no possible type!",a->str);
+        return Token_Null();
     }
 }
 

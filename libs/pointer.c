@@ -308,7 +308,33 @@ void Ex_Packer(ExternFunctionMap* Extern_Functions,Vector* funcs,Scope* s){//Vec
                 OperatorDefiner_New(TOKEN_SUPERALX_GRQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Grq),
                 OPERATORDEFINER_END
             })),
+            OperatorInterater_Make((CStr[]){ I32_TYPE,NULL },OperatorDefineMap_Make((OperatorDefiner[]){
+                OperatorDefiner_New(TOKEN_SUPERALX_ASS,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Ass),
+                OperatorDefiner_New(TOKEN_SUPERALX_ADD,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Add),
+                OperatorDefiner_New(TOKEN_SUPERALX_SUB,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Sub),
+                OperatorDefiner_New(TOKEN_SUPERALX_EQU,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Equ),
+                OperatorDefiner_New(TOKEN_SUPERALX_NEQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Neq),
+                OperatorDefiner_New(TOKEN_SUPERALX_LES,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Les),
+                OperatorDefiner_New(TOKEN_SUPERALX_GRT,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Grt),
+                OperatorDefiner_New(TOKEN_SUPERALX_LEQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Leq),
+                OperatorDefiner_New(TOKEN_SUPERALX_GRQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Grq),
+                OperatorDefiner_New(TOKEN_SUPERALX_SUBS,(Token(*)(void*,Token*,Vector*))Pointer_I64_Handler_Subs),
+                OPERATORDEFINER_END
+            })),
             OperatorInterater_Make((CStr[]){ I64_TYPE,NULL },OperatorDefineMap_Make((OperatorDefiner[]){
+                OperatorDefiner_New(TOKEN_SUPERALX_ASS,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Ass),
+                OperatorDefiner_New(TOKEN_SUPERALX_ADD,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Add),
+                OperatorDefiner_New(TOKEN_SUPERALX_SUB,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Sub),
+                OperatorDefiner_New(TOKEN_SUPERALX_EQU,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Equ),
+                OperatorDefiner_New(TOKEN_SUPERALX_NEQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Neq),
+                OperatorDefiner_New(TOKEN_SUPERALX_LES,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Les),
+                OperatorDefiner_New(TOKEN_SUPERALX_GRT,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Grt),
+                OperatorDefiner_New(TOKEN_SUPERALX_LEQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Leq),
+                OperatorDefiner_New(TOKEN_SUPERALX_GRQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Grq),
+                OperatorDefiner_New(TOKEN_SUPERALX_SUBS,(Token(*)(void*,Token*,Vector*))Pointer_I64_Handler_Subs),
+                OPERATORDEFINER_END
+            })),
+            OperatorInterater_Make((CStr[]){ U32_TYPE,NULL },OperatorDefineMap_Make((OperatorDefiner[]){
                 OperatorDefiner_New(TOKEN_SUPERALX_ASS,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Ass),
                 OperatorDefiner_New(TOKEN_SUPERALX_ADD,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Add),
                 OperatorDefiner_New(TOKEN_SUPERALX_SUB,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Sub),

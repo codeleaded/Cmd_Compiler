@@ -1,19 +1,25 @@
 
 namespace ptr {
     void set(void* ptr,i8 value,i64 size){
-        i8* cptr = ptr;
-        i64 todo = size / 8 * 8;
-        i64 rest = size - todo;
-        
-        i64* dst64 = cptr;
-        i64 value64 = value;
-        i64 comp = value64 | (value64<<8) | (value64<<16) | (value64<<24) | (value64<<32) | (value64<<40) | (value64<<48) | (value64<<56);
-        i64 i = 0;
-        for ,i<todo,i+=8 {
-            *(dst64+i) = comp;
-        }
-        for ,i<size,i+=1 {
-            cptr[i] = value;
+        //i8* cptr = ptr;
+        //i64 todo = size / 8 * 8;
+        //i64 rest = size - todo;
+        //
+        //i64* dst64 = cptr;
+        //i64 value64 = value;
+        //i64 comp = value64 | (value64<<8) | (value64<<16) | (value64<<24) | (value64<<32) | (value64<<40) | (value64<<48) | (value64<<56);
+        //
+        //i64 i = 0;
+        //for ,i<todo,i+=8 {
+        //    *(dst64+i) = comp;
+        //}
+        //for ,i<size,i+=1 {
+        //    cptr[i] = value;
+        //}
+
+        i8* cdst = ptr;
+        for i64 i = 0,i<size,i+=1 {
+            cdst[i] = value;
         }
     }
     void cpy(void* dst,void* src,i64 size){
