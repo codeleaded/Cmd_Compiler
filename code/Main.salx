@@ -32,7 +32,7 @@ import "../lib/CStr.salx";
 import "../lib/IO.salx";
 import "../lib/Char.salx";
 import "../lib/Math.salx";
-//import "../lib/Parser.salx";
+import "../lib/Parser.salx";
 //import "../lib/Memory.salx";
 
 i64 main(){
