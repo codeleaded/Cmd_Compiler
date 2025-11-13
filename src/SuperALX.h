@@ -38,8 +38,10 @@ Boolean ShutingYard_compress_defines(SuperALX* ll,TokenMap* tm){
 Boolean ShutingYard_compress_pointer(SuperALX* ll,TokenMap* tm){
     for(int i = 0;i<tm->size-1;i++){
         Token* type = (Token*)Vector_Get(tm,i);
+
         if(type->tt==TOKEN_TYPE){
             Token* next = (Token*)Vector_Get(tm,i+1);
+            
             if(next->tt==TOKEN_ASTERISK || next->tt==TOKEN_SUPERALX_MUL || next->tt==TOKEN_SUPERALX_DRF){
                 CStr newtype = CStr_Concat(type->str,"*");
                 CStr_Set((char**)&type->str,newtype);
@@ -50,6 +52,19 @@ Boolean ShutingYard_compress_pointer(SuperALX* ll,TokenMap* tm){
                 i--;
             }else if(next->tt==TOKEN_AMPERSAND || next->tt==TOKEN_SUPERALX_AND || next->tt==TOKEN_SUPERALX_ADR){
                 CStr newtype = CStr_Concat(type->str,"&");
+                CStr_Set((char**)&type->str,newtype);
+                CStr_Free(&newtype);
+                
+                Token_Free(next);
+                Vector_Remove(tm,i+1);
+                i--;
+            }else if(next->tt==TOKEN_SUPERALX_SUBS){
+                if(!SuperALX_CompressStackType(ll,tm,i)) continue;
+                type = (Token*)Vector_Get(tm,i);
+
+                ShutingYard_compress(ll,(TokenMap*)Vector_Get(type->args,0));
+
+                CStr newtype = CStr_Concat(type->str,"*");
                 CStr_Set((char**)&type->str,newtype);
                 CStr_Free(&newtype);
                 
@@ -817,7 +832,7 @@ Boolean ShutingYard_Curly_R(SuperALX* ll,TokenMap* tm){
         ll->logic = TOKEN_SUPERALX_WHILE;
         break;
     case TOKEN_SUPERALX_FOR:
-        CallPosition* cp = (CallPosition*)Vector_Get(&ll->ev.cs,ll->ev.cs.size-2);
+        CallPosition* cp = (CallPosition*)Vector_Get(&ll->ev.cs,ll->ev.cs.size-1);
         Compiler_Do(&ll->ev,&cp->tm);
 
         Scope_Pop(&ll->ev.sc);
@@ -938,7 +953,28 @@ Boolean ShutingYard_Decl(SuperALX* ll,TokenMap* tm){
         
         if(name->tt==TOKEN_STRING){
             if(!CStr_Cmp(name->str,SUPERALX_SELF)){
-                SuperALX_Variable_Build_Decl(ll,name->str,pottype->str);
+                if(pottype->args && pottype->args->size > 0){
+                    TokenMap* stm = (TokenMap*)Vector_Get(pottype->args,0);
+                    Token* stok = (Token*)Vector_Get(stm,0);
+                    
+                    Number size = 0;
+                    if(stok->tt == TOKEN_NUMBER){
+                        size = Number_Parse(stok->str);
+
+                        if(size == NUMBER_PARSE_ERROR){
+                            Compiler_ErrorHandler(&ll->ev,"decl: number: \'%s\' is not valid!",stok->str);
+                            return False;
+                        }
+                    }else{
+                        Compiler_ErrorHandler(&ll->ev,"decl: size of stack var is not a number: \'%s\'!",stok->str);
+                        return False;
+                    }
+
+                    SuperALX_Variable_Build_DeclStack(ll,name->str,pottype->str,size);
+                }else{
+                    SuperALX_Variable_Build_Decl(ll,name->str,pottype->str);
+                }
+                
                 if(tm->size>2){
                     if(ll->ev.sc.range>0){
                         Token* t = (Token*)Vector_Get(tm,0);
@@ -951,7 +987,8 @@ Boolean ShutingYard_Decl(SuperALX* ll,TokenMap* tm){
                         return False;
                     }
                 }
-            }else   Compiler_ErrorHandler(&ll->ev,"decl: name self is not allowed for decl!");
+            }else
+                Compiler_ErrorHandler(&ll->ev,"decl: name self is not allowed for decl!");
         }else{
             Compiler_ErrorHandler(&ll->ev,"decl: name of decl variable doesn't exist!");
             return False;

@@ -5,7 +5,7 @@ import "../lib/Parser.salx";
 
 namespace mem {
     struct Header[
-        pub u32 length,
+        pub u64 length,
         pub u8 flags
     ];
 
@@ -40,13 +40,6 @@ namespace mem {
             Allocator alloc;
             alloc.init(size);
             return alloc;
-        }
-
-        pub void* getMemory(Allocator* self){
-            return self->memory;
-        }
-        pub u64 getLength(Allocator* self){
-            return self->length;
         }
 
         pub void* alloc(Allocator* self,u64 size){
@@ -167,27 +160,28 @@ namespace mem {
         pub void print(Allocator* self){
             io::print("------------------ Allocator -----------------\n");
             
-            i8 cstr[48];
+            i8[48] cstr;
             
             ptr::set(cstr,32,45);
             ptr::cpy(cstr,"| Memory:",9);
-            math::uint::get(cstr+10,self->getMemory());
+            parse::uint::get(cstr+10,self->memory);
             ptr::cpy(cstr+45,"\n",2);
             io::print(cstr);
 
             ptr::set(cstr,32,45);
             ptr::cpy(cstr,"| Length:",9);
-            math::uint::get(cstr+10,self->getLength());
+            parse::uint::get(cstr+10,self->length);
             ptr::cpy(cstr+45,"\n",2);
             io::print(cstr);
 
             Header* first = self->memory;
-            while first>=self->memory && first<self->memory+self->length {
+            while first>=self->memory && first<self->memory + self->length {
+                
                 ptr::set(cstr,32,45);
                 ptr::cpy(cstr,"| Block:",8);
-                math::uint::get(cstr+9,first);
-                math::uint::get(cstr+28,first->length);
-                math::uint::get(cstr+35,first->flags);
+                parse::uint::get(cstr+9,first);
+                parse::uint::get(cstr+28,first->length);
+                parse::uint::get(cstr+35,first->flags);
                 ptr::cpy(cstr+45,"|",1);
                 ptr::cpy(cstr+46,"\n",2);
                 io::print(cstr);

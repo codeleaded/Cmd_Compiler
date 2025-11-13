@@ -27,6 +27,7 @@ Token I16_I16_Handler_Asm(SuperALX* ll,Token* op,Vector* args){
 Token I16_I16_Handler_Asv(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
     Token* b = (Token*)Vector_Get(args,1);
+    SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,0",SUPERALX_REG_D_64);
     return SuperALX_ExecuteAssA(ll,a,b,op,"idiv","ASV");
 }
 
@@ -48,6 +49,7 @@ Token I16_I16_Handler_Mul(SuperALX* ll,Token* op,Vector* args){
 Token I16_I16_Handler_Div(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
     Token* b = (Token*)Vector_Get(args,1);
+    SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,0",SUPERALX_REG_D_64);
     return SuperALX_ExecuteA(ll,a,b,op,"idiv","IDIV",SuperALX_Function_Div);
 }
 
