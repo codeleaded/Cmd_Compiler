@@ -1379,6 +1379,7 @@ SuperALX SuperALX_New(char* dllpath,char* src,char* output,char bits) {
                 StdConstType_New(TOKEN_FLOAT,F64_TYPE),
                 StdConstType_New(TOKEN_SUPERALX_BOOLEAN,BOOL_TYPE),
                 StdConstType_New(TOKEN_CONSTSTRING_DOUBLE,STR_TYPE),
+                StdConstType_New(TOKEN_CONSTSTRING_SINGLE,CHAR_TYPE),
                 StdConstType_New(TOKEN_FUNCTIONPOINTER,NULL_TYPE),
                 StdConstType_New(TOKEN_SUPERALX_NULL,NULL_TYPE),
                 STDCONSTTYPE_END

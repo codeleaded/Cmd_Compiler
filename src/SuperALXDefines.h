@@ -213,6 +213,7 @@ char* SuperALX_RT_64[] = {
 #define VOID_TYPE                           "void"
 #define NULL_TYPE                           VOID_TYPE"*"
 #define STR_TYPE                            "i8*"
+#define CHAR_TYPE                           I32_TYPE
 #define POINTER_TYPE                        "?*"
 #define DREF_TYPE                           "!&"
 #define STRUCT_TYPE                         ".struct"
@@ -230,6 +231,7 @@ char* SuperALX_RT_64[] = {
 #define F64_SIZE                            8
 #define VOID_SIZE                           0
 #define STR_SIZE                            8
+#define CHAR_SIZE                           4
 #define POINTER_SIZE                        8
 #define DREF_SIZE                           8
 
