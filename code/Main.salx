@@ -37,6 +37,8 @@ stack und struct arrays
 //import "../lib/String.salx";
 //import "../lib/Stream.salx";
 
+import "../lib/IO.salx";
+
 i64 main(){
     return 0;
 }
