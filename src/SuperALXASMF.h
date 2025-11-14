@@ -302,4 +302,26 @@ Token SuperALX_ExecuteFCmp(SuperALX* ll,Token* a,Token* b,Token* op,CStr instnam
     }
 }
 
+Token Int_Float_Handler_Cast(SuperALX* ll,Token* op,Vector* args){
+    Token* a = (Token*)Vector_Get(args,0);
+
+    if(a->tt==TOKEN_NUMBER){
+        CStr fstr = Double_Get(Number_Parse(a->str),8);
+        return Token_Move(TOKEN_FLOAT,fstr);
+    }else if(a->tt==TOKEN_STRING){
+        Variable* v = Scope_FindVariable(&ll->ev.sc,a->str);
+        CStr stack_name = SuperALX_Variablename_Next(ll,".STACK",6);
+        
+        SuperALX_Variable_Build_Decl(ll,stack_name,F64_TYPE);
+        
+        Token stack_t = Token_Move(TOKEN_STRING,stack_name);
+        SuperALX_AtFPU(ll,a);
+        SuperALX_FromFPU(ll,&stack_t);
+        return stack_t;
+    }else{
+        Enviroment_ErrorHandler(&ll->ev,"Cast(i64 -> f64): Error -> %s is from no possible type!",a->str);
+        return Token_Null();
+    }
+}
+
 #endif //!SUPERALXASMF

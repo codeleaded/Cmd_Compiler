@@ -1,5 +1,7 @@
 import "../lib/System.salx";
 import "../lib/CStr.salx";
+import "../lib/Pointer.salx";
+import "../lib/Parser.salx";
 
 define IO_FILE      void*;
 
@@ -51,6 +53,13 @@ namespace io {
         i8[24] str;
         ptr::set(str,0,24);
         parse::uint::get(str,a);
+        i64 len = cstr::len(str);
+        sys::write(1,str,len);
+    }
+    void print_float(f64 a){
+        i8[24] str;
+        ptr::set(str,0,24);
+        parse::float::get(str,a,6);
         i64 len = cstr::len(str);
         sys::write(1,str,len);
     }

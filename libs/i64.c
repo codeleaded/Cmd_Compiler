@@ -1,7 +1,6 @@
 #include "/home/codeleaded/System/Static/Library/AlxCallStack.h"
 #include "/home/codeleaded/System/Static/Library/AlxExternFunctions.h"
-#include "/home/codeleaded/Hecke/C/Cmd_Compiler/src/SuperALX.h"
-#include "/home/codeleaded/Hecke/C/Cmd_Compiler/src/SuperALXASMF.h"
+#include "../src/SuperALX.h"
 
 Token I64_I64_Handler_Ass(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
@@ -191,32 +190,11 @@ Token I64_Null_Handler_Cast(SuperALX* ll,Token* op,Vector* args){
     String_Free(&ret);
     return Token_Move(TOKEN_CONSTSTRING_DOUBLE,out);
 }
-Token I64_F64_Handler_Cast(SuperALX* ll,Token* op,Vector* args){
-    Token* a = (Token*)Vector_Get(args,0);
-
-    if(a->tt==TOKEN_NUMBER){
-        CStr fstr = Double_Get(Number_Parse(a->str),8);
-        return Token_Move(TOKEN_FLOAT,fstr);
-    }else if(a->tt==TOKEN_STRING){
-        Variable* v = Scope_FindVariable(&ll->ev.sc,a->str);
-        CStr stack_name = SuperALX_Variablename_Next(ll,".STACK",6);
-        
-        SuperALX_Variable_Build_Decl(ll,stack_name,F64_TYPE);
-        
-        Token stack_t = Token_Move(TOKEN_STRING,stack_name);
-        SuperALX_AtFPU(ll,a);
-        SuperALX_FromFPU(ll,&stack_t);
-        return stack_t;
-    }else{
-        Enviroment_ErrorHandler(&ll->ev,"Cast(i64 -> f64): Error -> %s is from no possible type!",a->str);
-        return Token_Null();
-    }
-}
 Token I64_Handler_Cast(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
 
     if(op->str==NULL)                   return I64_Null_Handler_Cast(ll,op,args);
-    if(CStr_Cmp(op->str,F64_TYPE))      return I64_F64_Handler_Cast(ll,op,args);
+    if(CStr_Cmp(op->str,F64_TYPE))      return Int_Float_Handler_Cast(ll,op,args);
     if(CStr_Cmp(op->str,I8_TYPE) || CStr_Cmp(op->str,I16_TYPE) || CStr_Cmp(op->str,I32_TYPE) || CStr_Cmp(op->str,I64_TYPE) ||
        CStr_Cmp(op->str,U8_TYPE) || CStr_Cmp(op->str,U16_TYPE) || CStr_Cmp(op->str,U32_TYPE) || CStr_Cmp(op->str,U64_TYPE) ||
        SuperALX_PointerType(ll,op->str))

@@ -1,3 +1,6 @@
+import "../lib/IO.salx";
+import "../lib/Parser.salx";
+import "../lib/Pointer.salx";
 import "../lib/Memory.salx";
 
 namespace con {
