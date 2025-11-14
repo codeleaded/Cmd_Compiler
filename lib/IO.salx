@@ -3,7 +3,6 @@ import "../lib/CStr.salx";
 import "../lib/Pointer.salx";
 import "../lib/Parser.salx";
 
-define IO_FILE      void*;
 
 define O_RDONLY     0;        // Datei nur zum Lesen.
 define O_WRONLY     1;        // Datei nur zum Schreiben.
@@ -27,7 +26,6 @@ define SEEK_END     2;        // Datei Ende.
 define STDIN        0;
 define STDOUT       1;
 define STDERR       2;
-
 
 namespace io {
     void input(i8* str,i64 len){
@@ -69,5 +67,67 @@ namespace io {
         parse::hex::get(str,a);
         i64 len = cstr::len(str);
         sys::write(1,str,len);
+    }
+
+
+    struct File[
+        void* fd
+    ];
+
+    impl File{
+        pub void init(File* f,void* fd_in){
+            f->fd = fd_in;
+        }
+        pub File new(void* fd_in){
+            File file;
+            file.init(fd_in);
+            return file;
+        }
+        pub File open(i8* filepath,i64 flags){
+            void* fd = sys::open(filepath,flags);
+            return File::new(fd);
+        }
+        pub void close(File* self){
+            if self->fd > 2 {
+                sys::close(self->fd);
+            }
+            self->fd = 0;
+        }
+
+        pub u64 size(File* self){
+            sys::Stat filestate;
+            sys::fstat(self->fd,&filestate);
+            return filestate.st_size;
+        }
+        pub void set_pos_start(File* self,u64 pos){
+            sys::lseek(self->fd,pos,SEEK_SET);
+        }
+        pub void set_pos_rel(File* self,u64 pos){
+            sys::lseek(self->fd,pos,SEEK_CUR);
+        }
+        pub void set_pos_end(File* self,u64 pos){
+            sys::lseek(self->fd,pos,SEEK_END);
+        }
+        pub i32 get_flags(File* self){
+            return sys::fcntl(self->fd,3,0);
+        }
+        pub i32 set_flags(File* self,i64 flags){
+            return sys::fcntl(self->fd,4,flags);
+        }
+        pub i32 add_flags(File* self,i64 flags){
+            i64 oldflags = self->get_flags();
+            return sys::fcntl(self->fd,4,oldflags | flags);
+        }
+        pub i32 rm_flags(File* self,i64 flags){
+            i64 oldflags = self->get_flags();
+            return sys::fcntl(self->fd,4,oldflags & ~flags);
+        }
+
+        pub i32 read(File* self,i8* cstr,i64 count){
+            return sys::read(self->fd,cstr,count);
+        }
+        pub void write(File* self,i8* cstr,i64 count){
+            sys::write(self->fd,cstr,count);
+        }
     }
 }
