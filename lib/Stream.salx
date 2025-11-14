@@ -1,18 +1,18 @@
 import "../lib/System.salx";
 import "../lib/IO.salx";
-import "../lib/String.salx";
 import "../lib/Memory.salx";
+import "../lib/Container.salx";
 
 namespace ios {
     struct OStream[
         void* file,
-        string::String data
+        con::Vector data
     ];
 
     impl OStream {
         pub void init(OStream* self,mem::Allocator* alloc,void* file){
             self->file = file;
-            self->data = string::String::new(alloc);
+            self->data = con::Vector::new(alloc,1);
         }
         pub OStream new(mem::Allocator* alloc,void* file){
             OStream stream;
@@ -28,10 +28,6 @@ namespace ios {
             }
             self->file = null;
             self->data.delete();
-        }
-
-        pub string::String* buff(OStream* self){
-            return &self->data;
         }
         
         pub u64 size(OStream* self){
@@ -63,76 +59,124 @@ namespace ios {
         }
 
         pub OStream* char(OStream* self,i8 ch){
-            self->data.char(ch);
+            self->data.push(&ch);
             return self;
         }
         pub OStream* cstr(OStream* self,i8* ptr){
-            self->data.cstr(ptr);
+            u64 len = cstr::len(ptr);
+            self->data.push_c(ptr,len);
             return self;
         }
         pub OStream* cstr_s(OStream* self,i8* ptr,u64 len){
-            self->data.cstr_s(ptr,len);
-            return self;
-        }
-        pub OStream* string(OStream* self,string::String* string){
-            self->data.string(string);
+            self->data.push_c(ptr,len);
             return self;
         }
         pub OStream* uint(OStream* self,u64 n){
-            self->data.uint(n);
+            i8[48] block;
+            ptr::set(block,0,48);
+            parse::uint::get(block,n);
+            u64 len = cstr::len(block);
+            self->data.push_c(block,len);
             return self;
         }
-        pub OStream* int(OStream* self,u64 n){
-            self->data.int(n);
+        pub OStream* int(OStream* self,i64 n){
+            i8[48] block;
+            ptr::set(block,0,48);
+            parse::int::get(block,n);
+            u64 len = cstr::len(block);
+            self->data.push_c(block,len);
             return self;
         }
         pub OStream* boolean(OStream* self,bool b){
-            self->data.boolean(b);
+            i8[8] block;
+            ptr::set(block,0,8);
+            parse::boolean::get(block,b);
+            u64 len = cstr::len(block);
+            self->data.push_c(block,len);
             return self;
         }
         pub OStream* float(OStream* self,f64 n,u64 postdigits){
-            self->data.float(n,postdigits);
+            i8[48] block;
+            ptr::set(block,0,48);
+            parse::float::get(block,n,postdigits);
+            u64 len = cstr::len(block);
+            self->data.push_c(block,len);
             return self;
         }
-
-        pub OStream* hex(OStream* self,u64 n){
-            self->data.hex(n);
+        pub OStream* hex(OStream* self,i64 n){
+            i8[48] block;
+            ptr::set(block,0,48);
+            parse::hex::get(block,n);
+            u64 len = cstr::len(block);
+            self->data.push_c(block,len);
             return self;
         }
-        pub OStream* oct(OStream* self,u64 n){
-            self->data.oct(n);
+        pub OStream* oct(OStream* self,i64 n){
+            i8[48] block;
+            ptr::set(block,0,48);
+            parse::oct::get(block,n);
+            u64 len = cstr::len(block);
+            self->data.push_c(block,len);
             return self;
         }
-        pub OStream* bin(OStream* self,u64 n){
-            self->data.bin(n);
+        pub OStream* bin(OStream* self,i64 n){
+            i8[48] block;
+            ptr::set(block,0,48);
+            parse::bin::get(block,n);
+            u64 len = cstr::len(block);
+            self->data.push_c(block,len);
             return self;
         }
-
         pub OStream* address(OStream* self,void* n){
-            self->data.address(n);
+            i8[48] block;
+            ptr::set(block,0,48);
+            
+            void** ptr = &n;
+            for i32 j = 0,j<8,j+=1 {
+                u8 ch = *((u8*)(ptr+j));
+                *(block+j*2) = char::to::hex((u64)(ch & 0xF0) >> 8);
+                *(block+j*2+1) = char::to::hex(ch & 0xF);
+            }
+
+            u64 len = cstr::len(block);
+            self->data.push_c(block,len);
             return self;
         }
         pub OStream* mem(OStream* self,void* n,u64 bytes){
-            self->data.mem(n,bytes);
+            u64 count = bytes * 2;
+            i8* block = self->data.alloc->alloc(count+1);
+            
+            ptr::set(block,0,count+1);
+            
+            for i32 j = 0,j<bytes,j+=1 {
+                u8 ch = *((u8*)(n+j));
+                *(block+j*2) = char::to::hex((u64)(ch & 0xF0) >> 8);
+                *(block+j*2+1) = char::to::hex(ch & 0xF);
+            }
+
+            self->data.push_c(block,count);
+            self->data.alloc->free(block);
             return self;
         }
 
         pub void print(OStream* self){
             io::print("------------------- OStream ------------------\n");
             i8[50] cstr;
+            u64 size = (u64)self->data.size();
+
             ptr::set(cstr,32,49);
             ptr::cpy(cstr+48,"\n",2);
             ptr::cpy(cstr,"| Header: ",10);
             parse::uint::get(cstr+12,(u64)self->file);
-            parse::uint::get(cstr+30,(u64)self->data.size());
+            parse::uint::get(cstr+30,size);
             io::print(cstr);
     
-            for u64 i = 0,i<self->data.size(),i+=1 {
+            for u64 i = 0,i<size,i+=1 {
                 ptr::set(cstr,32,49);
                 ptr::cpy(cstr,"| Element: ",11);
                 parse::uint::get(cstr+14,(u64)i);
                 //parse::int_Get(cstr+18,self->data.get(i));
-                cstr[18] = self->data.get(i);
+                cstr[18] = *(i8*)self->data.get(i);
                 ptr::cpy(cstr+48,"\n",2);
                 io::print(cstr);
             }
@@ -181,7 +225,7 @@ namespace ios {
         }
 
         pub i8* line(IStream* self){
-            string::String line = string::String::new(self->alloc);
+            con::Vector line = con::Vector::new(self->alloc,1);
             i8[16] buffer;
         
             bool searching = true;
@@ -189,14 +233,18 @@ namespace ios {
                 ptr::set(buffer,0,16);
                 i64 bytes_read = sys::read(self->file,buffer,15);
         
-                line.cstr(buffer);
-        
+                line.push_c(buffer,cstr::len(buffer));
+                
                 if bytes_read<15 || buffer[14]==10 {
                     searching = false;
                 }
             }
         
-            i8* out = line.cpy();
+            u64 size = line.size();
+            i8* out = line.alloc->alloc(size + 1);
+            ptr::cpy(out,line.data(),size);
+            out[size] = 0;
+
             line.delete();
             return out;
         }

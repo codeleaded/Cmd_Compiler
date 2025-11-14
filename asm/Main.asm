@@ -50,7 +50,6 @@ GLOBAL_STR39: db "-.0123456789",0
 GLOBAL_STR40: db "x0123456789ABCDEFabcdef",0
 GLOBAL_STR41: db "o01234567",0
 GLOBAL_STR42: db "b01",0
-GLOBAL_STR43: db "Hello World",10,0
 
 section .text
 global _start
@@ -2350,7 +2349,7 @@ f.math.float.ex:
     mov rax,4613303445313851804
     mov QWORD[rsp + 0],rax
     sub rsp,8
-    mov rax,QWORD[rsp + 8]
+    mov rax,QWORD[rsp + 32]
     mov QWORD[rsp + 0],rax
     call f.math.float.pow
     add rsp,8
@@ -6721,6 +6720,32 @@ f.mem.Allocator.alloc:
 
 f.mem.Allocator.free:
     sub rsp,1
+    sub rsp,1
+    mov rax,QWORD[rsp + 18]
+    cmp rax,0
+    sete BYTE[rsp + 0]
+    sub rsp,1
+    mov rax,QWORD[rsp + 11]
+    cmp rax,0
+    sete BYTE[rsp + 0]
+    sub rsp,1
+    mov al,BYTE[rsp + 2]
+    or al,BYTE[rsp + 1]
+    mov BYTE[rsp + 0],al
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 3],al
+    add rsp,1
+    add rsp,1
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF2_70
+    l.0_IF2_70:
+    ret
+    l.1_LOG2_70:
+    l.1_IF2_70:
+    sub rsp,1
     sub rsp,8
     mov rax,QWORD[rsp + 25]
     mov QWORD[rsp + 0],rax
@@ -6764,11 +6789,11 @@ f.mem.Allocator.free:
     mov al,BYTE[rsp + 0]
     add rsp,1
     cmp al,0
-    je l.1_IF2_70
-    l.0_IF2_70:
+    je l.1_IF2_71
+    l.0_IF2_71:
     ret
-    l.1_LOG2_70:
-    l.1_IF2_70:
+    l.1_LOG2_71:
+    l.1_IF2_71:
     sub rsp,8
     mov QWORD[rsp + 0],0
     sub rsp,8
@@ -6780,13 +6805,13 @@ f.mem.Allocator.free:
     mov rax,QWORD[r10]
     mov QWORD[rsp + 8],rax
     add rsp,8
-    l.0_WHILE2_71:
+    l.0_WHILE2_72:
     sub rsp,1
     mov BYTE[rsp + 0],1
     mov al,BYTE[rsp + 0]
     add rsp,1
     cmp al,0
-    je l.1_WHILE2_71
+    je l.1_WHILE2_72
     sub rsp,1
     sub rsp,8
     mov rax,QWORD[rsp + 9]
@@ -7037,18 +7062,14 @@ f.mem.Allocator.free:
     mov QWORD[rsp + 0],rax
     add QWORD[rsp + 0],0
     sub rsp,8
-    mov r10,QWORD[rsp + 8]
-    mov eax,DWORD[r10]
-    mov QWORD[rsp + 0],rax
-    sub rsp,8
     mov rax,8
-    add rax,QWORD[rsp + 8]
+    mov r10,QWORD[rsp + 8]
+    add eax,DWORD[r10]
     mov QWORD[rsp + 0],rax
     mov rax,0
     mov rax,QWORD[rsp + 0]
-    mov r10,QWORD[rsp + 24]
+    mov r10,QWORD[rsp + 16]
     add DWORD[r10],eax
-    add rsp,8
     add rsp,8
     add rsp,8
     add rsp,8
@@ -7089,8 +7110,8 @@ f.mem.Allocator.free:
     add rsp,8
     add rsp,8
     l.1_LOG3_28:
-    jmp l.0_WHILE2_71
-    l.1_WHILE2_71:
+    jmp l.0_WHILE2_72
+    l.1_WHILE2_72:
     add rsp,8
     add rsp,8
     ret
@@ -7140,12 +7161,12 @@ f.mem.Allocator.realloc:
     mov al,BYTE[rsp + 0]
     add rsp,1
     cmp al,0
-    je l.1_IF2_72
-    l.0_IF2_72:
+    je l.1_IF2_73
+    l.0_IF2_73:
     mov QWORD[rsp + 32],0
     ret
-    l.1_LOG2_72:
-    l.1_IF2_72:
+    l.1_LOG2_73:
+    l.1_IF2_73:
     sub rsp,8
     sub rsp,8
     mov rax,QWORD[rsp + 40]
@@ -7155,13 +7176,13 @@ f.mem.Allocator.realloc:
     mov rax,QWORD[r10]
     mov QWORD[rsp + 8],rax
     add rsp,8
-    l.0_WHILE2_73:
+    l.0_WHILE2_74:
     sub rsp,1
     mov BYTE[rsp + 0],1
     mov al,BYTE[rsp + 0]
     add rsp,1
     cmp al,0
-    je l.1_WHILE2_73
+    je l.1_WHILE2_74
     sub rsp,1
     sub rsp,8
     mov rax,QWORD[rsp + 9]
@@ -7658,8 +7679,8 @@ f.mem.Allocator.realloc:
     add rsp,8
     add rsp,8
     l.1_LOG3_29:
-    jmp l.0_WHILE2_73
-    l.1_WHILE2_73:
+    jmp l.0_WHILE2_74
+    l.1_WHILE2_74:
     mov rax,QWORD[rsp + 24]
     mov QWORD[rsp + 40],rax
     add rsp,8
@@ -7854,7 +7875,7 @@ f.mem.Allocator.print:
     mov rax,QWORD[r10]
     mov QWORD[rsp + 8],rax
     add rsp,8
-    l.0_WHILE2_74:
+    l.0_WHILE2_75:
     sub rsp,1
     sub rsp,8
     mov rax,QWORD[rsp + 161]
@@ -7899,7 +7920,7 @@ f.mem.Allocator.print:
     mov al,BYTE[rsp + 0]
     add rsp,1
     cmp al,0
-    je l.1_WHILE2_74
+    je l.1_WHILE2_75
     sub rsp,8
     mov rax,QWORD[rsp + 144]
     mov QWORD[rsp + 0],rax
@@ -8040,8 +8061,8 @@ f.mem.Allocator.print:
     add rsp,8
     add rsp,8
     add rsp,8
-    jmp l.0_WHILE2_74
-    l.1_WHILE2_74:
+    jmp l.0_WHILE2_75
+    l.1_WHILE2_75:
     sub rsp,8
     mov QWORD[rsp + 0],GLOBAL_STR18
     call f.io.print
@@ -8088,18 +8109,13 @@ f.con.Vector.init:
     mov QWORD[rsp + 0],rax
     add QWORD[rsp + 0],24
     sub rsp,8
+    sub rsp,8
     mov rax,QWORD[rsp + 48]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],32
     sub rsp,8
     sub rsp,8
-    mov r10,QWORD[rsp + 16]
-    mov rax,QWORD[r10]
-    mov QWORD[rsp + 0],rax
-    sub rsp,8
-    sub rsp,8
-    mov rax,QWORD[rsp + 56]
-    imul QWORD[rsp + 64]
+    mov rax,QWORD[rsp + 48]
+    imul QWORD[rsp + 56]
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 8],rax
@@ -8108,16 +8124,24 @@ f.con.Vector.init:
     add rsp,8
     add rsp,8
     mov rax,QWORD[rsp + 0]
-    mov r10,QWORD[rsp + 16]
+    mov r10,QWORD[rsp + 8]
     mov QWORD[r10],rax
-    add rsp,8
     add rsp,8
     add rsp,8
     ret
 
 f.con.Vector.delete:
     sub rsp,8
-    mov rax,QWORD[rsp + 16]
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],24
+    mov r10,QWORD[rsp + 0]
+    mov rax,QWORD[r10]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
     mov QWORD[rsp + 0],rax
     add QWORD[rsp + 0],32
     sub rsp,8
@@ -8125,52 +8149,47 @@ f.con.Vector.delete:
     mov rax,QWORD[r10]
     mov QWORD[rsp + 0],rax
     sub rsp,8
-    sub rsp,8
-    mov rax,QWORD[rsp + 16]
+    mov rax,QWORD[rsp + 24]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],0
-    mov r10,QWORD[rsp + 0]
-    mov rax,QWORD[r10]
-    mov QWORD[rsp + 8],rax
-    add rsp,8
     call f.mem.Allocator.free
     add rsp,8
     add rsp,8
     add rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 16]
+    mov rax,QWORD[rsp + 24]
     mov QWORD[rsp + 0],rax
     add QWORD[rsp + 0],32
     mov r10,QWORD[rsp + 0]
     mov QWORD[r10],0
     add rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 16]
+    mov rax,QWORD[rsp + 24]
     mov QWORD[rsp + 0],rax
     add QWORD[rsp + 0],0
     mov r10,QWORD[rsp + 0]
     mov QWORD[r10],0
     add rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 16]
+    mov rax,QWORD[rsp + 24]
     mov QWORD[rsp + 0],rax
     add QWORD[rsp + 0],8
     mov r10,QWORD[rsp + 0]
     mov QWORD[r10],0
     add rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 16]
+    mov rax,QWORD[rsp + 24]
     mov QWORD[rsp + 0],rax
     add QWORD[rsp + 0],16
     mov r10,QWORD[rsp + 0]
     mov QWORD[r10],0
     add rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 16]
+    mov rax,QWORD[rsp + 24]
     mov QWORD[rsp + 0],rax
     add QWORD[rsp + 0],24
     mov r10,QWORD[rsp + 0]
     mov QWORD[r10],0
+    add rsp,8
     add rsp,8
     ret
 
@@ -8277,12 +8296,12 @@ f.con.Vector.get:
     mov al,BYTE[rsp + 0]
     add rsp,1
     cmp al,0
-    je l.1_IF2_75
-    l.0_IF2_75:
+    je l.1_IF2_76
+    l.0_IF2_76:
     mov QWORD[rsp + 24],0
     ret
-    l.1_LOG2_75:
-    l.1_IF2_75:
+    l.1_LOG2_76:
+    l.1_IF2_76:
     sub rsp,8
     mov rax,QWORD[rsp + 24]
     mov QWORD[rsp + 0],rax
@@ -8338,8 +8357,8 @@ f.con.Vector.set:
     mov al,BYTE[rsp + 0]
     add rsp,1
     cmp al,0
-    je l.1_IF2_76
-    l.0_IF2_76:
+    je l.1_IF2_77
+    l.0_IF2_77:
     sub rsp,8
     sub rsp,8
     mov rax,QWORD[rsp + 40]
@@ -8381,8 +8400,8 @@ f.con.Vector.set:
     add rsp,8
     add rsp,8
     add rsp,8
-    l.1_LOG2_76:
-    l.1_IF2_76:
+    l.1_LOG2_77:
+    l.1_IF2_77:
     ret
 
 f.con.Vector.set_c:
@@ -8418,8 +8437,8 @@ f.con.Vector.set_c:
     mov al,BYTE[rsp + 0]
     add rsp,1
     cmp al,0
-    je l.1_IF2_77
-    l.0_IF2_77:
+    je l.1_IF2_78
+    l.0_IF2_78:
     sub rsp,8
     sub rsp,8
     mov rax,QWORD[rsp + 48]
@@ -8466,8 +8485,8 @@ f.con.Vector.set_c:
     add rsp,8
     add rsp,8
     add rsp,8
-    l.1_LOG2_77:
-    l.1_IF2_77:
+    l.1_LOG2_78:
+    l.1_IF2_78:
     ret
 
 f.con.Vector.expand:
@@ -8502,8 +8521,8 @@ f.con.Vector.expand:
     mov al,BYTE[rsp + 0]
     add rsp,1
     cmp al,0
-    je l.1_IF2_78
-    l.0_IF2_78:
+    je l.1_IF2_79
+    l.0_IF2_79:
     sub rsp,8
     sub rsp,8
     mov rax,QWORD[rsp + 40]
@@ -8606,9 +8625,9 @@ f.con.Vector.expand:
     mov QWORD[rsp + 0],rax
     sub rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 16]
+    mov rax,QWORD[rsp + 80]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],0
+    add QWORD[rsp + 0],24
     mov r10,QWORD[rsp + 0]
     mov rax,QWORD[r10]
     mov QWORD[rsp + 8],rax
@@ -8636,8 +8655,8 @@ f.con.Vector.expand:
     add rsp,8
     add rsp,8
     add rsp,8
-    l.1_LOG2_78:
-    l.1_IF2_78:
+    l.1_LOG2_79:
+    l.1_IF2_79:
     add rsp,8
     ret
 
@@ -8685,8 +8704,8 @@ f.con.Vector.shrink:
     mov al,BYTE[rsp + 0]
     add rsp,1
     cmp al,0
-    je l.1_IF2_79
-    l.0_IF2_79:
+    je l.1_IF2_80
+    l.0_IF2_80:
     sub rsp,8
     sub rsp,8
     mov rax,QWORD[rsp + 40]
@@ -8761,9 +8780,9 @@ f.con.Vector.shrink:
     mov QWORD[rsp + 0],rax
     sub rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 16]
+    mov rax,QWORD[rsp + 72]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],0
+    add QWORD[rsp + 0],24
     mov r10,QWORD[rsp + 0]
     mov rax,QWORD[r10]
     mov QWORD[rsp + 8],rax
@@ -8790,8 +8809,8 @@ f.con.Vector.shrink:
     add rsp,8
     add rsp,8
     add rsp,8
-    l.1_LOG2_79:
-    l.1_IF2_79:
+    l.1_LOG2_80:
+    l.1_IF2_80:
     add rsp,8
     ret
 
@@ -8867,9 +8886,9 @@ f.con.Vector.clear:
     mov QWORD[rsp + 0],rax
     sub rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 16]
+    mov rax,QWORD[rsp + 56]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],0
+    add QWORD[rsp + 0],24
     mov r10,QWORD[rsp + 0]
     mov rax,QWORD[r10]
     mov QWORD[rsp + 8],rax
@@ -8949,7 +8968,7 @@ f.con.Vector.push:
     mov QWORD[rsp + 0],rax
     sub rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 16]
+    mov rax,QWORD[rsp + 40]
     mov QWORD[rsp + 0],rax
     add QWORD[rsp + 0],8
     sub rsp,8
@@ -9011,7 +9030,7 @@ f.con.Vector.push_c:
     mov QWORD[rsp + 0],rax
     sub rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 16]
+    mov rax,QWORD[rsp + 48]
     mov QWORD[rsp + 0],rax
     add QWORD[rsp + 0],8
     sub rsp,8
@@ -9054,8 +9073,8 @@ f.con.Vector.pop_c:
     mov al,BYTE[rsp + 0]
     add rsp,1
     cmp al,0
-    je l.1_IF2_80
-    l.0_IF2_80:
+    je l.1_IF2_81
+    l.0_IF2_81:
     sub rsp,8
     mov rax,QWORD[rsp + 24]
     mov QWORD[rsp + 0],rax
@@ -9064,8 +9083,8 @@ f.con.Vector.pop_c:
     mov rax,QWORD[r10]
     mov QWORD[rsp + 16],rax
     add rsp,8
-    l.1_LOG2_80:
-    l.1_IF2_80:
+    l.1_LOG2_81:
+    l.1_IF2_81:
     sub rsp,8
     mov rax,QWORD[rsp + 24]
     mov QWORD[rsp + 0],rax
@@ -9152,7 +9171,7 @@ f.con.Vector.print:
     mov QWORD[rsp + 16],rax
     add rsp,8
     add rsp,8
-    call f.parse.uint.get
+    call f.parse.hex.get
     add rsp,8
     add rsp,8
     sub rsp,8
@@ -9245,115 +9264,6 @@ f.con.Vector.print:
     add rsp,8
     sub rsp,8
     mov QWORD[rsp + 0],0
-    sub rsp,1
-    sub rsp,8
-    mov rax,QWORD[rsp + 99]
-    mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],0
-    sub rsp,1
-    mov r10,QWORD[rsp + 1]
-    mov rax,QWORD[r10]
-    cmp rax,1
-    sete BYTE[rsp + 0]
-    mov al,BYTE[rsp + 0]
-    mov BYTE[rsp + 9],al
-    add rsp,1
-    add rsp,8
-    mov al,BYTE[rsp + 0]
-    add rsp,1
-    cmp al,0
-    je l.1_IF4_12
-    l.0_IF4_12:
-    sub rsp,8
-    mov rax,QWORD[rsp + 16]
-    mov QWORD[rsp + 0],rax
-    sub rsp,8
-    mov rax,QWORD[rsp + 8]
-    mov QWORD[rsp + 0],rax
-    mov r10,QWORD[rsp + 0]
-    mov al,BYTE[r10]
-    mov QWORD[rsp + 16],rax
-    add rsp,8
-    add rsp,8
-    jmp l.1_LOG4_12
-    l.1_IF4_12:
-    sub rsp,1
-    sub rsp,8
-    mov rax,QWORD[rsp + 99]
-    mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],0
-    sub rsp,1
-    mov r10,QWORD[rsp + 1]
-    mov rax,QWORD[r10]
-    cmp rax,2
-    sete BYTE[rsp + 0]
-    mov al,BYTE[rsp + 0]
-    mov BYTE[rsp + 9],al
-    add rsp,1
-    add rsp,8
-    mov al,BYTE[rsp + 0]
-    add rsp,1
-    cmp al,0
-    je l.1_ELIF4_12_2
-    l.0_ELIF4_12_2:
-    sub rsp,8
-    mov rax,QWORD[rsp + 16]
-    mov QWORD[rsp + 0],rax
-    sub rsp,8
-    mov rax,QWORD[rsp + 8]
-    mov QWORD[rsp + 0],rax
-    mov r10,QWORD[rsp + 0]
-    mov ax,WORD[r10]
-    mov QWORD[rsp + 16],rax
-    add rsp,8
-    add rsp,8
-    jmp l.1_LOG4_12
-    l.1_ELIF4_12_2:
-    sub rsp,1
-    sub rsp,8
-    mov rax,QWORD[rsp + 99]
-    mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],0
-    sub rsp,1
-    mov r10,QWORD[rsp + 1]
-    mov rax,QWORD[r10]
-    cmp rax,4
-    sete BYTE[rsp + 0]
-    mov al,BYTE[rsp + 0]
-    mov BYTE[rsp + 9],al
-    add rsp,1
-    add rsp,8
-    mov al,BYTE[rsp + 0]
-    add rsp,1
-    cmp al,0
-    je l.1_ELIF4_12_3
-    l.0_ELIF4_12_3:
-    sub rsp,8
-    mov rax,QWORD[rsp + 16]
-    mov QWORD[rsp + 0],rax
-    sub rsp,8
-    mov rax,QWORD[rsp + 8]
-    mov QWORD[rsp + 0],rax
-    mov r10,QWORD[rsp + 0]
-    mov eax,DWORD[r10]
-    mov QWORD[rsp + 16],rax
-    add rsp,8
-    add rsp,8
-    jmp l.1_LOG4_12
-    l.1_ELIF4_12_3:
-    l.0_ELSE4_12:
-    sub rsp,8
-    mov rax,QWORD[rsp + 16]
-    mov QWORD[rsp + 0],rax
-    sub rsp,8
-    mov rax,QWORD[rsp + 8]
-    mov QWORD[rsp + 0],rax
-    mov r10,QWORD[rsp + 0]
-    mov rax,QWORD[r10]
-    mov QWORD[rsp + 16],rax
-    add rsp,8
-    add rsp,8
-    l.1_LOG4_12:
     sub rsp,8
     mov rax,QWORD[rsp + 82]
     mov QWORD[rsp + 0],rax
@@ -9394,6 +9304,85 @@ f.con.Vector.print:
     call f.parse.uint.get
     add rsp,8
     add rsp,8
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 99]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,1
+    mov r10,QWORD[rsp + 1]
+    mov rax,QWORD[r10]
+    cmp rax,1
+    sete BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 9],al
+    add rsp,1
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF4_12
+    l.0_IF4_12:
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov r10,QWORD[rsp + 0]
+    mov al,BYTE[r10]
+    mov QWORD[rsp + 16],rax
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 82]
+    add rax,18
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov rax,0
+    mov rax,QWORD[rsp + 16]
+    mov r10,QWORD[rsp + 0]
+    mov BYTE[r10],al
+    add rsp,8
+    add rsp,8
+    jmp l.1_LOG4_12
+    l.1_IF4_12:
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 99]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,1
+    mov r10,QWORD[rsp + 1]
+    mov rax,QWORD[r10]
+    cmp rax,2
+    sete BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 9],al
+    add rsp,1
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_ELIF4_12_2
+    l.0_ELIF4_12_2:
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,2
+    mov r10,QWORD[rsp + 2]
+    mov ax,WORD[r10]
+    mov WORD[rsp + 0],ax
+    mov ax,WORD[rsp + 0]
+    mov QWORD[rsp + 18],rax
+    add rsp,2
+    add rsp,8
+    add rsp,8
     sub rsp,8
     sub rsp,8
     mov rax,QWORD[rsp + 90]
@@ -9408,6 +9397,89 @@ f.con.Vector.print:
     call f.parse.uint.get
     add rsp,8
     add rsp,8
+    jmp l.1_LOG4_12
+    l.1_ELIF4_12_2:
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 99]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,1
+    mov r10,QWORD[rsp + 1]
+    mov rax,QWORD[r10]
+    cmp rax,4
+    sete BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 9],al
+    add rsp,1
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_ELIF4_12_3
+    l.0_ELIF4_12_3:
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,4
+    mov r10,QWORD[rsp + 4]
+    mov eax,DWORD[r10]
+    mov DWORD[rsp + 0],eax
+    mov eax,DWORD[rsp + 0]
+    mov QWORD[rsp + 20],rax
+    add rsp,4
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 90]
+    add rax,18
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    call f.parse.uint.get
+    add rsp,8
+    add rsp,8
+    jmp l.1_LOG4_12
+    l.1_ELIF4_12_3:
+    l.0_ELSE4_12:
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov r10,QWORD[rsp + 8]
+    mov rax,QWORD[r10]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 24],rax
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 90]
+    add rax,18
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    call f.parse.uint.get
+    add rsp,8
+    add rsp,8
+    l.1_LOG4_12:
     sub rsp,8
     sub rsp,8
     mov rax,QWORD[rsp + 90]
@@ -9637,12 +9709,12 @@ f.con.List.find:
     mov al,BYTE[rsp + 0]
     add rsp,1
     cmp al,0
-    je l.1_IF2_81
-    l.0_IF2_81:
+    je l.1_IF2_82
+    l.0_IF2_82:
     mov QWORD[rsp + 24],0
     ret
-    l.1_LOG2_81:
-    l.1_IF2_81:
+    l.1_LOG2_82:
+    l.1_IF2_82:
     sub rsp,8
     sub rsp,8
     mov rax,QWORD[rsp + 32]
@@ -9727,12 +9799,12 @@ f.con.List.get:
     mov al,BYTE[rsp + 0]
     add rsp,1
     cmp al,0
-    je l.1_IF2_82
-    l.0_IF2_82:
+    je l.1_IF2_83
+    l.0_IF2_83:
     mov QWORD[rsp + 24],0
     ret
-    l.1_LOG2_82:
-    l.1_IF2_82:
+    l.1_LOG2_83:
+    l.1_IF2_83:
     sub rsp,8
     sub rsp,8
     sub rsp,8
@@ -9788,8 +9860,8 @@ f.con.List.set:
     mov al,BYTE[rsp + 0]
     add rsp,1
     cmp al,0
-    je l.1_IF2_83
-    l.0_IF2_83:
+    je l.1_IF2_84
+    l.0_IF2_84:
     sub rsp,8
     sub rsp,8
     sub rsp,8
@@ -9882,8 +9954,8 @@ f.con.List.set:
     add rsp,8
     add rsp,8
     add rsp,8
-    l.1_LOG2_83:
-    l.1_IF2_83:
+    l.1_LOG2_84:
+    l.1_IF2_84:
     ret
 
 f.con.List.size:
@@ -10033,8 +10105,8 @@ f.con.List.pop:
     mov al,BYTE[rsp + 0]
     add rsp,1
     cmp al,0
-    je l.1_IF2_84
-    l.0_IF2_84:
+    je l.1_IF2_85
+    l.0_IF2_85:
     sub rsp,8
     sub rsp,8
     mov rax,QWORD[rsp + 16]
@@ -10096,8 +10168,8 @@ f.con.List.pop:
     sub QWORD[r10],1
     add rsp,8
     add rsp,8
-    l.1_LOG2_84:
-    l.1_IF2_84:
+    l.1_LOG2_85:
+    l.1_IF2_85:
     add rsp,8
     ret
 
@@ -10453,71 +10525,6 @@ f.con.List.print:
     add rsp,70
     ret
 
-f.string.String.size:
-    sub rsp,8
-    mov rax,QWORD[rsp + 16]
-    mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],0
-    sub rsp,8
-    sub rsp,8
-    sub rsp,8
-    lea rax,[rsp + 24]
-    mov QWORD[rsp + 0],rax
-    mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 8],rax
-    add rsp,8
-    call f.con.Vector.size
-    add rsp,8
-    mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 32],rax
-    add rsp,8
-    add rsp,8
-    ret
-    ret
-
-f.string.String.data:
-    sub rsp,8
-    mov rax,QWORD[rsp + 16]
-    mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],0
-    sub rsp,8
-    sub rsp,8
-    sub rsp,8
-    lea rax,[rsp + 24]
-    mov QWORD[rsp + 0],rax
-    mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 8],rax
-    add rsp,8
-    call f.con.Vector.data
-    add rsp,8
-    sub rsp,8
-    mov rax,QWORD[rsp + 8]
-    mov QWORD[rsp + 0],rax
-    mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 40],rax
-    add rsp,8
-    add rsp,8
-    add rsp,8
-    ret
-    ret
-
-f.string.String.clear:
-    sub rsp,8
-    mov rax,QWORD[rsp + 16]
-    mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],0
-    sub rsp,8
-    sub rsp,8
-    lea rax,[rsp + 16]
-    mov QWORD[rsp + 0],rax
-    mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 8],rax
-    add rsp,8
-    call f.con.Vector.clear
-    add rsp,8
-    add rsp,8
-    ret
-
 f.string.String.cpy:
     sub rsp,8
     sub rsp,8
@@ -10542,7 +10549,11 @@ f.string.String.cpy:
     sub rsp,8
     mov rax,QWORD[rsp + 32]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],40
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],32
     sub rsp,8
     sub rsp,8
     mov r10,QWORD[rsp + 16]
@@ -10550,7 +10561,7 @@ f.string.String.cpy:
     mov QWORD[rsp + 0],rax
     sub rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 48]
+    mov rax,QWORD[rsp + 56]
     add rax,1
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
@@ -10560,7 +10571,8 @@ f.string.String.cpy:
     add rsp,8
     add rsp,8
     mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 16],rax
+    mov QWORD[rsp + 24],rax
+    add rsp,8
     add rsp,8
     add rsp,8
     sub rsp,8
@@ -10568,13 +10580,22 @@ f.string.String.cpy:
     mov QWORD[rsp + 0],rax
     sub rsp,8
     sub rsp,8
-    sub rsp,8
-    mov rax,QWORD[rsp + 56]
+    mov rax,QWORD[rsp + 48]
     mov QWORD[rsp + 0],rax
-    call f.string.String.data
-    add rsp,8
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    lea rax,[rsp + 24]
+    mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 8],rax
+    add rsp,8
+    call f.con.Vector.data
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 16],rax
+    add rsp,8
     add rsp,8
     sub rsp,8
     mov rax,QWORD[rsp + 32]
@@ -10681,23 +10702,41 @@ f.string.String.string:
     add rsp,8
     sub rsp,8
     sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    lea rax,[rsp + 24]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    call f.con.Vector.data
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 16],rax
+    add rsp,8
+    add rsp,8
+    sub rsp,8
     sub rsp,8
     mov rax,QWORD[rsp + 48]
     mov QWORD[rsp + 0],rax
-    call f.string.String.data
-    add rsp,8
-    mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 8],rax
-    add rsp,8
+    add QWORD[rsp + 0],0
     sub rsp,8
     sub rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 56]
+    lea rax,[rsp + 24]
     mov QWORD[rsp + 0],rax
-    call f.string.String.size
-    add rsp,8
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 8],rax
+    add rsp,8
+    call f.con.Vector.size
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 16],rax
+    add rsp,8
     add rsp,8
     call f.con.Vector.push_c
     add rsp,8
@@ -11474,7 +11513,11 @@ f.string.String.mem:
     sub rsp,8
     mov rax,QWORD[rsp + 48]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],40
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],32
     sub rsp,8
     sub rsp,8
     mov r10,QWORD[rsp + 16]
@@ -11482,7 +11525,7 @@ f.string.String.mem:
     mov QWORD[rsp + 0],rax
     sub rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 48]
+    mov rax,QWORD[rsp + 56]
     add rax,1
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
@@ -11492,7 +11535,8 @@ f.string.String.mem:
     add rsp,8
     add rsp,8
     mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 16],rax
+    mov QWORD[rsp + 24],rax
+    add rsp,8
     add rsp,8
     add rsp,8
     sub rsp,8
@@ -11652,15 +11696,20 @@ f.string.String.mem:
     sub rsp,8
     mov rax,QWORD[rsp + 48]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],40
+    add QWORD[rsp + 0],0
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],32
     sub rsp,8
     mov r10,QWORD[rsp + 8]
     mov rax,QWORD[r10]
     mov QWORD[rsp + 0],rax
     sub rsp,8
-    mov rax,QWORD[rsp + 24]
+    mov rax,QWORD[rsp + 32]
     mov QWORD[rsp + 0],rax
     call f.mem.Allocator.free
+    add rsp,8
     add rsp,8
     add rsp,8
     add rsp,8
@@ -11700,18 +11749,10 @@ f.string.String.init:
     mov QWORD[rdx + 32],rax
     add rsp,40
     add rsp,8
-    sub rsp,8
-    mov rax,QWORD[rsp + 24]
-    mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],40
-    mov rax,QWORD[rsp + 16]
-    mov r10,QWORD[rsp + 0]
-    mov QWORD[r10],rax
-    add rsp,8
     ret
 
 f.string.String.new:
-    sub rsp,48
+    sub rsp,40
     sub rsp,8
     sub rsp,8
     lea rax,[rsp + 16]
@@ -11720,26 +11761,24 @@ f.string.String.new:
     mov QWORD[rsp + 8],rax
     add rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 72]
+    mov rax,QWORD[rsp + 64]
     mov QWORD[rsp + 0],rax
     call f.string.String.init
     add rsp,8
     add rsp,8
     mov rax,QWORD[rsp + 0 + 0]
-    mov QWORD[rsp + 64 + 0],rax
+    mov QWORD[rsp + 56 + 0],rax
     mov rax,QWORD[rsp + 0 + 8]
-    mov QWORD[rsp + 64 + 8],rax
+    mov QWORD[rsp + 56 + 8],rax
     mov rax,QWORD[rsp + 0 + 16]
-    mov QWORD[rsp + 64 + 16],rax
+    mov QWORD[rsp + 56 + 16],rax
     mov rax,QWORD[rsp + 0 + 24]
-    mov QWORD[rsp + 64 + 24],rax
+    mov QWORD[rsp + 56 + 24],rax
     mov rax,QWORD[rsp + 0 + 32]
-    mov QWORD[rsp + 64 + 32],rax
-    mov rax,QWORD[rsp + 0 + 40]
-    mov QWORD[rsp + 64 + 40],rax
-    add rsp,48
+    mov QWORD[rsp + 56 + 32],rax
+    add rsp,40
     ret
-    add rsp,48
+    add rsp,40
     ret
 
 f.string.String.delete:
@@ -11757,17 +11796,10 @@ f.string.String.delete:
     call f.con.Vector.delete
     add rsp,8
     add rsp,8
-    sub rsp,8
-    mov rax,QWORD[rsp + 16]
-    mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],40
-    mov r10,QWORD[rsp + 0]
-    mov QWORD[r10],0
-    add rsp,8
     ret
 
 f.string.String.make:
-    sub rsp,48
+    sub rsp,40
     sub rsp,8
     sub rsp,8
     lea rax,[rsp + 16]
@@ -11776,7 +11808,7 @@ f.string.String.make:
     mov QWORD[rsp + 8],rax
     add rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 80]
+    mov rax,QWORD[rsp + 72]
     mov QWORD[rsp + 0],rax
     call f.string.String.init
     add rsp,8
@@ -11790,9 +11822,80 @@ f.string.String.make:
     mov QWORD[rsp + 8],rax
     add rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 80]
+    mov rax,QWORD[rsp + 72]
     mov QWORD[rsp + 0],rax
     call f.string.String.cstr
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    mov rax,QWORD[rsp + 0 + 0]
+    mov QWORD[rsp + 64 + 0],rax
+    mov rax,QWORD[rsp + 0 + 8]
+    mov QWORD[rsp + 64 + 8],rax
+    mov rax,QWORD[rsp + 0 + 16]
+    mov QWORD[rsp + 64 + 16],rax
+    mov rax,QWORD[rsp + 0 + 24]
+    mov QWORD[rsp + 64 + 24],rax
+    mov rax,QWORD[rsp + 0 + 32]
+    mov QWORD[rsp + 64 + 32],rax
+    add rsp,40
+    ret
+    add rsp,40
+    ret
+
+f.ios.OStream.init:
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    mov rax,QWORD[rsp + 16]
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],8
+    sub rsp,40
+    sub rsp,8
+    mov rax,QWORD[rsp + 72]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov QWORD[rsp + 0],1
+    call f.con.Vector.new
+    add rsp,8
+    add rsp,8
+    mov rdx,QWORD[rsp + 40]
+    mov rax,QWORD[rsp + 0 + 0]
+    mov QWORD[rdx + 0],rax
+    mov rax,QWORD[rsp + 0 + 8]
+    mov QWORD[rdx + 8],rax
+    mov rax,QWORD[rsp + 0 + 16]
+    mov QWORD[rdx + 16],rax
+    mov rax,QWORD[rsp + 0 + 24]
+    mov QWORD[rdx + 24],rax
+    mov rax,QWORD[rsp + 0 + 32]
+    mov QWORD[rdx + 32],rax
+    add rsp,40
+    add rsp,8
+    ret
+
+f.ios.OStream.new:
+    sub rsp,48
+    sub rsp,8
+    sub rsp,8
+    lea rax,[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 80]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 80]
+    mov QWORD[rsp + 0],rax
+    call f.ios.OStream.init
     add rsp,8
     add rsp,8
     add rsp,8
@@ -11813,89 +11916,15 @@ f.string.String.make:
     add rsp,48
     ret
 
-f.ios.OStream.init:
-    sub rsp,8
-    mov rax,QWORD[rsp + 32]
-    mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],0
-    mov rax,QWORD[rsp + 16]
-    mov r10,QWORD[rsp + 0]
-    mov QWORD[r10],rax
-    add rsp,8
-    sub rsp,8
-    mov rax,QWORD[rsp + 32]
-    mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],8
+f.ios.OStream.open:
     sub rsp,48
     sub rsp,8
-    mov rax,QWORD[rsp + 80]
+    mov rax,QWORD[rsp + 72]
     mov QWORD[rsp + 0],rax
-    call f.string.String.new
-    add rsp,8
-    mov rdx,QWORD[rsp + 48]
-    mov rax,QWORD[rsp + 0 + 0]
-    mov QWORD[rdx + 0],rax
-    mov rax,QWORD[rsp + 0 + 8]
-    mov QWORD[rdx + 8],rax
-    mov rax,QWORD[rsp + 0 + 16]
-    mov QWORD[rdx + 16],rax
-    mov rax,QWORD[rsp + 0 + 24]
-    mov QWORD[rdx + 24],rax
-    mov rax,QWORD[rsp + 0 + 32]
-    mov QWORD[rdx + 32],rax
-    mov rax,QWORD[rsp + 0 + 40]
-    mov QWORD[rdx + 40],rax
-    add rsp,48
-    add rsp,8
-    ret
-
-f.ios.OStream.new:
-    sub rsp,56
     sub rsp,8
     sub rsp,8
-    lea rax,[rsp + 16]
-    mov QWORD[rsp + 0],rax
-    mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 8],rax
-    add rsp,8
     sub rsp,8
     mov rax,QWORD[rsp + 88]
-    mov QWORD[rsp + 0],rax
-    sub rsp,8
-    mov rax,QWORD[rsp + 88]
-    mov QWORD[rsp + 0],rax
-    call f.ios.OStream.init
-    add rsp,8
-    add rsp,8
-    add rsp,8
-    mov rax,QWORD[rsp + 0 + 0]
-    mov QWORD[rsp + 80 + 0],rax
-    mov rax,QWORD[rsp + 0 + 8]
-    mov QWORD[rsp + 80 + 8],rax
-    mov rax,QWORD[rsp + 0 + 16]
-    mov QWORD[rsp + 80 + 16],rax
-    mov rax,QWORD[rsp + 0 + 24]
-    mov QWORD[rsp + 80 + 24],rax
-    mov rax,QWORD[rsp + 0 + 32]
-    mov QWORD[rsp + 80 + 32],rax
-    mov rax,QWORD[rsp + 0 + 40]
-    mov QWORD[rsp + 80 + 40],rax
-    mov rax,QWORD[rsp + 0 + 48]
-    mov QWORD[rsp + 80 + 48],rax
-    add rsp,56
-    ret
-    add rsp,56
-    ret
-
-f.ios.OStream.open:
-    sub rsp,56
-    sub rsp,8
-    mov rax,QWORD[rsp + 80]
-    mov QWORD[rsp + 0],rax
-    sub rsp,8
-    sub rsp,8
-    sub rsp,8
-    mov rax,QWORD[rsp + 96]
     mov QWORD[rsp + 0],rax
     sub rsp,8
     mov QWORD[rsp + 0],1
@@ -11909,20 +11938,18 @@ f.ios.OStream.open:
     add rsp,8
     add rsp,8
     mov rax,QWORD[rsp + 0 + 0]
-    mov QWORD[rsp + 80 + 0],rax
+    mov QWORD[rsp + 72 + 0],rax
     mov rax,QWORD[rsp + 0 + 8]
-    mov QWORD[rsp + 80 + 8],rax
+    mov QWORD[rsp + 72 + 8],rax
     mov rax,QWORD[rsp + 0 + 16]
-    mov QWORD[rsp + 80 + 16],rax
+    mov QWORD[rsp + 72 + 16],rax
     mov rax,QWORD[rsp + 0 + 24]
-    mov QWORD[rsp + 80 + 24],rax
+    mov QWORD[rsp + 72 + 24],rax
     mov rax,QWORD[rsp + 0 + 32]
-    mov QWORD[rsp + 80 + 32],rax
+    mov QWORD[rsp + 72 + 32],rax
     mov rax,QWORD[rsp + 0 + 40]
-    mov QWORD[rsp + 80 + 40],rax
-    mov rax,QWORD[rsp + 0 + 48]
-    mov QWORD[rsp + 80 + 48],rax
-    add rsp,56
+    mov QWORD[rsp + 72 + 40],rax
+    add rsp,48
     ret
     ret
 
@@ -11944,8 +11971,8 @@ f.ios.OStream.delete:
     mov al,BYTE[rsp + 0]
     add rsp,1
     cmp al,0
-    je l.1_IF2_85
-    l.0_IF2_85:
+    je l.1_IF2_86
+    l.0_IF2_86:
     sub rsp,8
     sub rsp,8
     mov rax,QWORD[rsp + 24]
@@ -11957,8 +11984,8 @@ f.ios.OStream.delete:
     add rsp,8
     call f.sys.close
     add rsp,8
-    l.1_LOG2_85:
-    l.1_IF2_85:
+    l.1_LOG2_86:
+    l.1_IF2_86:
     sub rsp,8
     mov rax,QWORD[rsp + 16]
     mov QWORD[rsp + 0],rax
@@ -11977,24 +12004,9 @@ f.ios.OStream.delete:
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 8],rax
     add rsp,8
-    call f.string.String.delete
+    call f.con.Vector.delete
     add rsp,8
     add rsp,8
-    ret
-
-f.ios.OStream.buff:
-    sub rsp,8
-    mov rax,QWORD[rsp + 16]
-    mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],8
-    sub rsp,8
-    lea rax,[rsp + 8]
-    mov QWORD[rsp + 0],rax
-    mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 32],rax
-    add rsp,8
-    add rsp,8
-    ret
     ret
 
 f.ios.OStream.size:
@@ -12101,7 +12113,7 @@ f.ios.OStream.ssize:
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 8],rax
     add rsp,8
-    call f.string.String.size
+    call f.con.Vector.size
     add rsp,8
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 32],rax
@@ -12124,7 +12136,7 @@ f.ios.OStream.flush:
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 8],rax
     add rsp,8
-    call f.string.String.size
+    call f.con.Vector.size
     add rsp,8
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 16],rax
@@ -12141,8 +12153,8 @@ f.ios.OStream.flush:
     mov al,BYTE[rsp + 0]
     add rsp,1
     cmp al,0
-    je l.1_IF2_86
-    l.0_IF2_86:
+    je l.1_IF2_87
+    l.0_IF2_87:
     sub rsp,8
     sub rsp,8
     mov rax,QWORD[rsp + 32]
@@ -12165,7 +12177,7 @@ f.ios.OStream.flush:
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 8],rax
     add rsp,8
-    call f.string.String.data
+    call f.con.Vector.data
     add rsp,8
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 16],rax
@@ -12189,11 +12201,11 @@ f.ios.OStream.flush:
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 8],rax
     add rsp,8
-    call f.string.String.clear
+    call f.con.Vector.clear
     add rsp,8
     add rsp,8
-    l.1_LOG2_86:
-    l.1_IF2_86:
+    l.1_LOG2_87:
+    l.1_IF2_87:
     mov rax,QWORD[rsp + 16]
     mov QWORD[rsp + 24],rax
     add rsp,8
@@ -12208,17 +12220,19 @@ f.ios.OStream.char:
     add QWORD[rsp + 0],8
     sub rsp,8
     sub rsp,8
-    sub rsp,8
-    lea rax,[rsp + 24]
+    lea rax,[rsp + 16]
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 8],rax
     add rsp,8
-    sub rsp,1
-    mov al,BYTE[rsp + 33]
-    mov BYTE[rsp + 0],al
-    call f.string.String.char
-    add rsp,1
+    sub rsp,8
+    sub rsp,8
+    lea rax,BYTE[rsp + 40]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    call f.con.Vector.push
     add rsp,8
     add rsp,8
     add rsp,8
@@ -12229,13 +12243,22 @@ f.ios.OStream.char:
 
 f.ios.OStream.cstr:
     sub rsp,8
-    mov rax,QWORD[rsp + 24]
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    call f.cstr.len
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
     mov QWORD[rsp + 0],rax
     add QWORD[rsp + 0],8
     sub rsp,8
     sub rsp,8
-    sub rsp,8
-    lea rax,[rsp + 24]
+    lea rax,[rsp + 16]
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 8],rax
@@ -12243,14 +12266,19 @@ f.ios.OStream.cstr:
     sub rsp,8
     mov rax,QWORD[rsp + 40]
     mov QWORD[rsp + 0],rax
-    call f.string.String.cstr
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    call f.con.Vector.push_c
     add rsp,8
     add rsp,8
     add rsp,8
     add rsp,8
-    mov rax,QWORD[rsp + 16]
-    mov QWORD[rsp + 24],rax
+    mov rax,QWORD[rsp + 24]
+    mov QWORD[rsp + 32],rax
+    add rsp,8
     ret
+    add rsp,8
     ret
 
 f.ios.OStream.cstr_s:
@@ -12260,38 +12288,7 @@ f.ios.OStream.cstr_s:
     add QWORD[rsp + 0],8
     sub rsp,8
     sub rsp,8
-    sub rsp,8
-    lea rax,[rsp + 24]
-    mov QWORD[rsp + 0],rax
-    mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 8],rax
-    add rsp,8
-    sub rsp,8
-    mov rax,QWORD[rsp + 48]
-    mov QWORD[rsp + 0],rax
-    sub rsp,8
-    mov rax,QWORD[rsp + 48]
-    mov QWORD[rsp + 0],rax
-    call f.string.String.cstr_s
-    add rsp,8
-    add rsp,8
-    add rsp,8
-    add rsp,8
-    add rsp,8
-    mov rax,QWORD[rsp + 24]
-    mov QWORD[rsp + 32],rax
-    ret
-    ret
-
-f.ios.OStream.string:
-    sub rsp,8
-    mov rax,QWORD[rsp + 24]
-    mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],8
-    sub rsp,8
-    sub rsp,8
-    sub rsp,8
-    lea rax,[rsp + 24]
+    lea rax,[rsp + 16]
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 8],rax
@@ -12299,256 +12296,895 @@ f.ios.OStream.string:
     sub rsp,8
     mov rax,QWORD[rsp + 40]
     mov QWORD[rsp + 0],rax
-    call f.string.String.string
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    mov QWORD[rsp + 0],rax
+    call f.con.Vector.push_c
     add rsp,8
     add rsp,8
     add rsp,8
     add rsp,8
-    mov rax,QWORD[rsp + 16]
-    mov QWORD[rsp + 24],rax
+    mov rax,QWORD[rsp + 24]
+    mov QWORD[rsp + 32],rax
     ret
     ret
 
 f.ios.OStream.uint:
     sub rsp,8
-    mov rax,QWORD[rsp + 24]
+    sub rsp,48
+    mov QWORD[rsp + 48],rsp
+    sub rsp,8
+    mov rax,QWORD[rsp + 56]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    mov BYTE[rsp + 0],0
+    sub rsp,8
+    mov QWORD[rsp + 0],48
+    call f.ptr.set
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 56]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 80]
+    mov QWORD[rsp + 0],rax
+    call f.parse.uint.get
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 72]
+    mov QWORD[rsp + 0],rax
+    call f.cstr.len
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 88]
     mov QWORD[rsp + 0],rax
     add QWORD[rsp + 0],8
     sub rsp,8
     sub rsp,8
-    sub rsp,8
-    lea rax,[rsp + 24]
+    lea rax,[rsp + 16]
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 8],rax
     add rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 40]
+    mov rax,QWORD[rsp + 80]
     mov QWORD[rsp + 0],rax
-    call f.string.String.uint
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    call f.con.Vector.push_c
     add rsp,8
     add rsp,8
     add rsp,8
     add rsp,8
-    mov rax,QWORD[rsp + 16]
-    mov QWORD[rsp + 24],rax
+    mov rax,QWORD[rsp + 80]
+    mov QWORD[rsp + 88],rax
+    add rsp,8
+    add rsp,8
+    add rsp,48
     ret
+    add rsp,8
+    add rsp,8
+    add rsp,48
     ret
 
 f.ios.OStream.int:
     sub rsp,8
-    mov rax,QWORD[rsp + 24]
+    sub rsp,48
+    mov QWORD[rsp + 48],rsp
+    sub rsp,8
+    mov rax,QWORD[rsp + 56]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    mov BYTE[rsp + 0],0
+    sub rsp,8
+    mov QWORD[rsp + 0],48
+    call f.ptr.set
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 56]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 80]
+    mov QWORD[rsp + 0],rax
+    call f.parse.int.get
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 72]
+    mov QWORD[rsp + 0],rax
+    call f.cstr.len
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 88]
     mov QWORD[rsp + 0],rax
     add QWORD[rsp + 0],8
     sub rsp,8
     sub rsp,8
-    sub rsp,8
-    lea rax,[rsp + 24]
+    lea rax,[rsp + 16]
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 8],rax
     add rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 40]
+    mov rax,QWORD[rsp + 80]
     mov QWORD[rsp + 0],rax
-    call f.string.String.int
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    call f.con.Vector.push_c
     add rsp,8
     add rsp,8
     add rsp,8
     add rsp,8
-    mov rax,QWORD[rsp + 16]
-    mov QWORD[rsp + 24],rax
+    mov rax,QWORD[rsp + 80]
+    mov QWORD[rsp + 88],rax
+    add rsp,8
+    add rsp,8
+    add rsp,48
     ret
+    add rsp,8
+    add rsp,8
+    add rsp,48
     ret
 
 f.ios.OStream.boolean:
     sub rsp,8
-    mov rax,QWORD[rsp + 17]
+    sub rsp,8
+    mov QWORD[rsp + 8],rsp
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    mov BYTE[rsp + 0],0
+    sub rsp,8
+    mov QWORD[rsp + 0],8
+    call f.ptr.set
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    mov al,BYTE[rsp + 33]
+    mov BYTE[rsp + 0],al
+    call f.parse.boolean.get
+    add rsp,1
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    call f.cstr.len
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 41]
     mov QWORD[rsp + 0],rax
     add QWORD[rsp + 0],8
     sub rsp,8
     sub rsp,8
-    sub rsp,8
-    lea rax,[rsp + 24]
+    lea rax,[rsp + 16]
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 8],rax
     add rsp,8
-    sub rsp,1
-    mov al,BYTE[rsp + 33]
-    mov BYTE[rsp + 0],al
-    call f.string.String.boolean
-    add rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    call f.con.Vector.push_c
     add rsp,8
     add rsp,8
     add rsp,8
-    mov rax,QWORD[rsp + 9]
-    mov QWORD[rsp + 17],rax
+    add rsp,8
+    mov rax,QWORD[rsp + 33]
+    mov QWORD[rsp + 41],rax
+    add rsp,8
+    add rsp,8
+    add rsp,8
     ret
+    add rsp,8
+    add rsp,8
+    add rsp,8
     ret
 
 f.ios.OStream.float:
     sub rsp,8
-    mov rax,QWORD[rsp + 32]
+    sub rsp,48
+    mov QWORD[rsp + 48],rsp
+    sub rsp,8
+    mov rax,QWORD[rsp + 56]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    mov BYTE[rsp + 0],0
+    sub rsp,8
+    mov QWORD[rsp + 0],48
+    call f.ptr.set
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 56]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 88]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 88]
+    mov QWORD[rsp + 0],rax
+    call f.parse.float.get
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 72]
+    mov QWORD[rsp + 0],rax
+    call f.cstr.len
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 96]
     mov QWORD[rsp + 0],rax
     add QWORD[rsp + 0],8
     sub rsp,8
     sub rsp,8
-    sub rsp,8
-    lea rax,[rsp + 24]
+    lea rax,[rsp + 16]
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 8],rax
     add rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 48]
+    mov rax,QWORD[rsp + 80]
     mov QWORD[rsp + 0],rax
     sub rsp,8
-    mov rax,QWORD[rsp + 48]
+    mov rax,QWORD[rsp + 32]
     mov QWORD[rsp + 0],rax
-    call f.string.String.float
+    call f.con.Vector.push_c
     add rsp,8
     add rsp,8
     add rsp,8
     add rsp,8
+    mov rax,QWORD[rsp + 88]
+    mov QWORD[rsp + 96],rax
     add rsp,8
-    mov rax,QWORD[rsp + 24]
-    mov QWORD[rsp + 32],rax
+    add rsp,8
+    add rsp,48
     ret
+    add rsp,8
+    add rsp,8
+    add rsp,48
     ret
 
 f.ios.OStream.hex:
     sub rsp,8
-    mov rax,QWORD[rsp + 24]
+    sub rsp,48
+    mov QWORD[rsp + 48],rsp
+    sub rsp,8
+    mov rax,QWORD[rsp + 56]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    mov BYTE[rsp + 0],0
+    sub rsp,8
+    mov QWORD[rsp + 0],48
+    call f.ptr.set
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 56]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 80]
+    mov QWORD[rsp + 0],rax
+    call f.parse.hex.get
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 72]
+    mov QWORD[rsp + 0],rax
+    call f.cstr.len
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 88]
     mov QWORD[rsp + 0],rax
     add QWORD[rsp + 0],8
     sub rsp,8
     sub rsp,8
-    sub rsp,8
-    lea rax,[rsp + 24]
+    lea rax,[rsp + 16]
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 8],rax
     add rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 40]
+    mov rax,QWORD[rsp + 80]
     mov QWORD[rsp + 0],rax
-    call f.string.String.hex
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    call f.con.Vector.push_c
     add rsp,8
     add rsp,8
     add rsp,8
     add rsp,8
-    mov rax,QWORD[rsp + 16]
-    mov QWORD[rsp + 24],rax
+    mov rax,QWORD[rsp + 80]
+    mov QWORD[rsp + 88],rax
+    add rsp,8
+    add rsp,8
+    add rsp,48
     ret
+    add rsp,8
+    add rsp,8
+    add rsp,48
     ret
 
 f.ios.OStream.oct:
     sub rsp,8
-    mov rax,QWORD[rsp + 24]
+    sub rsp,48
+    mov QWORD[rsp + 48],rsp
+    sub rsp,8
+    mov rax,QWORD[rsp + 56]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    mov BYTE[rsp + 0],0
+    sub rsp,8
+    mov QWORD[rsp + 0],48
+    call f.ptr.set
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 56]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 80]
+    mov QWORD[rsp + 0],rax
+    call f.parse.oct.get
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 72]
+    mov QWORD[rsp + 0],rax
+    call f.cstr.len
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 88]
     mov QWORD[rsp + 0],rax
     add QWORD[rsp + 0],8
     sub rsp,8
     sub rsp,8
-    sub rsp,8
-    lea rax,[rsp + 24]
+    lea rax,[rsp + 16]
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 8],rax
     add rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 40]
+    mov rax,QWORD[rsp + 80]
     mov QWORD[rsp + 0],rax
-    call f.string.String.oct
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    call f.con.Vector.push_c
     add rsp,8
     add rsp,8
     add rsp,8
     add rsp,8
-    mov rax,QWORD[rsp + 16]
-    mov QWORD[rsp + 24],rax
+    mov rax,QWORD[rsp + 80]
+    mov QWORD[rsp + 88],rax
+    add rsp,8
+    add rsp,8
+    add rsp,48
     ret
+    add rsp,8
+    add rsp,8
+    add rsp,48
     ret
 
 f.ios.OStream.bin:
     sub rsp,8
-    mov rax,QWORD[rsp + 24]
+    sub rsp,48
+    mov QWORD[rsp + 48],rsp
+    sub rsp,8
+    mov rax,QWORD[rsp + 56]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    mov BYTE[rsp + 0],0
+    sub rsp,8
+    mov QWORD[rsp + 0],48
+    call f.ptr.set
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 56]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 80]
+    mov QWORD[rsp + 0],rax
+    call f.parse.bin.get
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 72]
+    mov QWORD[rsp + 0],rax
+    call f.cstr.len
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 88]
     mov QWORD[rsp + 0],rax
     add QWORD[rsp + 0],8
     sub rsp,8
     sub rsp,8
-    sub rsp,8
-    lea rax,[rsp + 24]
+    lea rax,[rsp + 16]
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 8],rax
     add rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 40]
+    mov rax,QWORD[rsp + 80]
     mov QWORD[rsp + 0],rax
-    call f.string.String.bin
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    call f.con.Vector.push_c
     add rsp,8
     add rsp,8
     add rsp,8
     add rsp,8
-    mov rax,QWORD[rsp + 16]
-    mov QWORD[rsp + 24],rax
+    mov rax,QWORD[rsp + 80]
+    mov QWORD[rsp + 88],rax
+    add rsp,8
+    add rsp,8
+    add rsp,48
     ret
+    add rsp,8
+    add rsp,8
+    add rsp,48
     ret
 
 f.ios.OStream.address:
     sub rsp,8
-    mov rax,QWORD[rsp + 24]
+    sub rsp,48
+    mov QWORD[rsp + 48],rsp
+    sub rsp,8
+    mov rax,QWORD[rsp + 56]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    mov BYTE[rsp + 0],0
+    sub rsp,8
+    mov QWORD[rsp + 0],48
+    call f.ptr.set
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    lea rax,QWORD[rsp + 80]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,4
+    mov DWORD[rsp + 0],0
+    l.0_FOR3_37:
+    sub rsp,1
+    sub rsp,1
+    mov rax,0
+    mov eax,DWORD[rsp + 2]
+    cmp rax,8
+    setl BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_FOR3_37
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 13]
+    add eax,DWORD[rsp + 9]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov r10,QWORD[rsp + 0]
+    mov al,BYTE[r10]
+    mov BYTE[rsp + 24],al
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    sub rsp,4
+    mov eax,DWORD[rsp + 5]
+    mov rbx,2
+    imul rbx
+    mov DWORD[rsp + 0],eax
+    sub rsp,8
+    mov rax,QWORD[rsp + 73]
+    add eax,DWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    sub rsp,8
+    sub rsp,1
+    mov rax,0
+    mov al,BYTE[rsp + 30]
+    and rax,0xF0
+    mov BYTE[rsp + 0],al
+    sub rsp,8
+    mov al,BYTE[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov rcx,8
+    shr rax,cl
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 17],rax
+    add rsp,8
+    add rsp,8
+    add rsp,1
+    call f.char.to.hex
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    mov r10,QWORD[rsp + 1]
+    mov BYTE[r10],al
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,4
+    sub rsp,4
+    mov eax,DWORD[rsp + 5]
+    mov rbx,2
+    imul rbx
+    mov DWORD[rsp + 0],eax
+    sub rsp,8
+    mov rax,QWORD[rsp + 73]
+    add eax,DWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    add rax,1
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    sub rsp,8
+    sub rsp,1
+    mov rax,0
+    mov al,BYTE[rsp + 38]
+    and rax,0xF
+    mov BYTE[rsp + 0],al
+    mov al,BYTE[rsp + 0]
+    mov QWORD[rsp + 1],rax
+    add rsp,1
+    call f.char.to.hex
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    mov r10,QWORD[rsp + 1]
+    mov BYTE[r10],al
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,4
+    add DWORD[rsp + 1],1
+    add rsp,1
+    jmp l.0_FOR3_37
+    l.1_FOR3_37:
+    add rsp,4
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 80]
+    mov QWORD[rsp + 0],rax
+    call f.cstr.len
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 96]
     mov QWORD[rsp + 0],rax
     add QWORD[rsp + 0],8
     sub rsp,8
     sub rsp,8
-    sub rsp,8
-    lea rax,[rsp + 24]
+    lea rax,[rsp + 16]
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 8],rax
     add rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 40]
+    mov rax,QWORD[rsp + 88]
     mov QWORD[rsp + 0],rax
-    call f.string.String.address
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    call f.con.Vector.push_c
     add rsp,8
     add rsp,8
     add rsp,8
     add rsp,8
-    mov rax,QWORD[rsp + 16]
-    mov QWORD[rsp + 24],rax
+    mov rax,QWORD[rsp + 88]
+    mov QWORD[rsp + 96],rax
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,48
     ret
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,48
     ret
 
 f.ios.OStream.mem:
     sub rsp,8
-    mov rax,QWORD[rsp + 32]
-    mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],8
     sub rsp,8
-    sub rsp,8
-    sub rsp,8
-    lea rax,[rsp + 24]
+    mov rax,QWORD[rsp + 24]
+    mov rbx,2
+    imul rbx
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 8],rax
     add rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 48]
-    mov QWORD[rsp + 0],rax
     sub rsp,8
     mov rax,QWORD[rsp + 48]
     mov QWORD[rsp + 0],rax
-    call f.string.String.mem
+    add QWORD[rsp + 0],8
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],32
+    sub rsp,8
+    sub rsp,8
+    mov r10,QWORD[rsp + 16]
+    mov rax,QWORD[r10]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 56]
+    add rax,1
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    call f.mem.Allocator.alloc
+    add rsp,8
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 24],rax
     add rsp,8
     add rsp,8
     add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    mov BYTE[rsp + 0],0
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 33]
+    add rax,1
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    call f.ptr.set
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    sub rsp,4
+    mov DWORD[rsp + 0],0
+    l.0_FOR3_38:
+    sub rsp,1
+    sub rsp,1
+    mov rax,0
+    mov eax,DWORD[rsp + 2]
+    cmp rax,QWORD[rsp + 30]
+    setl BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 1],al
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_FOR3_38
+    sub rsp,1
+    sub rsp,8
+    mov rax,QWORD[rsp + 45]
+    add eax,DWORD[rsp + 9]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov r10,QWORD[rsp + 0]
+    mov al,BYTE[r10]
+    mov BYTE[rsp + 24],al
     add rsp,8
     add rsp,8
+    add rsp,8
+    sub rsp,4
+    mov eax,DWORD[rsp + 5]
+    mov rbx,2
+    imul rbx
+    mov DWORD[rsp + 0],eax
+    sub rsp,8
+    mov rax,QWORD[rsp + 17]
+    add eax,DWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    sub rsp,8
+    sub rsp,1
+    mov rax,0
+    mov al,BYTE[rsp + 30]
+    and rax,0xF0
+    mov BYTE[rsp + 0],al
+    sub rsp,8
+    mov al,BYTE[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov rcx,8
+    shr rax,cl
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 17],rax
+    add rsp,8
+    add rsp,8
+    add rsp,1
+    call f.char.to.hex
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    mov r10,QWORD[rsp + 1]
+    mov BYTE[r10],al
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,4
+    sub rsp,4
+    mov eax,DWORD[rsp + 5]
+    mov rbx,2
+    imul rbx
+    mov DWORD[rsp + 0],eax
+    sub rsp,8
+    mov rax,QWORD[rsp + 17]
+    add eax,DWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    add rax,1
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,1
+    sub rsp,8
+    sub rsp,1
+    mov rax,0
+    mov al,BYTE[rsp + 38]
+    and rax,0xF
+    mov BYTE[rsp + 0],al
+    mov al,BYTE[rsp + 0]
+    mov QWORD[rsp + 1],rax
+    add rsp,1
+    call f.char.to.hex
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    mov r10,QWORD[rsp + 1]
+    mov BYTE[r10],al
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,4
+    add DWORD[rsp + 1],1
+    add rsp,1
+    jmp l.0_FOR3_38
+    l.1_FOR3_38:
+    add rsp,4
+    sub rsp,8
+    mov rax,QWORD[rsp + 48]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],8
+    sub rsp,8
+    sub rsp,8
+    lea rax,[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
     mov rax,QWORD[rsp + 24]
-    mov QWORD[rsp + 32],rax
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    mov QWORD[rsp + 0],rax
+    call f.con.Vector.push_c
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 48]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],8
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],32
+    sub rsp,8
+    mov r10,QWORD[rsp + 8]
+    mov rax,QWORD[r10]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    call f.mem.Allocator.free
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    mov rax,QWORD[rsp + 40]
+    mov QWORD[rsp + 48],rax
+    add rsp,8
+    add rsp,8
     ret
+    add rsp,8
+    add rsp,8
     ret
 
 f.ios.OStream.print:
@@ -12560,7 +13196,30 @@ f.ios.OStream.print:
     sub rsp,50
     mov QWORD[rsp + 50],rsp
     sub rsp,8
-    mov rax,QWORD[rsp + 58]
+    sub rsp,8
+    mov rax,QWORD[rsp + 82]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],8
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    lea rax,[rsp + 24]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    call f.con.Vector.size
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 24],rax
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 66]
     mov QWORD[rsp + 0],rax
     sub rsp,1
     mov BYTE[rsp + 0],32
@@ -12572,7 +13231,7 @@ f.ios.OStream.print:
     add rsp,8
     sub rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 66]
+    mov rax,QWORD[rsp + 74]
     add rax,48
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
@@ -12587,7 +13246,7 @@ f.ios.OStream.print:
     add rsp,8
     add rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 58]
+    mov rax,QWORD[rsp + 66]
     mov QWORD[rsp + 0],rax
     sub rsp,8
     mov QWORD[rsp + 0],GLOBAL_STR33
@@ -12599,7 +13258,7 @@ f.ios.OStream.print:
     add rsp,8
     sub rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 66]
+    mov rax,QWORD[rsp + 74]
     add rax,12
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
@@ -12607,7 +13266,7 @@ f.ios.OStream.print:
     add rsp,8
     sub rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 90]
+    mov rax,QWORD[rsp + 98]
     mov QWORD[rsp + 0],rax
     add QWORD[rsp + 0],0
     sub rsp,8
@@ -12623,76 +13282,40 @@ f.ios.OStream.print:
     add rsp,8
     sub rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 66]
+    mov rax,QWORD[rsp + 74]
     add rax,30
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 8],rax
     add rsp,8
     sub rsp,8
-    sub rsp,8
-    mov rax,QWORD[rsp + 90]
+    mov rax,QWORD[rsp + 16]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],8
-    sub rsp,8
-    sub rsp,8
-    sub rsp,8
-    lea rax,[rsp + 24]
-    mov QWORD[rsp + 0],rax
-    mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 8],rax
-    add rsp,8
-    call f.string.String.size
-    add rsp,8
-    sub rsp,8
-    mov rax,QWORD[rsp + 8]
-    mov QWORD[rsp + 0],rax
-    mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 24],rax
-    add rsp,8
-    add rsp,8
-    add rsp,8
     call f.parse.uint.get
     add rsp,8
     add rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 58]
+    mov rax,QWORD[rsp + 66]
     mov QWORD[rsp + 0],rax
     call f.io.print
     add rsp,8
     sub rsp,8
     mov QWORD[rsp + 0],0
-    l.0_FOR3_37:
+    l.0_FOR3_39:
     sub rsp,1
-    sub rsp,8
-    mov rax,QWORD[rsp + 83]
-    mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],8
-    sub rsp,8
-    sub rsp,8
-    sub rsp,8
-    lea rax,[rsp + 24]
-    mov QWORD[rsp + 0],rax
-    mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 8],rax
-    add rsp,8
-    call f.string.String.size
-    add rsp,8
     sub rsp,1
-    mov rax,QWORD[rsp + 18]
-    cmp rax,QWORD[rsp + 1]
+    mov rax,QWORD[rsp + 2]
+    cmp rax,QWORD[rsp + 10]
     setl BYTE[rsp + 0]
     mov al,BYTE[rsp + 0]
-    mov BYTE[rsp + 17],al
+    mov BYTE[rsp + 1],al
     add rsp,1
-    add rsp,8
-    add rsp,8
     mov al,BYTE[rsp + 0]
     add rsp,1
     cmp al,0
-    je l.1_FOR3_37
+    je l.1_FOR3_39
     sub rsp,8
-    mov rax,QWORD[rsp + 66]
+    mov rax,QWORD[rsp + 74]
     mov QWORD[rsp + 0],rax
     sub rsp,1
     mov BYTE[rsp + 0],32
@@ -12703,7 +13326,7 @@ f.ios.OStream.print:
     add rsp,1
     add rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 66]
+    mov rax,QWORD[rsp + 74]
     mov QWORD[rsp + 0],rax
     sub rsp,8
     mov QWORD[rsp + 0],GLOBAL_STR34
@@ -12715,7 +13338,7 @@ f.ios.OStream.print:
     add rsp,8
     sub rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 74]
+    mov rax,QWORD[rsp + 82]
     add rax,14
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
@@ -12732,41 +13355,49 @@ f.ios.OStream.print:
     add rsp,8
     add rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 66]
+    mov rax,QWORD[rsp + 74]
     add rax,18
     mov QWORD[rsp + 0],rax
     sub rsp,8
     mov rax,QWORD[rsp + 8]
     mov QWORD[rsp + 0],rax
     sub rsp,8
-    mov rax,QWORD[rsp + 98]
+    mov rax,QWORD[rsp + 106]
     mov QWORD[rsp + 0],rax
     add QWORD[rsp + 0],8
-    sub rsp,1
     sub rsp,8
     sub rsp,8
-    lea rax,[rsp + 17]
+    sub rsp,8
+    lea rax,[rsp + 24]
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 8],rax
     add rsp,8
-    sub rsp,4
-    mov rax,0
-    mov rax,QWORD[rsp + 37]
-    mov DWORD[rsp + 0],eax
-    call f.string.String.get
-    add rsp,4
+    sub rsp,8
+    mov rax,QWORD[rsp + 48]
+    mov QWORD[rsp + 0],rax
+    call f.con.Vector.get
     add rsp,8
-    mov al,BYTE[rsp + 0]
-    mov r10,QWORD[rsp + 9]
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov r10,QWORD[rsp + 0]
+    mov al,BYTE[r10]
+    mov r10,QWORD[rsp + 32]
     mov BYTE[r10],al
-    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,8
     add rsp,8
     add rsp,8
     add rsp,8
     sub rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 74]
+    mov rax,QWORD[rsp + 82]
     add rax,48
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
@@ -12781,17 +13412,18 @@ f.ios.OStream.print:
     add rsp,8
     add rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 66]
+    mov rax,QWORD[rsp + 74]
     mov QWORD[rsp + 0],rax
     call f.io.print
     add rsp,8
     add QWORD[rsp + 0],1
-    jmp l.0_FOR3_37
-    l.1_FOR3_37:
+    jmp l.0_FOR3_39
+    l.1_FOR3_39:
     add rsp,8
     sub rsp,8
     mov QWORD[rsp + 0],GLOBAL_STR36
     call f.io.print
+    add rsp,8
     add rsp,8
     add rsp,8
     add rsp,50
@@ -12891,8 +13523,8 @@ f.ios.IStream.delete:
     mov al,BYTE[rsp + 0]
     add rsp,1
     cmp al,0
-    je l.1_IF2_87
-    l.0_IF2_87:
+    je l.1_IF2_88
+    l.0_IF2_88:
     sub rsp,8
     sub rsp,8
     mov rax,QWORD[rsp + 24]
@@ -12904,8 +13536,8 @@ f.ios.IStream.delete:
     add rsp,8
     call f.sys.close
     add rsp,8
-    l.1_LOG2_87:
-    l.1_IF2_87:
+    l.1_LOG2_88:
+    l.1_IF2_88:
     sub rsp,8
     mov rax,QWORD[rsp + 16]
     mov QWORD[rsp + 0],rax
@@ -13007,45 +13639,46 @@ f.ios.IStream.set_pos_end:
     ret
 
 f.ios.IStream.line:
-    sub rsp,48
-    sub rsp,48
+    sub rsp,40
+    sub rsp,40
     sub rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 120]
+    mov rax,QWORD[rsp + 104]
     mov QWORD[rsp + 0],rax
     add QWORD[rsp + 0],8
     mov r10,QWORD[rsp + 0]
     mov rax,QWORD[r10]
     mov QWORD[rsp + 8],rax
     add rsp,8
-    call f.string.String.new
+    sub rsp,8
+    mov QWORD[rsp + 0],1
+    call f.con.Vector.new
+    add rsp,8
     add rsp,8
     mov rax,QWORD[rsp + 0 + 0]
-    mov QWORD[rsp + 48 + 0],rax
+    mov QWORD[rsp + 40 + 0],rax
     mov rax,QWORD[rsp + 0 + 8]
-    mov QWORD[rsp + 48 + 8],rax
+    mov QWORD[rsp + 40 + 8],rax
     mov rax,QWORD[rsp + 0 + 16]
-    mov QWORD[rsp + 48 + 16],rax
+    mov QWORD[rsp + 40 + 16],rax
     mov rax,QWORD[rsp + 0 + 24]
-    mov QWORD[rsp + 48 + 24],rax
+    mov QWORD[rsp + 40 + 24],rax
     mov rax,QWORD[rsp + 0 + 32]
-    mov QWORD[rsp + 48 + 32],rax
-    mov rax,QWORD[rsp + 0 + 40]
-    mov QWORD[rsp + 48 + 40],rax
-    add rsp,48
+    mov QWORD[rsp + 40 + 32],rax
+    add rsp,40
     sub rsp,8
     sub rsp,16
     mov QWORD[rsp + 16],rsp
     sub rsp,1
     mov BYTE[rsp + 0],1
-    l.0_WHILE2_88:
+    l.0_WHILE2_89:
     sub rsp,1
     mov al,BYTE[rsp + 1]
     mov BYTE[rsp + 0],al
     mov al,BYTE[rsp + 0]
     add rsp,1
     cmp al,0
-    je l.1_WHILE2_88
+    je l.1_WHILE2_89
     sub rsp,8
     mov rax,QWORD[rsp + 25]
     mov QWORD[rsp + 0],rax
@@ -13061,7 +13694,7 @@ f.ios.IStream.line:
     sub rsp,8
     sub rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 113]
+    mov rax,QWORD[rsp + 105]
     mov QWORD[rsp + 0],rax
     add QWORD[rsp + 0],0
     mov r10,QWORD[rsp + 0]
@@ -13082,16 +13715,25 @@ f.ios.IStream.line:
     add rsp,8
     sub rsp,8
     sub rsp,8
-    sub rsp,8
-    lea rax,[rsp + 57]
+    lea rax,[rsp + 49]
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 8],rax
     add rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 49]
+    mov rax,QWORD[rsp + 41]
     mov QWORD[rsp + 0],rax
-    call f.string.String.cstr
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 65]
+    mov QWORD[rsp + 0],rax
+    call f.cstr.len
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    call f.con.Vector.push_c
     add rsp,8
     add rsp,8
     add rsp,8
@@ -13127,14 +13769,14 @@ f.ios.IStream.line:
     mov al,BYTE[rsp + 0]
     add rsp,1
     cmp al,0
-    je l.1_IF3_38
-    l.0_IF3_38:
+    je l.1_IF3_40
+    l.0_IF3_40:
     mov BYTE[rsp + 8],0
-    l.1_LOG3_38:
-    l.1_IF3_38:
+    l.1_LOG3_40:
+    l.1_IF3_40:
     add rsp,8
-    jmp l.0_WHILE2_88
-    l.1_WHILE2_88:
+    jmp l.0_WHILE2_89
+    l.1_WHILE2_89:
     sub rsp,8
     sub rsp,8
     sub rsp,8
@@ -13144,33 +13786,89 @@ f.ios.IStream.line:
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 8],rax
     add rsp,8
-    call f.string.String.cpy
+    call f.con.Vector.size
     add rsp,8
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 8],rax
     add rsp,8
     sub rsp,8
     sub rsp,8
-    lea rax,[rsp + 49]
+    sub rsp,8
+    mov rax,QWORD[rsp + 89]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    add rax,1
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 8],rax
     add rsp,8
-    call f.string.String.delete
+    call f.mem.Allocator.alloc
+    add rsp,8
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    lea rax,[rsp + 81]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    call f.con.Vector.data
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    call f.ptr.cpy
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    add rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov r10,QWORD[rsp + 0]
+    mov BYTE[r10],0
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    lea rax,[rsp + 57]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    call f.con.Vector.delete
     add rsp,8
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 97],rax
     add rsp,8
+    add rsp,8
     add rsp,1
     add rsp,8
     add rsp,16
-    add rsp,48
+    add rsp,40
     ret
     add rsp,8
+    add rsp,8
     add rsp,1
     add rsp,8
     add rsp,16
-    add rsp,48
+    add rsp,40
     ret
 
 f.ios.IStream.char:
@@ -13253,8 +13951,8 @@ f.ios.IStream.buff:
     mov al,BYTE[rsp + 0]
     add rsp,1
     cmp al,0
-    je l.1_IF2_89
-    l.0_IF2_89:
+    je l.1_IF2_90
+    l.0_IF2_90:
     sub rsp,8
     mov rax,QWORD[rsp + 40]
     mov QWORD[rsp + 0],rax
@@ -13268,9 +13966,9 @@ f.ios.IStream.buff:
     add rsp,8
     add rsp,8
     add rsp,8
-    jmp l.1_LOG2_89
-    l.1_IF2_89:
-    l.0_ELSE2_89:
+    jmp l.1_LOG2_90
+    l.1_IF2_90:
+    l.0_ELSE2_90:
     sub rsp,8
     mov rax,QWORD[rsp + 40]
     mov QWORD[rsp + 0],rax
@@ -13284,7 +13982,7 @@ f.ios.IStream.buff:
     add rsp,8
     add rsp,8
     add rsp,8
-    l.1_LOG2_89:
+    l.1_LOG2_90:
     sub rsp,8
     mov rax,QWORD[rsp + 48]
     mov QWORD[rsp + 0],rax
@@ -14480,11 +15178,11 @@ f.main:
     mov rax,QWORD[rsp + 0 + 8]
     mov QWORD[rsp + 16 + 8],rax
     add rsp,16
-    sub rsp,56
-    sub rsp,56
+    sub rsp,48
+    sub rsp,48
     sub rsp,8
     sub rsp,8
-    lea rax,[rsp + 128]
+    lea rax,[rsp + 112]
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 8],rax
@@ -14495,40 +15193,26 @@ f.main:
     add rsp,8
     add rsp,8
     mov rax,QWORD[rsp + 0 + 0]
-    mov QWORD[rsp + 56 + 0],rax
+    mov QWORD[rsp + 48 + 0],rax
     mov rax,QWORD[rsp + 0 + 8]
-    mov QWORD[rsp + 56 + 8],rax
+    mov QWORD[rsp + 48 + 8],rax
     mov rax,QWORD[rsp + 0 + 16]
-    mov QWORD[rsp + 56 + 16],rax
+    mov QWORD[rsp + 48 + 16],rax
     mov rax,QWORD[rsp + 0 + 24]
-    mov QWORD[rsp + 56 + 24],rax
+    mov QWORD[rsp + 48 + 24],rax
     mov rax,QWORD[rsp + 0 + 32]
-    mov QWORD[rsp + 56 + 32],rax
+    mov QWORD[rsp + 48 + 32],rax
     mov rax,QWORD[rsp + 0 + 40]
-    mov QWORD[rsp + 56 + 40],rax
-    mov rax,QWORD[rsp + 0 + 48]
-    mov QWORD[rsp + 56 + 48],rax
-    add rsp,56
+    mov QWORD[rsp + 48 + 40],rax
+    add rsp,48
     sub rsp,8
     sub rsp,8
-    sub rsp,8
-    lea rax,[rsp + 24]
+    lea rax,[rsp + 16]
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 8],rax
     add rsp,8
-    sub rsp,8
-    mov QWORD[rsp + 0],GLOBAL_STR43
-    call f.ios.OStream.cstr
-    add rsp,8
-    add rsp,8
-    sub rsp,8
-    sub rsp,8
-    mov rax,QWORD[rsp + 16]
-    mov QWORD[rsp + 0],rax
-    call f.ios.OStream.flush
-    add rsp,8
-    add rsp,8
+    call f.ios.OStream.print
     add rsp,8
     sub rsp,8
     sub rsp,8
@@ -14541,23 +15225,33 @@ f.main:
     add rsp,8
     sub rsp,8
     sub rsp,8
-    lea rax,[rsp + 72]
+    lea rax,[rsp + 64]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    call f.mem.Allocator.print
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    lea rax,[rsp + 64]
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 8],rax
     add rsp,8
     call f.mem.Allocator.delete
     add rsp,8
-    mov QWORD[rsp + 80],0
-    add rsp,56
+    mov QWORD[rsp + 72],0
+    add rsp,48
     add rsp,16
     ret
-    add rsp,56
+    add rsp,48
     add rsp,16
     ret
 
 
 _start:
+    mov rbp,rsp
     sub rsp,8
     call f.main
     mov rdi,QWORD[rsp + 0]

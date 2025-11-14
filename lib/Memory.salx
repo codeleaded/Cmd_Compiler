@@ -74,6 +74,9 @@ namespace mem {
             return ptr;
         }
         pub void free(Allocator* self,void* ptr){
+            if self == null || ptr == null {
+                return;
+            }
             if ptr<self->memory || ptr>self->memory+self->length {
                 return;
             }
@@ -88,7 +91,7 @@ namespace mem {
                     first->flags = 0;
                     
                     Header* next = first + 8 + (u64)first->length;
-                    if next<=self->memory+self->length {
+                    if next<=self->memory + self->length {
                         if next->flags==0 {
                             first->length += 8 + next->length;
                         }
@@ -96,7 +99,7 @@ namespace mem {
 
                     if prev>=self->memory {
                         if prev->flags==0 {
-                            prev->length += 8 + (u64)first->length;
+                            prev->length += 8 + first->length;
                         }
                     }
                     return;

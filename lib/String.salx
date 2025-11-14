@@ -3,25 +3,14 @@ import "../lib/Memory.salx";
 
 namespace string {
     struct String[
-        pub con::Vector vec,
-        mem::Allocator* alloc
+        pub con::Vector vec
     ];
 
     impl String {
-        pub u64 size(String* self){
-            return self->vec.size();
-        }
-        pub i8* data(String* self){
-            return (i8*)self->vec.data();
-        }
-        pub void clear(String* self){
-            self->vec.clear();
-        }
-
         pub i8* cpy(String* self){
             u64 size = self->vec.size();
-            i8* out = self->alloc->alloc(size + 1);
-            ptr::cpy(out,self->data(),size);
+            i8* out = self->vec.alloc->alloc(size + 1);
+            ptr::cpy(out,self->vec.data(),size);
             out[size] = 0;
             return out;
         }
@@ -34,7 +23,7 @@ namespace string {
         }
 
         pub String* string(String* self,String* ptr){
-            self->vec.push_c(ptr->data(),ptr->size());
+            self->vec.push_c(ptr->vec.data(),ptr->vec.size());
             return self;
         }
         pub String* char(String* self,i8 ch){
@@ -125,7 +114,7 @@ namespace string {
         }
         pub String* mem(String* self,void* n,u64 bytes){
             u64 count = bytes * 2;
-            i8* block = self->alloc->alloc(count+1);
+            i8* block = self->vec.alloc->alloc(count+1);
             
             ptr::set(block,0,count+1);
             
@@ -136,13 +125,12 @@ namespace string {
             }
 
             self->vec.push_c(block,count);
-            self->alloc->free(block);
+            self->vec.alloc->free(block);
             return self;
         }
 
         pub void init(String* self,mem::Allocator* alloc){
             self->vec = con::Vector::new(alloc,1);
-            self->alloc = alloc;
         }
         pub String new(mem::Allocator* alloc){
             String cstr;
@@ -151,7 +139,6 @@ namespace string {
         }
         pub void delete(String* self){
             self->vec.delete();
-            self->alloc = null;
         }
         pub String make(mem::Allocator* alloc,i8* add){
             String string;

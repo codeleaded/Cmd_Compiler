@@ -1298,6 +1298,9 @@ SuperALX SuperALX_New(char* dllpath,char* src,char* output,char bits) {
             { TOKEN_CONSTSTRING_SINGLE,RESETER_ADD1 },
             { TOKEN_CONSTSTRING_DOUBLE,RESETER_ADD1 },
 
+            { TOKEN_SUPERALX_NULL,RESETER_ADD1 },
+            { TOKEN_SUPERALX_BOOLEAN,RESETER_ADD1 },
+
             { TOKEN_SUPERALX_RETURN,RESETER_RST },
             { TOKEN_END,RESETER_RST }
         }),
@@ -1576,6 +1579,7 @@ void SuperALX_Build_Globals(SuperALX* ll,String* str) {
 }
 void SuperALX_Build_EntryPoint(SuperALX* ll) {
     String_Append(&ll->text,"\n_start:\n");
+    String_Appendf(&ll->text,"%smov rbp,rsp\n",SUPERALX_INDENTATION);
     String_Appendf(&ll->text,"%ssub rsp,%d\n",SUPERALX_INDENTATION,SuperALX_Bytes(ll));
     
     CStr fmain = SuperALX_FunctionName(ll,"main");
