@@ -1,0 +1,23 @@
+import "../lib/IO.salx";
+import "../lib/Time.salx";
+
+i64 main(){
+
+    u64 start = time::nget();
+    
+    while true {
+        u64 tp = time::nget();
+
+        //f64 elapsed = ((f64)tp - (f64)start) / 1000000000.0;
+
+        io::print("Time: ");
+        //io::print_uint(tp);
+        io::print_uint((tp - start) / 1000000);
+        //io::print_float(elapsed);
+        io::print(" |\n");
+
+        time::msleep(100);
+    }
+
+    return 0;
+}

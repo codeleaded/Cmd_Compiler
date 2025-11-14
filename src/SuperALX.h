@@ -13,6 +13,8 @@
 
 #include "SuperALXDefines.h"
 #include "SuperALXASM.h"
+#include "SuperALXASMF.h"
+
 
 Boolean ShutingYard_compress(SuperALX* ll,TokenMap* tm);
 Boolean ShutingYard_compress_pointer(SuperALX* ll,TokenMap* tm);
