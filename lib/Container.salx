@@ -6,7 +6,7 @@ namespace con {
         u64 size,
         u64 memory_size,
         void* memory,
-        mem::Allocator* alloc
+        pub mem::Allocator* alloc
     ];
 
     impl Vector{
@@ -15,10 +15,11 @@ namespace con {
             self->elementsize = elementsize;
             self->size = 0;
             self->memory_size = size;
-            self->memory = self->alloc->alloc(size * elementsize);
+            self->memory = alloc->alloc(size * elementsize);
         }
         pub void delete(Vector* self){
-            self->alloc->free(self->memory);
+            void* mem = self->memory;
+            self->alloc->free(mem);
             self->alloc = null;
             self->elementsize = 0;
             self->size = 0;
@@ -132,7 +133,7 @@ namespace con {
             ptr::set(cstr,32,49);
             ptr::cpy(cstr+48,"\n",2);
             ptr::cpy(cstr,"| Header: ",10);
-            parse::uint::get(cstr+12,(u64)self->memory);
+            parse::hex::get(cstr+12,(u64)self->memory);
             parse::uint::get(cstr+30,(u64)self->elementsize);
             parse::uint::get(cstr+40,(u64)self->size);
             io::print(cstr);
@@ -141,20 +142,24 @@ namespace con {
                 void* element = self->get(i);
                 u64 visiual = 0;
                 
-                if self->elementsize==1 {
-                    visiual = *((u8*)element);
-                }elif self->elementsize==2 {
-                    visiual = *((u16*)element);
-                }elif self->elementsize==4 {
-                    visiual = *((u32*)element);
-                }else {
-                    visiual = *((u64*)element);
-                }
-                
                 ptr::set(cstr,32,49);
                 ptr::cpy(cstr,"| Element: ",11);
                 parse::uint::get(cstr+14,(u64)i);
-                parse::uint::get(cstr+18,visiual);
+                
+                if self->elementsize==1 {
+                    visiual = *((u8*)element);
+                    cstr[18] = visiual;
+                }elif self->elementsize==2 {
+                    visiual = (u16)(*((u16*)element));
+                    parse::uint::get(cstr+18,visiual);
+                }elif self->elementsize==4 {
+                    visiual = (u32)(*((u32*)element));
+                    parse::uint::get(cstr+18,visiual);
+                }else {
+                    visiual = (u64)(*((u64*)element));
+                    parse::uint::get(cstr+18,visiual);
+                }
+                
                 ptr::cpy(cstr+48,"\n",2);
                 io::print(cstr);
             }

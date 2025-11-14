@@ -178,6 +178,7 @@ Token Pointer_Handler_Arw(SuperALX* ll,Token* op,Vector* args){
                     }
 
                     CStr stack_name = SuperALX_Variablename_Next(ll,".STACK",6);
+                    
                     if(!SuperALX_DrefType(ll,v->typename)){
                         CStr type = CStr_Concat(member->type,"&");
                         SuperALX_Variable_Build_Decl(ll,stack_name,type);
