@@ -71,21 +71,21 @@ namespace io {
 
 
     struct File[
-        void* fd
+        pub i64 fd
     ];
 
     impl File{
-        pub void init(File* f,void* fd_in){
+        pub void init(File* f,i64 fd_in){
             f->fd = fd_in;
         }
-        pub File new(void* fd_in){
+        pub File new(i64 fd_in){
             File file;
             file.init(fd_in);
             return file;
         }
         pub File open(i8* filepath,i64 flags){
-            void* fd = sys::open(filepath,flags);
-            return File::new(fd);
+            i64 fd = sys::open(filepath,flags);
+            return io::File::new(fd);
         }
         pub void close(File* self){
             if self->fd > 2 {
@@ -114,14 +114,14 @@ namespace io {
         pub i32 set_flags(File* self,i64 flags){
             return sys::fcntl(self->fd,4,flags);
         }
-        pub i32 add_flags(File* self,i64 flags){
-            i64 oldflags = self->get_flags();
-            return sys::fcntl(self->fd,4,oldflags | flags);
-        }
-        pub i32 rm_flags(File* self,i64 flags){
-            i64 oldflags = self->get_flags();
-            return sys::fcntl(self->fd,4,oldflags & ~flags);
-        }
+        //pub i32 add_flags(File* self,i64 flags){
+        //    i64 oldflags = self->get_flags();
+        //    return sys::fcntl(self->fd,4,oldflags | flags);
+        //}
+        //pub i32 rm_flags(File* self,i64 flags){
+        //    i64 oldflags = self->get_flags();
+        //    return sys::fcntl(self->fd,4,oldflags & (~flags));
+        //}
 
         pub i32 read(File* self,i8* cstr,i64 count){
             return sys::read(self->fd,cstr,count);

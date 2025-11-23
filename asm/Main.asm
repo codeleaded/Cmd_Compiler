@@ -18,8 +18,7 @@ GLOBAL_STR7: db "false",0
 GLOBAL_STR8: db "0",0
 GLOBAL_STR9: db "true",0
 GLOBAL_STR10: db "1",0
-GLOBAL_STR11: db "Time: ",0
-GLOBAL_STR12: db " |",10,0
+GLOBAL_STR11: db "Hello World",10,0
 
 section .text
 global _start
@@ -6276,8 +6275,19 @@ f.io.print_hex:
     add rsp,24
     ret
 
-f.time.nget:
-    sub rsp,16
+f.io.File.init:
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    mov rax,QWORD[rsp + 16]
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],rax
+    add rsp,8
+    ret
+
+f.io.File.new:
+    sub rsp,8
     sub rsp,8
     sub rsp,8
     lea rax,[rsp + 16]
@@ -6285,207 +6295,289 @@ f.time.nget:
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 8],rax
     add rsp,8
-    call f.sys.clock_gettime
-    add rsp,8
-    sub rsp,8
-    mov rax,QWORD[rsp + 8]
-    mov QWORD[rsp + 0],rax
-    sub rsp,8
-    mov rax,QWORD[rsp + 8]
-    mov rbx,1000000000
-    imul rbx
-    mov QWORD[rsp + 0],rax
     sub rsp,8
     mov rax,QWORD[rsp + 32]
     mov QWORD[rsp + 0],rax
+    call f.io.File.init
+    add rsp,8
+    add rsp,8
+    mov rax,QWORD[rsp + 0 + 0]
+    mov QWORD[rsp + 24 + 0],rax
+    add rsp,8
+    ret
+    add rsp,8
+    ret
+
+f.io.File.open:
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    mov QWORD[rsp + 0],rax
+    call f.sys.open
+    add rsp,8
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
     sub rsp,8
     mov rax,QWORD[rsp + 16]
-    add rax,QWORD[rsp + 8]
     mov QWORD[rsp + 0],rax
-    mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 56],rax
+    call f.io.File.new
+    add rsp,8
+    mov rax,QWORD[rsp + 0 + 0]
+    mov QWORD[rsp + 40 + 0],rax
     add rsp,8
     add rsp,8
-    add rsp,8
-    add rsp,8
-    add rsp,16
     ret
-    add rsp,16
+    add rsp,8
     ret
 
-f.time.msleep:
-    sub rsp,16
-    mov rdx,0
+f.io.File.close:
+    sub rsp,1
     sub rsp,8
-    mov rax,QWORD[rsp + 32]
-    mov rbx,1000
-    idiv rbx
+    mov rax,QWORD[rsp + 17]
     mov QWORD[rsp + 0],rax
-    mov rax,QWORD[rsp + 0]
+    add QWORD[rsp + 0],0
+    sub rsp,1
+    mov r10,QWORD[rsp + 1]
+    mov rax,QWORD[r10]
+    cmp rax,2
+    setg BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 9],al
+    add rsp,1
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF2_68
+    l.0_IF2_68:
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    mov r10,QWORD[rsp + 0]
+    mov rax,QWORD[r10]
     mov QWORD[rsp + 8],rax
     add rsp,8
-    mov rdx,0
+    call f.sys.close
+    add rsp,8
+    l.1_LOG2_68:
+    l.1_IF2_68:
     sub rsp,8
-    mov rax,QWORD[rsp + 32]
-    mov rbx,1000
-    idiv rbx
-    mov QWORD[rsp + 0],rdx
-    sub rsp,8
-    mov rax,QWORD[rsp + 8]
-    mov rbx,1000000
-    imul rbx
+    mov rax,QWORD[rsp + 16]
     mov QWORD[rsp + 0],rax
-    mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 24],rax
+    add QWORD[rsp + 0],0
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],0
     add rsp,8
-    add rsp,8
-    sub rsp,8
-    sub rsp,8
-    lea rax,[rsp + 16]
-    mov QWORD[rsp + 0],rax
-    mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 8],rax
-    add rsp,8
-    sub rsp,8
-    mov QWORD[rsp + 0],0
-    call f.sys.nanosleep
-    add rsp,8
-    add rsp,8
-    add rsp,16
     ret
 
-f.time.usleep:
-    sub rsp,16
-    mov rdx,0
+f.io.File.size:
+    sub rsp,144
     sub rsp,8
-    mov rax,QWORD[rsp + 32]
-    mov rbx,1000000
-    idiv rbx
+    sub rsp,8
+    mov rax,QWORD[rsp + 168]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    mov r10,QWORD[rsp + 0]
+    mov rax,QWORD[r10]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    lea rax,[rsp + 24]
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 8],rax
     add rsp,8
-    mov rdx,0
-    sub rsp,8
-    mov rax,QWORD[rsp + 32]
-    mov rbx,1000000
-    idiv rbx
-    mov QWORD[rsp + 0],rdx
-    sub rsp,8
-    mov rax,QWORD[rsp + 8]
-    mov rbx,1000
-    imul rbx
-    mov QWORD[rsp + 0],rax
-    mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 24],rax
+    call f.sys.fstat
     add rsp,8
     add rsp,8
-    sub rsp,8
-    sub rsp,8
-    lea rax,[rsp + 16]
-    mov QWORD[rsp + 0],rax
-    mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 8],rax
-    add rsp,8
-    sub rsp,8
-    mov QWORD[rsp + 0],0
-    call f.sys.nanosleep
-    add rsp,8
-    add rsp,8
-    add rsp,16
+    mov rax,QWORD[rsp + 48]
+    mov QWORD[rsp + 160],rax
+    add rsp,144
+    ret
+    add rsp,144
     ret
 
-f.time.nsleep:
-    sub rsp,16
-    mov rdx,0
+f.io.File.set_pos_start:
+    sub rsp,8
     sub rsp,8
     mov rax,QWORD[rsp + 32]
-    mov rbx,1000000000
-    idiv rbx
     mov QWORD[rsp + 0],rax
-    mov rax,QWORD[rsp + 0]
+    add QWORD[rsp + 0],0
+    mov r10,QWORD[rsp + 0]
+    mov rax,QWORD[r10]
     mov QWORD[rsp + 8],rax
     add rsp,8
-    mov rdx,0
     sub rsp,8
-    mov rax,QWORD[rsp + 32]
-    mov rbx,1000000000
-    idiv rbx
-    mov QWORD[rsp + 0],rdx
-    mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 16],rax
-    add rsp,8
-    sub rsp,8
-    sub rsp,8
-    lea rax,[rsp + 16]
+    mov rax,QWORD[rsp + 24]
     mov QWORD[rsp + 0],rax
-    mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 8],rax
-    add rsp,8
     sub rsp,8
     mov QWORD[rsp + 0],0
-    call f.sys.nanosleep
+    call f.sys.lseek
     add rsp,8
     add rsp,8
-    add rsp,16
+    add rsp,8
+    ret
+
+f.io.File.set_pos_rel:
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    mov r10,QWORD[rsp + 0]
+    mov rax,QWORD[r10]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov QWORD[rsp + 0],1
+    call f.sys.lseek
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+
+f.io.File.set_pos_end:
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    mov r10,QWORD[rsp + 0]
+    mov rax,QWORD[r10]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 24]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov QWORD[rsp + 0],2
+    call f.sys.lseek
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    ret
+
+f.io.File.get_flags:
+    sub rsp,4
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 28]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    mov r10,QWORD[rsp + 0]
+    mov rax,QWORD[r10]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],3
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    call f.sys.fcntl
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    mov eax,DWORD[rsp + 0]
+    mov DWORD[rsp + 20],eax
+    add rsp,4
+    ret
+    ret
+
+f.io.File.set_flags:
+    sub rsp,4
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 36]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    mov r10,QWORD[rsp + 0]
+    mov rax,QWORD[r10]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],4
+    sub rsp,8
+    mov rax,QWORD[rsp + 36]
+    mov QWORD[rsp + 0],rax
+    call f.sys.fcntl
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    mov eax,DWORD[rsp + 0]
+    mov DWORD[rsp + 28],eax
+    add rsp,4
+    ret
+    ret
+
+f.io.File.read:
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 48]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    mov r10,QWORD[rsp + 0]
+    mov rax,QWORD[r10]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    mov QWORD[rsp + 0],rax
+    call f.sys.read
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    mov rax,0
+    mov rax,QWORD[rsp + 0]
+    mov DWORD[rsp + 40],eax
+    add rsp,8
+    ret
+    ret
+
+f.io.File.write:
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    mov r10,QWORD[rsp + 0]
+    mov rax,QWORD[r10]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    call f.sys.write
+    add rsp,8
+    add rsp,8
+    add rsp,8
     ret
 
 f.main:
     sub rsp,8
-    sub rsp,8
-    call f.time.nget
-    mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 8],rax
-    add rsp,8
-    l.0_WHILE2_68:
-    sub rsp,1
-    mov BYTE[rsp + 0],1
-    mov al,BYTE[rsp + 0]
-    add rsp,1
-    cmp al,0
-    je l.1_WHILE2_68
-    sub rsp,8
-    sub rsp,8
-    call f.time.nget
-    mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 8],rax
-    add rsp,8
-    sub rsp,8
     mov QWORD[rsp + 0],GLOBAL_STR11
     call f.io.print
     add rsp,8
-    sub rsp,8
-    sub rsp,8
-    mov rax,QWORD[rsp + 16]
-    sub rax,QWORD[rsp + 24]
-    mov QWORD[rsp + 0],rax
-    mov rdx,0
-    sub rsp,8
-    mov rax,QWORD[rsp + 8]
-    mov rbx,1000000
-    div rbx
-    mov QWORD[rsp + 0],rax
-    mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 16],rax
-    add rsp,8
-    add rsp,8
-    call f.io.print_uint
-    add rsp,8
-    sub rsp,8
-    mov QWORD[rsp + 0],GLOBAL_STR12
-    call f.io.print
-    add rsp,8
-    sub rsp,8
-    mov QWORD[rsp + 0],100
-    call f.time.msleep
-    add rsp,8
-    add rsp,8
-    jmp l.0_WHILE2_68
-    l.1_WHILE2_68:
-    mov QWORD[rsp + 16],0
-    add rsp,8
+    mov QWORD[rsp + 8],0
     ret
-    add rsp,8
     ret
 
 
