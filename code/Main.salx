@@ -40,5 +40,7 @@ stack und struct arrays
 import "../lib/IO.salx";
 
 i64 main(){
+    io::print("Hello World\n");
+
     return 0;
 }
