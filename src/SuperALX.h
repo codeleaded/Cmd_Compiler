@@ -207,7 +207,7 @@ Boolean ShutingYard_compress_functioncalls(SuperALX* ll,TokenMap* tm){
                     if(t->tt==TOKEN_PARENTHESES_R) Parentheses--;
                     if(t->tt==TOKEN_COMMA || Parentheses<0){
                         if(Parentheses<=0){
-                            TokenMap newtm = TokenMap_SubMove(tm,Last,j);
+                            TokenMap newtm = TokenMap_Sub(tm,Last,j);
                             ShutingYard_compress(ll,&newtm);
                             Vector_Push(func->args,&newtm);
                             Last = j + 1;
