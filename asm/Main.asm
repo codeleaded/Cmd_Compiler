@@ -26,7 +26,7 @@ GLOBAL_STR15: db 10,0
 GLOBAL_STR16: db "| Block:",0
 GLOBAL_STR17: db 10,0
 GLOBAL_STR18: db "------------------------------------------------------",10,0
-GLOBAL_STR19: db "Hello World",10,0
+GLOBAL_STR19: db "Hello World",0
 
 section .text
 global _start
@@ -8399,13 +8399,242 @@ f.mem.Allocator.print:
     add rsp,128
     ret
 
+f.win.Window.init:
+    sub rsp,8
+    mov rax,QWORD[rsp + 48]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],0
+    mov rax,QWORD[rsp + 40]
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 48]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],8
+    mov rax,QWORD[rsp + 32]
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 48]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],24
+    mov rax,QWORD[rsp + 24]
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 48]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],16
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 72]
+    imul QWORD[rsp + 64]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    mov rbx,4
+    imul rbx
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 16],rax
+    add rsp,8
+    add rsp,8
+    call f.mem.Allocator.alloc
+    add rsp,8
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov r10,QWORD[rsp + 8]
+    mov QWORD[r10],rax
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 48]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],80
+    mov rax,QWORD[rsp + 16]
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],rax
+    add rsp,8
+    ret
+
+f.win.Window.delete:
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],80
+    sub rsp,8
+    mov r10,QWORD[rsp + 8]
+    mov rax,QWORD[r10]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 40]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],16
+    mov r10,QWORD[rsp + 0]
+    mov rax,QWORD[r10]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    call f.mem.Allocator.free
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],16
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],0
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],80
+    mov r10,QWORD[rsp + 0]
+    mov QWORD[r10],0
+    add rsp,8
+    ret
+
+f.win.Window.new:
+    sub rsp,88
+    sub rsp,8
+    sub rsp,8
+    lea rax,[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 136]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 136]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 136]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 136]
+    mov QWORD[rsp + 0],rax
+    call f.win.Window.init
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    mov rax,QWORD[rsp + 0 + 0]
+    mov QWORD[rsp + 128 + 0],rax
+    mov rax,QWORD[rsp + 0 + 8]
+    mov QWORD[rsp + 128 + 8],rax
+    mov rax,QWORD[rsp + 0 + 16]
+    mov QWORD[rsp + 128 + 16],rax
+    mov rax,QWORD[rsp + 0 + 24]
+    mov QWORD[rsp + 128 + 24],rax
+    mov rax,QWORD[rsp + 0 + 32]
+    mov QWORD[rsp + 128 + 32],rax
+    mov rax,QWORD[rsp + 0 + 40]
+    mov QWORD[rsp + 128 + 40],rax
+    mov rax,QWORD[rsp + 0 + 48]
+    mov QWORD[rsp + 128 + 48],rax
+    mov rax,QWORD[rsp + 0 + 56]
+    mov QWORD[rsp + 128 + 56],rax
+    mov rax,QWORD[rsp + 0 + 64]
+    mov QWORD[rsp + 128 + 64],rax
+    mov rax,QWORD[rsp + 0 + 72]
+    mov QWORD[rsp + 128 + 72],rax
+    mov rax,QWORD[rsp + 0 + 80]
+    mov QWORD[rsp + 128 + 80],rax
+    add rsp,88
+    ret
+    add rsp,88
+    ret
+
+f.win.Window.render:
+    ret
+
 f.main:
+    sub rsp,16
+    sub rsp,16
+    call f.mem.Allocator.new
+    mov rax,QWORD[rsp + 0 + 0]
+    mov QWORD[rsp + 16 + 0],rax
+    mov rax,QWORD[rsp + 0 + 8]
+    mov QWORD[rsp + 16 + 8],rax
+    add rsp,16
+    sub rsp,88
+    sub rsp,88
+    sub rsp,8
+    mov QWORD[rsp + 0],400
+    sub rsp,8
+    mov QWORD[rsp + 0],300
     sub rsp,8
     mov QWORD[rsp + 0],GLOBAL_STR19
-    call f.io.print
+    sub rsp,8
+    sub rsp,8
+    lea rax,[rsp + 216]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
     add rsp,8
-    mov QWORD[rsp + 8],0
+    call f.win.Window.new
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    mov rax,QWORD[rsp + 0 + 0]
+    mov QWORD[rsp + 88 + 0],rax
+    mov rax,QWORD[rsp + 0 + 8]
+    mov QWORD[rsp + 88 + 8],rax
+    mov rax,QWORD[rsp + 0 + 16]
+    mov QWORD[rsp + 88 + 16],rax
+    mov rax,QWORD[rsp + 0 + 24]
+    mov QWORD[rsp + 88 + 24],rax
+    mov rax,QWORD[rsp + 0 + 32]
+    mov QWORD[rsp + 88 + 32],rax
+    mov rax,QWORD[rsp + 0 + 40]
+    mov QWORD[rsp + 88 + 40],rax
+    mov rax,QWORD[rsp + 0 + 48]
+    mov QWORD[rsp + 88 + 48],rax
+    mov rax,QWORD[rsp + 0 + 56]
+    mov QWORD[rsp + 88 + 56],rax
+    mov rax,QWORD[rsp + 0 + 64]
+    mov QWORD[rsp + 88 + 64],rax
+    mov rax,QWORD[rsp + 0 + 72]
+    mov QWORD[rsp + 88 + 72],rax
+    mov rax,QWORD[rsp + 0 + 80]
+    mov QWORD[rsp + 88 + 80],rax
+    add rsp,88
+    sub rsp,8
+    sub rsp,8
+    lea rax,[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    call f.win.Window.delete
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    lea rax,[rsp + 104]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    call f.mem.Allocator.delete
+    add rsp,8
+    mov QWORD[rsp + 112],0
+    add rsp,88
+    add rsp,16
     ret
+    add rsp,88
+    add rsp,16
     ret
 
 

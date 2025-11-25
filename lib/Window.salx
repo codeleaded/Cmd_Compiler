@@ -1,0 +1,80 @@
+import "../lib/Memory.salx";
+
+// XID -> u64
+// Display -> void
+// XVisualInfo -> void
+// GC -> void*
+// Atom -> u64
+
+namespace win {
+    struct Window[
+        pub u64 width,
+        pub u64 height,
+        pub u32* buffer,
+        pub i8* title,
+        pub i32 running,
+        pub i32 screen,
+        pub void* display,
+        pub u64 window,
+        //pub XSetWindowAttributes attr,
+        pub void* vinfo,
+        pub void* gc,
+        pub u64 wmDeleteMessage,
+        pub mem::Allocator* alloc
+    ];
+
+    impl Window{
+        pub void init(Window* self,u64 width,u64 height,i8* title,mem::Allocator* alloc){
+            self->width = width;
+            self->height = height;
+            self->title = title;
+            self->buffer = alloc->alloc(width * height * 4);
+            self->alloc = alloc;
+
+            //XSetWindowAttributes attr;
+            //attr.colormap = XCreateColormap(w->display,RootWindow(w->display,w->screen),w->vinfo->visual,AllocNone);
+            //attr.background_pixel = WhitePixel(w->display,w->screen);
+            //attr.border_pixel = BlackPixel(w->display,w->screen);
+            //
+            //Window root = RootWindow(w->display,w->screen);
+            //Window alxwindow = XCreateWindow(w->display,root,0,0,Width * w->PixelWidth,Height * w->PixelHeight,0,w->vinfo->depth, InputOutput,w->vinfo->visual,CWColormap | CWBorderPixel | CWBackPixel,&attr); 
+            //XStoreName(w->display,alxwindow,Name);
+            //XSelectInput(w->display,alxwindow,ExposureMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask | StructureNotifyMask | FocusChangeMask);
+            //XMapWindow(w->display,alxwindow);
+            //w->wmDeleteMessage = XInternAtom(w->display,"WM_DELETE_WINDOW",False);
+            //XSetWMProtocols(w->display,alxwindow,&w->wmDeleteMessage,1);
+            //w->gc = XCreateGC(w->display,alxwindow,0,NULL);
+            //w->attr = attr;
+            //w->alxwindow = alxwindow;
+            //w->Buffer = (Pixel*)malloc(w->Width * w->Height * sizeof(Pixel));
+        }
+        pub void delete(Window* self){
+            self->alloc->free(self->buffer);
+            self->buffer = 0;
+            self->alloc = 0;
+
+            //XSync(w->display,0);
+            //XFreeGC(w->display,w->gc);
+            //XDestroyWindow(w->display,w->alxwindow);
+            //XCloseDisplay(w->display);
+        }
+        pub Window new(u64 width,u64 height,i8* title,mem::Allocator* alloc){
+            Window w;
+            w.init(width,height,title,alloc);
+            return w;
+        }
+
+        pub void render(Window* self){
+            //u32* output = (u32*)self->alloc->alloc(w->width * w->height * 4);
+            //XImage *image = XCreateImage(
+            //    w->display,w->vinfo->visual,
+            //    w->vinfo->depth,ZPixmap,0,(i8*)self->buffer,
+            //    w->width,w->height,32,0
+            //);
+            //XPutImage(w->display,w->alxwindow,w->gc,image,0,0,0,0,w->width,w->height);
+            //XFree(image);
+            //free(output);
+            //XFlush(w->display);
+        }
+    }
+}

@@ -163,65 +163,70 @@ Token Pointer_Handler_Arw(SuperALX* ll,Token* op,Vector* args){
         CStr stack_name = SuperALX_Variablename_Next(ll,".STACK",6);
         Variable* v = Scope_FindVariable(&ll->ev.sc,a->str);
         
-        CStr structtype = CStr_PopOff(v->typename);
-        Type* t = Scope_FindType(&ll->ev.sc,structtype);
-        CStr_Free(&structtype);
-        if(t){
-            Member* member = MemberMap_Find(&t->related,b->str);
-            if(member){
-                if(member->access || CStr_Cmp(a->str,SUPERALX_SELF)){
-                    int offset = 0;
-                    for(int i = 0;i<t->related.size;i++){
-                        Member* m = (Member*)Vector_Get(&t->related,i);
-                        if(CStr_Cmp(b->str,m->name)) break;
-                        offset += SuperALX_Size(ll,m->type);
-                    }
+        if(v){
+            CStr structtype = CStr_PopOff(v->typename);
+            Type* t = Scope_FindType(&ll->ev.sc,structtype);
+            CStr_Free(&structtype);
+            if(t){
+                Member* member = MemberMap_Find(&t->related,b->str);
+                if(member){
+                    if(member->access || CStr_Cmp(a->str,SUPERALX_SELF)){
+                        int offset = 0;
+                        for(int i = 0;i<t->related.size;i++){
+                            Member* m = (Member*)Vector_Get(&t->related,i);
+                            if(CStr_Cmp(b->str,m->name)) break;
+                            offset += SuperALX_Size(ll,m->type);
+                        }
 
-                    CStr stack_name = SuperALX_Variablename_Next(ll,".STACK",6);
-                    
-                    if(!SuperALX_DrefType(ll,v->typename)){
-                        CStr type = CStr_Concat(member->type,"&");
-                        SuperALX_Variable_Build_Decl(ll,stack_name,type);
-                        CStr_Free(&type);
+                        CStr stack_name = SuperALX_Variablename_Next(ll,".STACK",6);
 
-                        Token stack_t = Token_Move(TOKEN_STRING,stack_name);
-                        CStr location_a = SuperALX_Location(ll,a->str);
-                        CStr location_s = SuperALX_Location(ll,stack_name);
+                        if(!SuperALX_DrefType(ll,v->typename)){
+                            CStr type = CStr_Concat(member->type,"&");
+                            SuperALX_Variable_Build_Decl(ll,stack_name,type);
+                            CStr_Free(&type);
 
-                        SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,%s",SUPERALX_REG_A_64,location_a);
-                        SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,%s",location_s,SUPERALX_REG_A_64);
-                        SuperALX_Indentation_Appendf(ll,&ll->text,"add %s,%d",location_s,offset);
+                            Token stack_t = Token_Move(TOKEN_STRING,stack_name);
+                            CStr location_a = SuperALX_Location(ll,a->str);
+                            CStr location_s = SuperALX_Location(ll,stack_name);
 
-                        CStr_Free(&location_a);
-                        CStr_Free(&location_s);
+                            SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,%s",SUPERALX_REG_A_64,location_a);
+                            SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,%s",location_s,SUPERALX_REG_A_64);
+                            SuperALX_Indentation_Appendf(ll,&ll->text,"add %s,%d",location_s,offset);
+
+                            CStr_Free(&location_a);
+                            CStr_Free(&location_s);
+                        }else{
+                            CStr type = CStr_Concat(member->type,"&");
+                            SuperALX_Variable_Build_Decl(ll,stack_name,type);
+                            CStr_Free(&type);
+
+                            Token stack_t = Token_Move(TOKEN_STRING,stack_name);
+                            CStr location_a = SuperALX_Location(ll,a->str);
+                            CStr location_s = SuperALX_Location(ll,stack_name);
+
+                            SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,%s",SUPERALX_REG_A_64,location_a);
+                            SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,%s[%s]",SUPERALX_REG_A_64,SUPERALX_DREF_64,SUPERALX_REG_A_64);
+                            SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,%s",location_s,SUPERALX_REG_A_64);
+                            SuperALX_Indentation_Appendf(ll,&ll->text,"add %s,%d",location_s,offset);
+
+                            CStr_Free(&location_a);
+                            CStr_Free(&location_s);
+                        }
+                        return Token_Move(TOKEN_STRING,stack_name);
                     }else{
-                        CStr type = CStr_Concat(member->type,"&");
-                        SuperALX_Variable_Build_Decl(ll,stack_name,type);
-                        CStr_Free(&type);
-
-                        Token stack_t = Token_Move(TOKEN_STRING,stack_name);
-                        CStr location_a = SuperALX_Location(ll,a->str);
-                        CStr location_s = SuperALX_Location(ll,stack_name);
-
-                        SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,%s",SUPERALX_REG_A_64,location_a);
-                        SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,%s[%s]",SUPERALX_REG_A_64,SUPERALX_DREF_64,SUPERALX_REG_A_64);
-                        SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,%s",location_s,SUPERALX_REG_A_64);
-                        SuperALX_Indentation_Appendf(ll,&ll->text,"add %s,%d",location_s,offset);
-
-                        CStr_Free(&location_a);
-                        CStr_Free(&location_s);
+                        Enviroment_ErrorHandler(&ll->ev,"Arw: Member %s isn't pub or non self %s tries to access!",b->str,a->str);
+                        return Token_Null();
                     }
-                    return Token_Move(TOKEN_STRING,stack_name);
                 }else{
-                    Enviroment_ErrorHandler(&ll->ev,"Arw: Member %s isn't pub or non self %s tries to access!",b->str,a->str);
+                    Enviroment_ErrorHandler(&ll->ev,"Arw: Member %s not found!",b->str);
                     return Token_Null();
                 }
             }else{
-                Enviroment_ErrorHandler(&ll->ev,"Arw: Member %s not found!",b->str);
+                Enviroment_ErrorHandler(&ll->ev,"Arw: Type %s not found!",v->typename);
                 return Token_Null();
             }
         }else{
-            Enviroment_ErrorHandler(&ll->ev,"Arw: Type %s not found!",v->typename);
+            Enviroment_ErrorHandler(&ll->ev,"Arw: Variable %s not found!",a->str);
             return Token_Null();
         }
     }else{
