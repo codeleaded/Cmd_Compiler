@@ -40,7 +40,7 @@ cleanlib:
 lib: $(SO_FILES)
 
 $(BIN_DIR)/%.so: $(LIB_DIR)/%.c
-	$(CC) $(CFLAGS) -fPIC -o $@ $< -shared $(LDFLAGS)
+	$(CC) $(CFLAGS) -g -fPIC -o $@ $< -shared $(LDFLAGS)
 
 comp:
 	nasm -f elf64 -g -F dwarf ./asm/Main.asm -o ./build/Output.o

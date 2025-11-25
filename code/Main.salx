@@ -39,9 +39,14 @@ import "../lib/Memory.salx";
 //import "../lib/Stream.salx";
 
 //import "../lib/IO.salx";
+import "../lib/Window.salx";
 
 i64 main(){
-    io::print("Hello World\n");
-
+    mem::Allocator alloc = mem::Allocator::new();
+    
+    win::Window w = win::Window::new(400,300,"Hello World",&alloc);
+    w.delete();
+    
+    alloc.delete();
     return 0;
 }
