@@ -861,7 +861,6 @@ Boolean ShutingYard_Impl(SuperALX* ll,TokenMap* tm){
         CallPosition cp =  CallPosition_New_N(TOKEN_SUPERALX_IMPL,ll->ev.iter,t_name->str);
         CallStack_Push(&ll->ev.cs,&cp);
     }else{
-        TokenMap_Print(tm);
         Compiler_ErrorHandler(&ll->ev,"Impl: name of impl doesn't exist!");
     }
     return False;
