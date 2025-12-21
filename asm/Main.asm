@@ -37,6 +37,7 @@ f.sys.read:
     mov rsi,QWORD[rsp + 16]
     mov rdx,QWORD[rsp + 8]
     syscall
+
     sub rsp,8
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
@@ -8562,7 +8563,9 @@ f.win.Window.render:
 f.main:
     sub rsp,16
     sub rsp,16
+    
     call f.mem.Allocator.new
+    
     mov rax,QWORD[rsp + 0 + 0]
     mov QWORD[rsp + 16 + 0],rax
     mov rax,QWORD[rsp + 0 + 8]
