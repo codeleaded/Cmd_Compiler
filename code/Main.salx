@@ -41,22 +41,25 @@ stack und struct arrays
 import "../lib/Stream.salx";
 //import "../lib/String.salx";
 
+
+i64 fib(i64 n){
+    if n <= 1 {
+        return n;
+    }
+    return fib(n - 1) + fib(n - 2);
+}
+
+
 i64 main(){
     mem::Allocator alloc = mem::Allocator::new();
-
     ios::OStream stdout = ios::OStream::new(&alloc,1);
-    stdout.cstr("-> Stdout avalible!\n")->flush();
-
-    ios::IStream stdin = ios::IStream::new(&alloc,0);
-    stdout.cstr("-> Stdin: Read: ")->flush();
     
-    i8* input = stdin.line();
-    stdout.cstr("-> Stdout: Found: \'")->cstr(input)->cstr("\'!\n")->flush();
-    alloc.free(input);
-
-    stdout.cstr("-> Stdout closed!\n")->flush();
+    for i64 i = 0,i<20,i+=1 {
+        i64 num = fib(i);
+        stdout.cstr("Fib(")->int(i)->cstr(") = ")->int(num)->cstr("\n")->flush();
+    }
+    
     stdout.delete();
-
     alloc.print();
     alloc.delete();
     return 0;
