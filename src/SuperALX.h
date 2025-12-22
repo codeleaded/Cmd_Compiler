@@ -16,10 +16,10 @@
 #include "SuperALXASMF.h"
 
 
-Boolean ShutingYard_compress(SuperALX* ll,TokenMap* tm);
-Boolean ShutingYard_compress_pointer(SuperALX* ll,TokenMap* tm);
+Boolean SuperALX_Compress(SuperALX* ll,TokenMap* tm);
+Boolean SuperALX_Compress_pointer(SuperALX* ll,TokenMap* tm);
 
-Boolean ShutingYard_compress_defines(SuperALX* ll,TokenMap* tm){
+Boolean SuperALX_Compress_defines(SuperALX* ll,TokenMap* tm){
     for(int i = 0;i<tm->size;i++){
         Token* t = (Token*)Vector_Get(tm,i);
         if(t->tt==TOKEN_STRING){
@@ -37,7 +37,7 @@ Boolean ShutingYard_compress_defines(SuperALX* ll,TokenMap* tm){
     }
     return False;
 }
-Boolean ShutingYard_compress_pointer(SuperALX* ll,TokenMap* tm){
+Boolean SuperALX_Compress_pointer(SuperALX* ll,TokenMap* tm){
     for(int i = 0;i<tm->size-1;i++){
         Token* type = (Token*)Vector_Get(tm,i);
 
@@ -64,7 +64,7 @@ Boolean ShutingYard_compress_pointer(SuperALX* ll,TokenMap* tm){
                 if(!SuperALX_CompressStackType(ll,tm,i)) continue;
                 type = (Token*)Vector_Get(tm,i);
 
-                ShutingYard_compress(ll,(TokenMap*)Vector_Get(type->args,0));
+                SuperALX_Compress(ll,(TokenMap*)Vector_Get(type->args,0));
 
                 CStr newtype = CStr_Concat(type->str,"*");
                 CStr_Set((char**)&type->str,newtype);
@@ -78,7 +78,7 @@ Boolean ShutingYard_compress_pointer(SuperALX* ll,TokenMap* tm){
     }
     return False;
 }
-Boolean ShutingYard_compress_functionpointer(SuperALX* ll,TokenMap* tm){
+Boolean SuperALX_Compress_functionpointer(SuperALX* ll,TokenMap* tm){
     for(int i = 0;i<tm->size-1;i++){
         Token* type = (Token*)Vector_Get(tm,i);
 
@@ -112,14 +112,14 @@ Boolean ShutingYard_compress_functionpointer(SuperALX* ll,TokenMap* tm){
                 String_Free(&builder);
 
                 TokenMap_Remove(tm,i+1,i+pretr);
-                ShutingYard_compress_pointer(ll,tm);
+                SuperALX_Compress_pointer(ll,tm);
                 i = -1;
             }
         }
     }
     return False;
 }
-Boolean ShutingYard_compress_cast(SuperALX* ll,TokenMap* tm){
+Boolean SuperALX_Compress_cast(SuperALX* ll,TokenMap* tm){
     for(int i = 0;i<tm->size;i++){
         Token* pretl = (Token*)Vector_Get(tm,i);
         Token* type = (Token*)Vector_Get(tm,i+1);
@@ -133,7 +133,7 @@ Boolean ShutingYard_compress_cast(SuperALX* ll,TokenMap* tm){
     }
     return False;
 }
-Boolean ShutingYard_compress_subscript(SuperALX* ll,TokenMap* tm){
+Boolean SuperALX_Compress_subscript(SuperALX* ll,TokenMap* tm){
     for(int i = 0;i<tm->size;i++){
         Token* subs = (Token*)Vector_Get(tm,i);
 
@@ -146,7 +146,7 @@ Boolean ShutingYard_compress_subscript(SuperALX* ll,TokenMap* tm){
     }
     return False;
 }
-Boolean ShutingYard_compress_staticmethods(SuperALX* ll,TokenMap* tm){
+Boolean SuperALX_Compress_staticmethods(SuperALX* ll,TokenMap* tm){
     for(int i = 0;i<tm->size;i++){
         Token* class = (Token*)Vector_Get(tm,i);
         
@@ -186,7 +186,7 @@ Boolean ShutingYard_compress_staticmethods(SuperALX* ll,TokenMap* tm){
     }
     return False;
 }
-Boolean ShutingYard_compress_functioncalls(SuperALX* ll,TokenMap* tm){
+Boolean SuperALX_Compress_functioncalls(SuperALX* ll,TokenMap* tm){
     for(int i = 0;i<tm->size-1;i++){
         Token* func = (Token*)Vector_Get(tm,i);
         Token* prentl = (Token*)Vector_Get(tm,i+1);
@@ -208,7 +208,7 @@ Boolean ShutingYard_compress_functioncalls(SuperALX* ll,TokenMap* tm){
                     if(t->tt==TOKEN_COMMA || Parentheses<0){
                         if(Parentheses<=0){
                             TokenMap newtm = TokenMap_Sub(tm,Last,j);
-                            ShutingYard_compress(ll,&newtm);
+                            SuperALX_Compress(ll,&newtm);
                             Vector_Push(func->args,&newtm);
                             Last = j + 1;
                         }
@@ -224,7 +224,7 @@ Boolean ShutingYard_compress_functioncalls(SuperALX* ll,TokenMap* tm){
     }
     return False;
 }
-Boolean ShutingYard_compress_functionaspointer(SuperALX* ll,TokenMap* tm){
+Boolean SuperALX_Compress_functionaspointer(SuperALX* ll,TokenMap* tm){
     for(int i = 0;i<tm->size;i++){
         Token* func = (Token*)Vector_Get(tm,i);
 
@@ -237,7 +237,7 @@ Boolean ShutingYard_compress_functionaspointer(SuperALX* ll,TokenMap* tm){
     }
     return False;
 }
-Boolean ShutingYard_compress_function(SuperALX* ll,TokenMap* tm){
+Boolean SuperALX_Compress_function(SuperALX* ll,TokenMap* tm){
     for(int i = 0;i<tm->size-2;i++){
         Token* ttype = (Token*)Vector_Get(tm,i);
         Token* tname = (Token*)Vector_Get(tm,i+1);
@@ -309,48 +309,48 @@ Boolean ShutingYard_compress_function(SuperALX* ll,TokenMap* tm){
 
     return False;
 }
-Boolean ShutingYard_compress(SuperALX* ll,TokenMap* tm){
-    //ShutingYard_compress_objects(ev,tm);
+Boolean SuperALX_Compress(SuperALX* ll,TokenMap* tm){
+    //SuperALX_Compress_objects(ev,tm);
 
-    ShutingYard_compress_staticmethods(ll,tm);
-    ShutingYard_compress_defines(ll,tm);
-    ShutingYard_compress_pointer(ll,tm);
-    ShutingYard_compress_functionpointer(ll,tm);
-    ShutingYard_compress_cast(ll,tm);
-    ShutingYard_compress_subscript(ll,tm);
-    ShutingYard_compress_function(ll,tm);
-    ShutingYard_compress_functioncalls(ll,tm);
-    ShutingYard_compress_functionaspointer(ll,tm);
+    SuperALX_Compress_staticmethods(ll,tm);
+    SuperALX_Compress_defines(ll,tm);
+    SuperALX_Compress_pointer(ll,tm);
+    SuperALX_Compress_functionpointer(ll,tm);
+    SuperALX_Compress_cast(ll,tm);
+    SuperALX_Compress_subscript(ll,tm);
+    SuperALX_Compress_function(ll,tm);
+    SuperALX_Compress_functioncalls(ll,tm);
+    SuperALX_Compress_functionaspointer(ll,tm);
     return False;
 }
 
-Boolean ShutingYard_PP_if(Compiler* ev,TokenMap* tm){
+Boolean SuperALX_PP_if(Compiler* ev,TokenMap* tm){
     CallPosition cp =  CallPosition_New(TOKEN_SUPERALX_IF,ev->iter);
     Vector_Push(&ev->cs,&cp);
     return False;
 }
-Boolean ShutingYard_PP_elif(Compiler* ev,TokenMap* tm){
+Boolean SuperALX_PP_elif(Compiler* ev,TokenMap* tm){
     CallPosition cp =  CallPosition_New(TOKEN_SUPERALX_ELIF,ev->iter);
     Vector_Push(&ev->cs,&cp);
     return False;
 }
-Boolean ShutingYard_PP_else(Compiler* ev,TokenMap* tm){
+Boolean SuperALX_PP_else(Compiler* ev,TokenMap* tm){
     CallPosition cp =  CallPosition_New(TOKEN_SUPERALX_ELSE,ev->iter);
     Vector_Push(&ev->cs,&cp);
     return False;
 }
-Boolean ShutingYard_PP_while(Compiler* ev,TokenMap* tm){
+Boolean SuperALX_PP_while(Compiler* ev,TokenMap* tm){
     CallPosition cp =  CallPosition_New(TOKEN_SUPERALX_WHILE,ev->iter);
     Vector_Push(&ev->cs,&cp);
     return False;
 }
-Boolean ShutingYard_PP_for(Compiler* ev,TokenMap* tm){
+Boolean SuperALX_PP_for(Compiler* ev,TokenMap* tm){
     CallPosition cp = CallPosition_New(TOKEN_SUPERALX_FOR,ev->iter);
     Vector_Push(&ev->cs,&cp);
     return False;
 }
 
-Boolean ShutingYard_PP_Struct(SuperALX* ll,TokenMap* tm){
+Boolean SuperALX_PP_Struct(SuperALX* ll,TokenMap* tm){
     Token* t_struct = (Token*)Vector_Get(tm,0);
     Token* t_name = (Token*)Vector_Get(tm,1);
 
@@ -421,7 +421,7 @@ Boolean ShutingYard_PP_Struct(SuperALX* ll,TokenMap* tm){
         return False;
     }
 }
-Boolean ShutingYard_PP_Impl(SuperALX* ll,TokenMap* tm){
+Boolean SuperALX_PP_Impl(SuperALX* ll,TokenMap* tm){
     Token* t_impl = (Token*)Vector_Get(tm,0);
     Token* t_name = (Token*)Vector_Get(tm,1);
     
@@ -433,7 +433,7 @@ Boolean ShutingYard_PP_Impl(SuperALX* ll,TokenMap* tm){
     }
     return False;
 }
-Boolean ShutingYard_PP_Namespace(SuperALX* ll,TokenMap* tm){
+Boolean SuperALX_PP_Namespace(SuperALX* ll,TokenMap* tm){
     Token* t_impl = (Token*)Vector_Get(tm,0);
     Token* t_name = (Token*)Vector_Get(tm,1);
     
@@ -445,12 +445,12 @@ Boolean ShutingYard_PP_Namespace(SuperALX* ll,TokenMap* tm){
     }
     return False;
 }
-Boolean ShutingYard_PP_Curly_L(SuperALX* ll,TokenMap* tm){
+Boolean SuperALX_PP_Curly_L(SuperALX* ll,TokenMap* tm){
     CallPosition cp = CallPosition_New(TOKEN_NONE,ll->ev.iter);
     Vector_Push(&ll->ev.cs,&cp);
     return False;
 }
-Boolean ShutingYard_PP_Curly_R(SuperALX* ll,TokenMap* tm){
+Boolean SuperALX_PP_Curly_R(SuperALX* ll,TokenMap* tm){
     TT_Type tt = CallStack_Back(&ll->ev.cs);
     
     switch (tt){
@@ -480,7 +480,7 @@ Boolean ShutingYard_PP_Curly_R(SuperALX* ll,TokenMap* tm){
     return False;
 }
 
-Boolean ShutingYard_Import(SuperALX* ll,TokenMap* tm){
+Boolean SuperALX_Import(SuperALX* ll,TokenMap* tm){
     Token* file = (Token*)Vector_Get(tm,1);
 
     if(file->tt==TOKEN_CONSTSTRING_DOUBLE){
@@ -511,7 +511,7 @@ Boolean ShutingYard_Import(SuperALX* ll,TokenMap* tm){
     }
     return True;
 }
-Boolean ShutingYard_Define(SuperALX* ll,TokenMap* tm){
+Boolean SuperALX_Define(SuperALX* ll,TokenMap* tm){
     Token* define = (Token*)Vector_Get(tm,0);
     Token* name = (Token*)Vector_Get(tm,1);
     
@@ -525,7 +525,7 @@ Boolean ShutingYard_Define(SuperALX* ll,TokenMap* tm){
     return False;
 }
 
-Boolean ShutingYard_if(SuperALX* ll,TokenMap* tm){
+Boolean SuperALX_If(SuperALX* ll,TokenMap* tm){
     Token* if_tok = (Token*)Vector_Get(tm,0);
     Token* cbl_tok = (Token*)Vector_Get(tm,tm->size-1);
     
@@ -578,7 +578,7 @@ Boolean ShutingYard_if(SuperALX* ll,TokenMap* tm){
         return False;
     }
 }
-Boolean ShutingYard_elif(SuperALX* ll,TokenMap* tm){
+Boolean SuperALX_Elif(SuperALX* ll,TokenMap* tm){
     Token* elif_tok = (Token*)Vector_Get(tm,0);
     Token* cbl_tok = (Token*)Vector_Get(tm,tm->size-1);
     
@@ -631,7 +631,7 @@ Boolean ShutingYard_elif(SuperALX* ll,TokenMap* tm){
         return False;
     }
 }
-Boolean ShutingYard_else(SuperALX* ll,TokenMap* tm){
+Boolean SuperALX_Else(SuperALX* ll,TokenMap* tm){
     Token* if_tok = (Token*)Vector_Get(tm,0);
     Token* cbl_tok = (Token*)Vector_Get(tm,tm->size-1);
     
@@ -667,7 +667,7 @@ Boolean ShutingYard_else(SuperALX* ll,TokenMap* tm){
         return False;
     }
 }
-Boolean ShutingYard_while(SuperALX* ll,TokenMap* tm){
+Boolean SuperALX_While(SuperALX* ll,TokenMap* tm){
     Token* while_tok = (Token*)Vector_Get(tm,0);
     Token* cbl_tok = (Token*)Vector_Get(tm,tm->size-1);
     
@@ -720,7 +720,7 @@ Boolean ShutingYard_while(SuperALX* ll,TokenMap* tm){
         return False;
     }
 }
-Boolean ShutingYard_for(SuperALX* ll,TokenMap* tm){
+Boolean SuperALX_For(SuperALX* ll,TokenMap* tm){
     Token* for_tok = (Token*)Vector_Get(tm,0);
     Token* cbl_tok = (Token*)Vector_Get(tm,tm->size-1);
     
@@ -790,14 +790,14 @@ Boolean ShutingYard_for(SuperALX* ll,TokenMap* tm){
     }
 }
 
-Boolean ShutingYard_Curly_L(SuperALX* ll,TokenMap* tm){
+Boolean SuperALX_Curly_L(SuperALX* ll,TokenMap* tm){
     SuperALX_LogicAddPath(ll);
     ll->ev.sc.range++;
     CallPosition cp = CallPosition_New(TOKEN_NONE,ll->ev.iter);
     CallStack_Push(&ll->ev.cs,&cp);
     return False;
 }
-Boolean ShutingYard_Curly_R(SuperALX* ll,TokenMap* tm){
+Boolean SuperALX_Curly_R(SuperALX* ll,TokenMap* tm){
     TT_Type tt = CallStack_Back(&ll->ev.cs);
 
     switch (tt){
@@ -850,10 +850,10 @@ Boolean ShutingYard_Curly_R(SuperALX* ll,TokenMap* tm){
     CallStack_Pop(&ll->ev.cs);
     return False;
 }
-Boolean ShutingYard_Struct(SuperALX* ll,TokenMap* tm){
+Boolean SuperALX_Struct(SuperALX* ll,TokenMap* tm){
     return False;
 }
-Boolean ShutingYard_Impl(SuperALX* ll,TokenMap* tm){
+Boolean SuperALX_Impl(SuperALX* ll,TokenMap* tm){
     Token* t_impl = (Token*)Vector_Get(tm,0);
     Token* t_name = (Token*)Vector_Get(tm,1);
     
@@ -865,7 +865,7 @@ Boolean ShutingYard_Impl(SuperALX* ll,TokenMap* tm){
     }
     return False;
 }
-Boolean ShutingYard_Namespace(SuperALX* ll,TokenMap* tm){
+Boolean SuperALX_Namespace(SuperALX* ll,TokenMap* tm){
     Token* t_impl = (Token*)Vector_Get(tm,0);
     Token* t_name = (Token*)Vector_Get(tm,1);
     
@@ -877,7 +877,7 @@ Boolean ShutingYard_Namespace(SuperALX* ll,TokenMap* tm){
     }
     return False;
 }
-Boolean ShutingYard_function(SuperALX* ll,TokenMap* tm){
+Boolean SuperALX_Function(SuperALX* ll,TokenMap* tm){
     Token* tfunc = (Token*)Vector_Get(tm,0);
     
     TT_Iter it_func = FunctionMap_Find(&ll->ev.fs,tfunc->str);
@@ -912,7 +912,7 @@ Boolean ShutingYard_function(SuperALX* ll,TokenMap* tm){
 
     return False;
 }
-Boolean ShutingYard_return(SuperALX* ll,TokenMap* tm){
+Boolean SuperALX_Return(SuperALX* ll,TokenMap* tm){
     if(tm->size!=1){
         TokenMap cpy = TokenMap_Cpy(tm);
         Variable* v = Scope_FindVariable(&ll->ev.sc,COMPILER_RETURN"0");
@@ -948,7 +948,7 @@ Boolean ShutingYard_return(SuperALX* ll,TokenMap* tm){
 
     return False;
 }
-Boolean ShutingYard_Decl(SuperALX* ll,TokenMap* tm){
+Boolean SuperALX_Decl(SuperALX* ll,TokenMap* tm){
     if(tm->size >= 2){
         Token* pottype = (Token*)Vector_Get(tm,0);
         Token* name = (Token*)Vector_Get(tm,1);
@@ -999,7 +999,7 @@ Boolean ShutingYard_Decl(SuperALX* ll,TokenMap* tm){
     return False;
 }
 
-Boolean ShutingYard_Assembly(SuperALX* ll,TokenMap* tm){
+Boolean SuperALX_Assembly(SuperALX* ll,TokenMap* tm){
     CStr indent = SuperALX_Indentation_CStr(ll);
     String_Append(&ll->text,indent);
     CStr_Free(&indent);
@@ -1022,7 +1022,7 @@ Boolean ShutingYard_Assembly(SuperALX* ll,TokenMap* tm){
     return False;
 }
 
-Boolean ShutingYard_FunctionCall_Acs(SuperALX* ll,TokenMap* tm,int i,int args,Token* tok){
+Boolean SuperALX_FunctionCall_Acs(SuperALX* ll,TokenMap* tm,int i,int args,Token* tok){
     if(i - args >= 0 && i - args + 1 < tm->size){
         Token* accssed = (Token*)Vector_Get(tm,i - args);
         Token* func = (Token*)Vector_Get(tm,i - args + 1);
@@ -1075,7 +1075,7 @@ Boolean ShutingYard_FunctionCall_Acs(SuperALX* ll,TokenMap* tm,int i,int args,To
         
     return FUNCTIONRT_NONE;
 }
-Boolean ShutingYard_FunctionCall_Arw(SuperALX* ll,TokenMap* tm,int i,int args,Token* tok){
+Boolean SuperALX_FunctionCall_Arw(SuperALX* ll,TokenMap* tm,int i,int args,Token* tok){
     Token* accssed = (Token*)Vector_Get(tm,i - args);
     Token* func = (Token*)Vector_Get(tm,i - args + 1);
 
@@ -1408,8 +1408,8 @@ SuperALX SuperALX_New(char* dllpath,char* src,char* output,char bits) {
                 Executer_End
             }),
             PreexecuteMap_Make((Preexecuter[]){
-                Preexecuter_New(TOKEN_SUPERALX_ACS,(void*)ShutingYard_FunctionCall_Acs),
-                Preexecuter_New(TOKEN_SUPERALX_ARW,(void*)ShutingYard_FunctionCall_Arw),
+                Preexecuter_New(TOKEN_SUPERALX_ACS,(void*)SuperALX_FunctionCall_Acs),
+                Preexecuter_New(TOKEN_SUPERALX_ARW,(void*)SuperALX_FunctionCall_Arw),
                 Preexecuter_End
             })
         ),
@@ -1445,55 +1445,55 @@ SuperALX SuperALX_New(char* dllpath,char* src,char* output,char bits) {
             EXTERNPACKAGE_END
         }),
         KeywordExecuterMap_Make((KeywordExecuter[]){
-            KeywordExecuter_New(TOKEN_TYPE,                 (void*)ShutingYard_compress),
-            KeywordExecuter_New(TOKEN_STRING,               (void*)ShutingYard_compress),
-            KeywordExecuter_New(TOKEN_PARENTHESES_L,        (void*)ShutingYard_compress),
-            KeywordExecuter_New(TOKEN_SUPERALX_RETURN,      (void*)ShutingYard_compress),
-            KeywordExecuter_New(TOKEN_SUPERALX_IF,          (void*)ShutingYard_compress),
-            KeywordExecuter_New(TOKEN_SUPERALX_ELIF,        (void*)ShutingYard_compress),
-            KeywordExecuter_New(TOKEN_SUPERALX_ELSE,        (void*)ShutingYard_compress),
-            KeywordExecuter_New(TOKEN_SUPERALX_WHILE,       (void*)ShutingYard_compress),
-            KeywordExecuter_New(TOKEN_SUPERALX_FOR,         (void*)ShutingYard_compress),
-            KeywordExecuter_New(TOKEN_PARENTHESES_L,        (void*)ShutingYard_compress),
-            KeywordExecuter_New(TOKEN_SUPERALX_DRF,         (void*)ShutingYard_compress),
-            KeywordExecuter_New(TOKEN_SUPERALX_PUB,         (void*)ShutingYard_compress),
+            KeywordExecuter_New(TOKEN_TYPE,                 (void*)SuperALX_Compress),
+            KeywordExecuter_New(TOKEN_STRING,               (void*)SuperALX_Compress),
+            KeywordExecuter_New(TOKEN_PARENTHESES_L,        (void*)SuperALX_Compress),
+            KeywordExecuter_New(TOKEN_SUPERALX_RETURN,      (void*)SuperALX_Compress),
+            KeywordExecuter_New(TOKEN_SUPERALX_IF,          (void*)SuperALX_Compress),
+            KeywordExecuter_New(TOKEN_SUPERALX_ELIF,        (void*)SuperALX_Compress),
+            KeywordExecuter_New(TOKEN_SUPERALX_ELSE,        (void*)SuperALX_Compress),
+            KeywordExecuter_New(TOKEN_SUPERALX_WHILE,       (void*)SuperALX_Compress),
+            KeywordExecuter_New(TOKEN_SUPERALX_FOR,         (void*)SuperALX_Compress),
+            KeywordExecuter_New(TOKEN_PARENTHESES_L,        (void*)SuperALX_Compress),
+            KeywordExecuter_New(TOKEN_SUPERALX_DRF,         (void*)SuperALX_Compress),
+            KeywordExecuter_New(TOKEN_SUPERALX_PUB,         (void*)SuperALX_Compress),
 
-            KeywordExecuter_New(TOKEN_SUPERALX_STRUCT,      (void*)ShutingYard_compress_staticmethods),
-            KeywordExecuter_New(TOKEN_SUPERALX_STRUCT,      (void*)ShutingYard_compress_pointer),
-            KeywordExecuter_New(TOKEN_SUPERALX_IMPL,        (void*)ShutingYard_compress_staticmethods),
-            KeywordExecuter_New(TOKEN_SUPERALX_IMPL,        (void*)ShutingYard_compress_pointer),
+            KeywordExecuter_New(TOKEN_SUPERALX_STRUCT,      (void*)SuperALX_Compress_staticmethods),
+            KeywordExecuter_New(TOKEN_SUPERALX_STRUCT,      (void*)SuperALX_Compress_pointer),
+            KeywordExecuter_New(TOKEN_SUPERALX_IMPL,        (void*)SuperALX_Compress_staticmethods),
+            KeywordExecuter_New(TOKEN_SUPERALX_IMPL,        (void*)SuperALX_Compress_pointer),
 
-            KeywordExecuter_New(TOKEN_SUPERALX_STRUCT,      (void*)ShutingYard_PP_Struct),
-            KeywordExecuter_New(TOKEN_SUPERALX_IMPL,        (void*)ShutingYard_PP_Impl),
-            KeywordExecuter_New(TOKEN_SUPERALX_NAMESPACE,   (void*)ShutingYard_PP_Namespace),
-            KeywordExecuter_New(TOKEN_SUPERALX_IF,          (void*)ShutingYard_PP_if),
-            KeywordExecuter_New(TOKEN_SUPERALX_ELIF,        (void*)ShutingYard_PP_elif),
-            KeywordExecuter_New(TOKEN_SUPERALX_ELSE,        (void*)ShutingYard_PP_else),
-            KeywordExecuter_New(TOKEN_SUPERALX_WHILE,       (void*)ShutingYard_PP_while),
-            KeywordExecuter_New(TOKEN_SUPERALX_FOR,         (void*)ShutingYard_PP_for),
-            KeywordExecuter_New(TOKEN_CURLY_BRACES_L,       (void*)ShutingYard_PP_Curly_L),
-            KeywordExecuter_New(TOKEN_CURLY_BRACES_R,       (void*)ShutingYard_PP_Curly_R),
-            KeywordExecuter_New(TOKEN_SUPERALX_IMPORT,      (void*)ShutingYard_Import),
-            KeywordExecuter_New(TOKEN_SUPERALX_DEFINE,      (void*)ShutingYard_Define),
+            KeywordExecuter_New(TOKEN_SUPERALX_STRUCT,      (void*)SuperALX_PP_Struct),
+            KeywordExecuter_New(TOKEN_SUPERALX_IMPL,        (void*)SuperALX_PP_Impl),
+            KeywordExecuter_New(TOKEN_SUPERALX_NAMESPACE,   (void*)SuperALX_PP_Namespace),
+            KeywordExecuter_New(TOKEN_SUPERALX_IF,          (void*)SuperALX_PP_if),
+            KeywordExecuter_New(TOKEN_SUPERALX_ELIF,        (void*)SuperALX_PP_elif),
+            KeywordExecuter_New(TOKEN_SUPERALX_ELSE,        (void*)SuperALX_PP_else),
+            KeywordExecuter_New(TOKEN_SUPERALX_WHILE,       (void*)SuperALX_PP_while),
+            KeywordExecuter_New(TOKEN_SUPERALX_FOR,         (void*)SuperALX_PP_for),
+            KeywordExecuter_New(TOKEN_CURLY_BRACES_L,       (void*)SuperALX_PP_Curly_L),
+            KeywordExecuter_New(TOKEN_CURLY_BRACES_R,       (void*)SuperALX_PP_Curly_R),
+            KeywordExecuter_New(TOKEN_SUPERALX_IMPORT,      (void*)SuperALX_Import),
+            KeywordExecuter_New(TOKEN_SUPERALX_DEFINE,      (void*)SuperALX_Define),
             KEYWORDEXECUTER_END
         }),
         KeywordExecuterMap_Make((KeywordExecuter[]){
-            KeywordExecuter_New(TOKEN_TYPE,                 (void*)ShutingYard_Decl),
+            KeywordExecuter_New(TOKEN_TYPE,                 (void*)SuperALX_Decl),
             KeywordExecuter_New(TOKEN_PARENTHESES_L,        (void*)Compiler_ShutingYard),
             KeywordExecuter_New(TOKEN_SUPERALX_DRF,         (void*)Compiler_ShutingYard),
-            KeywordExecuter_New(TOKEN_CURLY_BRACES_L,       (void*)ShutingYard_Curly_L),
-            KeywordExecuter_New(TOKEN_CURLY_BRACES_R,       (void*)ShutingYard_Curly_R),
-            KeywordExecuter_New(TOKEN_SUPERALX_IF,          (void*)ShutingYard_if),
-            KeywordExecuter_New(TOKEN_SUPERALX_ELIF,        (void*)ShutingYard_elif),
-            KeywordExecuter_New(TOKEN_SUPERALX_ELSE,        (void*)ShutingYard_else),
-            KeywordExecuter_New(TOKEN_SUPERALX_WHILE,       (void*)ShutingYard_while),
-            KeywordExecuter_New(TOKEN_SUPERALX_FOR,         (void*)ShutingYard_for),
-            KeywordExecuter_New(TOKEN_SUPERALX_RETURN,      (void*)ShutingYard_return),
-            KeywordExecuter_New(TOKEN_SUPERALX_STRUCT,      (void*)ShutingYard_Struct),
-            KeywordExecuter_New(TOKEN_SUPERALX_IMPL,        (void*)ShutingYard_Impl),
-            KeywordExecuter_New(TOKEN_SUPERALX_NAMESPACE,   (void*)ShutingYard_Namespace),
-            KeywordExecuter_New(TOKEN_FUNCTIONDECL,         (void*)ShutingYard_function),
-            KeywordExecuter_New(TOKEN_SUPERALX_ASMBY,       (void*)ShutingYard_Assembly),
+            KeywordExecuter_New(TOKEN_CURLY_BRACES_L,       (void*)SuperALX_Curly_L),
+            KeywordExecuter_New(TOKEN_CURLY_BRACES_R,       (void*)SuperALX_Curly_R),
+            KeywordExecuter_New(TOKEN_SUPERALX_IF,          (void*)SuperALX_If),
+            KeywordExecuter_New(TOKEN_SUPERALX_ELIF,        (void*)SuperALX_Elif),
+            KeywordExecuter_New(TOKEN_SUPERALX_ELSE,        (void*)SuperALX_Else),
+            KeywordExecuter_New(TOKEN_SUPERALX_WHILE,       (void*)SuperALX_While),
+            KeywordExecuter_New(TOKEN_SUPERALX_FOR,         (void*)SuperALX_For),
+            KeywordExecuter_New(TOKEN_SUPERALX_RETURN,      (void*)SuperALX_Return),
+            KeywordExecuter_New(TOKEN_SUPERALX_STRUCT,      (void*)SuperALX_Struct),
+            KeywordExecuter_New(TOKEN_SUPERALX_IMPL,        (void*)SuperALX_Impl),
+            KeywordExecuter_New(TOKEN_SUPERALX_NAMESPACE,   (void*)SuperALX_Namespace),
+            KeywordExecuter_New(TOKEN_FUNCTIONDECL,         (void*)SuperALX_Function),
+            KeywordExecuter_New(TOKEN_SUPERALX_ASMBY,       (void*)SuperALX_Assembly),
             KEYWORDEXECUTER_END
         }),
         DTT_TypeMap_Make((DTT_Type[]){
