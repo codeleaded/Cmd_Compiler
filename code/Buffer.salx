@@ -210,3 +210,27 @@ stdout.cstr("-> Stdout closed!\n")->flush();
 stdout.delete();
 alloc.print();
 alloc.delete();
+
+
+
+i64 fib(i64 n){
+    if n <= 1 {
+        return n;
+    }
+    return fib(n - 1) + fib(n - 2);
+}
+
+i64 main(){
+    mem::Allocator alloc = mem::Allocator::new();
+    ios::OStream stdout = ios::OStream::new(&alloc,1);
+    
+    for i64 i = 0,i<20,i+=1 {
+        i64 num = fib(i);
+        stdout.cstr("Fib(")->int(i)->cstr(") = ")->int(num)->cstr("\n")->flush();
+    }
+    
+    stdout.delete();
+    alloc.print();
+    alloc.delete();
+    return 0;
+}
