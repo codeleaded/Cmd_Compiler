@@ -44,16 +44,18 @@ import "../lib/Stream.salx";
 i64 main(){
     mem::Allocator alloc = mem::Allocator::new();
 
-    // st::String buffer = st::String::new(&alloc);
-    // buffer.cstr("Hello + ")->int(69)->cstr(" + World!\n");
-    // buffer.write(1);
-    // alloc.print();
-    // buffer.delete();
-
     ios::OStream stdout = ios::OStream::new(&alloc,1);
-    stdout.cstr("Hello ")->cstr("World: ")->int(69)->cstr("\n")->flush();
+    stdout.cstr("-> Stdout avalible!\n")->flush();
+
+    ios::IStream stdin = ios::IStream::new(&alloc,0);
+    i8* input = stdin.line();
+    stdout.cstr("-> Stdout: Found: \'")->cstr(input)->cstr("\'!\n")->flush();
+    alloc.free(input);
+
+    stdout.cstr("-> Stdout closed!\n")->flush();
     stdout.delete();
-    
+
+    alloc.print();
     alloc.delete();
     return 0;
 }
