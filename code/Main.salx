@@ -48,6 +48,8 @@ i64 main(){
     stdout.cstr("-> Stdout avalible!\n")->flush();
 
     ios::IStream stdin = ios::IStream::new(&alloc,0);
+    stdout.cstr("-> Stdin: Read: ")->flush();
+    
     i8* input = stdin.line();
     stdout.cstr("-> Stdout: Found: \'")->cstr(input)->cstr("\'!\n")->flush();
     alloc.free(input);

@@ -44,9 +44,11 @@ GLOBAL_STR33: db "-.0123456789",0
 GLOBAL_STR34: db "x0123456789ABCDEFabcdef",0
 GLOBAL_STR35: db "o01234567",0
 GLOBAL_STR36: db "b01",0
-GLOBAL_STR37: db "Hello ",0
-GLOBAL_STR38: db "World: ",0
-GLOBAL_STR39: db 10,0
+GLOBAL_STR37: db "-> Stdout avalible!",10,0
+GLOBAL_STR38: db "-> Stdin: Read: ",0
+GLOBAL_STR39: db "-> Stdout: Found: '",0
+GLOBAL_STR40: db "'!",10,0
+GLOBAL_STR41: db "-> Stdout closed!",10,0
 
 section .text
 global _start
@@ -14403,6 +14405,37 @@ f.main:
     sub rsp,8
     mov rax,QWORD[rsp + 16]
     mov QWORD[rsp + 0],rax
+    call f.ios.OStream.flush
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    sub rsp,16
+    sub rsp,16
+    sub rsp,8
+    sub rsp,8
+    lea rax,[rsp + 88]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    call f.ios.IStream.new
+    add rsp,8
+    add rsp,8
+    mov rax,QWORD[rsp + 0 + 0]
+    mov QWORD[rsp + 16 + 0],rax
+    mov rax,QWORD[rsp + 0 + 8]
+    mov QWORD[rsp + 16 + 8],rax
+    add rsp,16
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    lea rax,[rsp + 40]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
     sub rsp,8
     mov QWORD[rsp + 0],GLOBAL_STR38
     call f.ios.OStream.cstr
@@ -14412,9 +14445,35 @@ f.main:
     sub rsp,8
     mov rax,QWORD[rsp + 16]
     mov QWORD[rsp + 0],rax
+    call f.ios.OStream.flush
+    add rsp,8
+    add rsp,8
+    add rsp,8
     sub rsp,8
-    mov QWORD[rsp + 0],69
-    call f.ios.OStream.int
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    lea rax,[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    call f.ios.IStream.line
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    lea rax,[rsp + 48]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],GLOBAL_STR39
+    call f.ios.OStream.cstr
     add rsp,8
     add rsp,8
     sub rsp,8
@@ -14422,7 +14481,17 @@ f.main:
     mov rax,QWORD[rsp + 16]
     mov QWORD[rsp + 0],rax
     sub rsp,8
-    mov QWORD[rsp + 0],GLOBAL_STR39
+    mov rax,QWORD[rsp + 32]
+    mov QWORD[rsp + 0],rax
+    call f.ios.OStream.cstr
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov QWORD[rsp + 0],GLOBAL_STR40
     call f.ios.OStream.cstr
     add rsp,8
     add rsp,8
@@ -14436,10 +14505,30 @@ f.main:
     add rsp,8
     add rsp,8
     add rsp,8
+    sub rsp,8
+    sub rsp,8
+    sub rsp,8
+    lea rax,[rsp + 48]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],GLOBAL_STR41
+    call f.ios.OStream.cstr
+    add rsp,8
     add rsp,8
     sub rsp,8
     sub rsp,8
-    lea rax,[rsp + 16]
+    mov rax,QWORD[rsp + 16]
+    mov QWORD[rsp + 0],rax
+    call f.ios.OStream.flush
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    lea rax,[rsp + 40]
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 8],rax
@@ -14448,17 +14537,30 @@ f.main:
     add rsp,8
     sub rsp,8
     sub rsp,8
-    lea rax,[rsp + 56]
+    lea rax,[rsp + 80]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    call f.mem.Allocator.print
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    lea rax,[rsp + 80]
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 8],rax
     add rsp,8
     call f.mem.Allocator.delete
     add rsp,8
-    mov QWORD[rsp + 64],0
+    mov QWORD[rsp + 88],0
+    add rsp,8
+    add rsp,16
     add rsp,40
     add rsp,16
     ret
+    add rsp,8
+    add rsp,16
     add rsp,40
     add rsp,16
     ret
