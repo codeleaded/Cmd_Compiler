@@ -1,42 +1,123 @@
-import "../lib/Container.salx";
 import "../lib/Memory.salx";
 
-namespace string {
+namespace st {
     struct String[
-        pub con::Vector vec
+        u64 size,
+        u64 memory_size,
+        i8* memory,
+        pub mem::Allocator* alloc
     ];
 
     impl String {
+        pub void init(String* self,mem::Allocator* alloc){
+            self->alloc = alloc;
+            self->size = 0;
+            self->memory_size = 5;
+            self->memory = alloc->alloc(5);
+        }
+        pub void delete(String* self){
+            void* mem = self->memory;
+            self->alloc->free(mem);
+            self->alloc = null;
+            self->size = 0;
+            self->memory_size = 0;
+            self->memory = null;
+        }
+        pub String new(mem::Allocator* alloc){
+            String vec;
+            vec.init(alloc);
+            return vec;
+        }
+        pub void write(String* self,i64 file){
+            sys::write(file,self->get_data(),self->get_size());
+        }
+
+        pub i8 get(String* self,u64 i){
+            if i>=self->size {
+                return 0;
+            }
+            return self->memory[i];
+        }
+        pub void set_c(String* self,u64 i,i8* cstr,u64 count){
+            if cstr != null && i>=0 && i+count<=self->size {
+                ptr::cpy(self->memory + i,cstr,count);
+            }
+        }
+        pub void expand(String* self,u64 count){
+            u64 length = self->size + count;
+            if length > self->memory_size {
+                u64 newsize = self->memory_size;
+                while length>newsize {
+                    newsize *= 2;
+                }
+                void* block = self->alloc->alloc(newsize);
+                ptr::cpy(block,self->memory,self->size);
+
+                self->alloc->free(self->memory);
+                self->memory = block;
+                self->memory_size = newsize;
+            }
+        }
+        pub void shrink(String* self,u64 count){
+            u64 newsize = self->memory_size / 2;
+            if self->size <= newsize && newsize>5 {
+                void* block = self->alloc->alloc(newsize);
+                ptr::cpy(block,self->memory,self->size);
+
+                self->alloc->free(self->memory);
+                self->memory = block;
+                self->memory_size = newsize;
+            }
+        }
+        pub void tozero(String* self){
+            ptr::set(self->memory,0,self->size);
+        }
+        pub void clear(String* self){
+            void* block = self->alloc->alloc(5);
+            self->alloc->free(self->memory);
+            self->memory = block;
+            self->size = 0;
+            self->memory_size = 5;
+        }
+        pub i8* get_data(String* self){
+            return self->memory;
+        }
+        pub u64 get_size(String* self){
+            return self->size;
+        }
+
+        pub void push_c(String* self,i8* cstr,u64 count){
+            self->expand(count);
+            self->size+=count;
+            self->set_c(self->size-count,cstr,count);
+        }
+        pub void pop_c(String* self,u64 count){
+            if self->size<count {
+                count = self->size;
+            }
+            self->size-=count;
+            self->shrink(count);
+        }
+
         pub i8* cpy(String* self){
-            u64 size = self->vec.size();
-            i8* out = self->vec.alloc->alloc(size + 1);
-            ptr::cpy(out,self->vec.data(),size);
+            u64 size = self->get_size();
+            i8* out = self->alloc->alloc(size + 1);
+            ptr::cpy(out,self->get_data(),size);
             out[size] = 0;
             return out;
         }
 
-        pub i8 get(String* self,i32 i){
-            return *(i8*)self->vec.get(i);
-        }
-        pub void set(String* self,i32 i,i8 ch){
-            self->vec.set(i,&ch);
-        }
-
         pub String* string(String* self,String* ptr){
-            self->vec.push_c(ptr->vec.data(),ptr->vec.size());
+            self->push_c(ptr->get_data(),ptr->get_size());
             return self;
         }
         pub String* char(String* self,i8 ch){
-            self->vec.push(&ch);
+            self->push_c(&ch,1);
             return self;
         }
         pub String* cstr(String* self,i8* ptr){
             u64 len = cstr::len(ptr);
-            self->vec.push_c(ptr,len);
-            return self;
-        }
-        pub String* cstr_s(String* self,i8* ptr,u64 len){
-            self->vec.push_c(ptr,len);
+            self->push_c(ptr,len);
             return self;
         }
         pub String* uint(String* self,u64 n){
@@ -44,7 +125,7 @@ namespace string {
             ptr::set(block,0,48);
             parse::uint::get(block,n);
             u64 len = cstr::len(block);
-            self->vec.push_c(block,len);
+            self->push_c(block,len);
             return self;
         }
         pub String* int(String* self,i64 n){
@@ -52,7 +133,7 @@ namespace string {
             ptr::set(block,0,48);
             parse::int::get(block,n);
             u64 len = cstr::len(block);
-            self->vec.push_c(block,len);
+            self->push_c(block,len);
             return self;
         }
         pub String* boolean(String* self,bool b){
@@ -60,7 +141,7 @@ namespace string {
             ptr::set(block,0,8);
             parse::boolean::get(block,b);
             u64 len = cstr::len(block);
-            self->vec.push_c(block,len);
+            self->push_c(block,len);
             return self;
         }
         pub String* float(String* self,f64 n,u64 postdigits){
@@ -68,7 +149,7 @@ namespace string {
             ptr::set(block,0,48);
             parse::float::get(block,n,postdigits);
             u64 len = cstr::len(block);
-            self->vec.push_c(block,len);
+            self->push_c(block,len);
             return self;
         }
 
@@ -77,7 +158,7 @@ namespace string {
             ptr::set(block,0,48);
             parse::hex::get(block,n);
             u64 len = cstr::len(block);
-            self->vec.push_c(block,len);
+            self->push_c(block,len);
             return self;
         }
         pub String* oct(String* self,i64 n){
@@ -85,7 +166,7 @@ namespace string {
             ptr::set(block,0,48);
             parse::oct::get(block,n);
             u64 len = cstr::len(block);
-            self->vec.push_c(block,len);
+            self->push_c(block,len);
             return self;
         }
         pub String* bin(String* self,i64 n){
@@ -93,7 +174,7 @@ namespace string {
             ptr::set(block,0,48);
             parse::bin::get(block,n);
             u64 len = cstr::len(block);
-            self->vec.push_c(block,len);
+            self->push_c(block,len);
             return self;
         }
 
@@ -109,12 +190,12 @@ namespace string {
             }
 
             u64 len = cstr::len(block);
-            self->vec.push_c(block,len);
+            self->push_c(block,len);
             return self;
         }
         pub String* mem(String* self,void* n,u64 bytes){
             u64 count = bytes * 2;
-            i8* block = self->vec.alloc->alloc(count+1);
+            i8* block = self->alloc->alloc(count+1);
             
             ptr::set(block,0,count+1);
             
@@ -124,27 +205,9 @@ namespace string {
                 *(block+j*2+1) = char::to::hex(ch & 0xF);
             }
 
-            self->vec.push_c(block,count);
-            self->vec.alloc->free(block);
+            self->push_c(block,count);
+            self->alloc->free(block);
             return self;
-        }
-
-        pub void init(String* self,mem::Allocator* alloc){
-            self->vec = con::Vector::new(alloc,1);
-        }
-        pub String new(mem::Allocator* alloc){
-            String cstr;
-            cstr.init(alloc);
-            return cstr;
-        }
-        pub void delete(String* self){
-            self->vec.delete();
-        }
-        pub String make(mem::Allocator* alloc,i8* add){
-            String string;
-            string.init(alloc);
-            string.cstr(add);
-            return string;
         }
     }
 }

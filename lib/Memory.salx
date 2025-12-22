@@ -171,12 +171,16 @@ namespace mem {
             ptr::set(cstr,32,128);
             ptr::cpy(cstr,"| Memory:",9);
             parse::hex::get(cstr+10,self->memory);
+            
+            cstr[53] = '|';
             ptr::cpy(cstr+125,"\n",2);
             io::print(cstr);
 
             ptr::set(cstr,32,128);
             ptr::cpy(cstr,"| Length:",9);
             parse::uint::get(cstr+10,self->length);
+            
+            cstr[53] = '|';
             ptr::cpy(cstr+125,"\n",2);
             io::print(cstr);
 

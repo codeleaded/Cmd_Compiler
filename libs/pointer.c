@@ -160,7 +160,6 @@ Token Pointer_Handler_Arw(SuperALX* ll,Token* op,Vector* args){
     //printf("[Pointer]: ARW: %s->%s\n",a->str,b->str);
     
     if(a->tt==TOKEN_STRING){
-        CStr stack_name = SuperALX_Variablename_Next(ll,".STACK",6);
         Variable* v = Scope_FindVariable(&ll->ev.sc,a->str);
         
         if(v){

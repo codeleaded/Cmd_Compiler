@@ -1084,24 +1084,21 @@ Boolean ShutingYard_FunctionCall_Arw(SuperALX* ll,TokenMap* tm,int i,int args,To
 
         if(v){
             CStr type = SuperALX_TypeOfPointer(ll,v->typename);
-            CStr oldname = CStr_Cpy(func->str);
             CStr newname = CStr_Format("%s::%s",type,func->str);
-            CStr_Set((char**)&func->str,newname);
 
-            TT_Iter it_f = FunctionMap_Find(&ll->ev.fs,func->str);
+            TT_Iter it_f = FunctionMap_Find(&ll->ev.fs,newname);
             if(it_f>=0){
+                CStr_Set((char**)&func->str,newname);
+
                 TokenMap acs = TokenMap_Make((Token[]){
                     Token_Cpy(accssed),
                     Token_Null()
                 });
 
                 Vector_Add(func->args,&acs,0);
-            }else{
-                CStr_Set((char**)&func->str,oldname);
             }
 
             CStr_Free(&newname);
-            CStr_Free(&oldname);
             CStr_Free(&type);
 
             it_f = FunctionMap_Find(&ll->ev.fs,func->str);
