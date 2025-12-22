@@ -38,23 +38,21 @@ stack und struct arrays
 //import "../lib/IO.salx";
 //import "../lib/Window.salx";
 
-//import "../lib/Stream.salx";
-import "../lib/String.salx";
+import "../lib/Stream.salx";
+//import "../lib/String.salx";
 
 i64 main(){
     mem::Allocator alloc = mem::Allocator::new();
 
-    st::String buffer = st::String::new(&alloc);
-    
-    buffer.cstr("Hello + ")->int(69)->cstr(" + World!\n");
-    buffer.write(1);
-    
-    alloc.print();
-    buffer.delete();
+    // st::String buffer = st::String::new(&alloc);
+    // buffer.cstr("Hello + ")->int(69)->cstr(" + World!\n");
+    // buffer.write(1);
+    // alloc.print();
+    // buffer.delete();
 
-    //ios::OStream stdout = ios::OStream::new(&alloc,1);
-    //stdout.cstr("Hello ")->cstr("World: ")->int(69)->cstr("\n")->flush();
-    //stdout.delete();
+    ios::OStream stdout = ios::OStream::new(&alloc,1);
+    stdout.cstr("Hello ")->cstr("World: ")->int(69)->cstr("\n")->flush();
+    stdout.delete();
     
     alloc.delete();
     return 0;
