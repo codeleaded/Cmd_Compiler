@@ -125,3 +125,57 @@ f64 a = 1.5;
 f64 b = 3.0;
 f64 c = a + b;
 return (i64)(a + b);
+
+win::Window w = win::Window::new(400,300,"Hello World",&alloc);
+w.delete();
+
+namespace std {
+    struct Human[
+        pub i8* name,
+        pub i64 age
+    ];
+
+    impl Human{
+        pub void init(Human* self,i8* name,i64 age){
+            self->name = name;
+            self->age = age;
+        }
+        pub void delete(Human* self){
+            
+        }
+        pub Human new(i8* name,i64 age){
+            Human vec;
+            vec.init(name,age);
+            return vec;
+        }
+
+        pub void* print_name(Human* self,i8* name,i64 age,i64 b,i64 c){
+            io::print(name);
+            io::print("\n");
+            io::print_int(age);
+            io::print("\n");
+            io::print_int(b);
+            io::print("\n");
+            io::print_int(c);
+            io::print("\n");
+            return name;
+        }
+        pub void print_all(Human* self){
+            i8* name = self->print_name(self->name,self->age + self->age - self->age,self->age - 1,self->age + 1);
+        }
+    }
+}
+
+mem::Allocator alloc = mem::Allocator::new();
+con::Vector v = con::Vector::new(&alloc,8);
+
+for i64 i = 0,i<10,i+=1 {
+    i64 var = i * (i + 1);
+    v.push(&var);
+}
+
+alloc.print();
+v.print();
+v.delete();
+
+alloc.delete();

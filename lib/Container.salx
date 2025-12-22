@@ -51,13 +51,11 @@ namespace con {
                 ptr::cpy(self->memory + i * self->elementsize,element,self->elementsize);
             }
         }
-
         pub void set_c(Vector* self,u64 i,void* elements,u64 count){
-            if i>=0 && i+count<=self->size {
+            if elements != null && i>=0 && i+count<=self->size {
                 ptr::cpy(self->memory + i * self->elementsize,elements,self->elementsize * count);
             }
         }
-
         pub void expand(Vector* self,u64 count){
             u64 length = self->size + count;
             if length > self->memory_size {
@@ -75,7 +73,6 @@ namespace con {
                 self->memory_size = newsize;
             }
         }
-
         pub void shrink(Vector* self,u64 count){
             u64 newsize = self->memory_size / 2;
             if self->size <= newsize && newsize>5 {
@@ -89,8 +86,8 @@ namespace con {
             }
         }
 
-        pub void tonull(Vector* self){
-            ptr::set(self->memory,0,self->size);
+        pub void tozero(Vector* self){
+            ptr::set(self->memory,0,self->size * self->elementsize);
         }
         pub void clear(Vector* self){
             u64 elementsize = self->elementsize;
@@ -100,10 +97,11 @@ namespace con {
             self->size = 0;
             self->memory_size = 5;
         }
-        pub void* data(Vector* self){
+
+        pub void* get_data(Vector* self){
             return self->memory;
         }
-        pub u64 size(Vector* self){
+        pub u64 get_size(Vector* self){
             return self->size;
         }
         

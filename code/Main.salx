@@ -21,31 +21,40 @@ stack und struct arrays
 // import "../lib/CStr.salx";
 // import "../lib/System.salx";
 
-//import "../lib/IO.salx";
 //import "../lib/Memory.salx";
 //import "../lib/Math.salx";
 //import "../lib/Time.salx";
 
-import "../lib/System.salx";
-import "../lib/CStr.salx";
-import "../lib/IO.salx";
-import "../lib/Char.salx";
-import "../lib/Math.salx";
-import "../lib/Parser.salx";
-import "../lib/Pointer.salx";
-import "../lib/Memory.salx";
-//import "../lib/Container.salx";
+//import "../lib/System.salx";
+//import "../lib/CStr.salx";
+//import "../lib/IO.salx";
+//import "../lib/Char.salx";
+//import "../lib/Math.salx";
+//import "../lib/Parser.salx";
+//import "../lib/Pointer.salx";
+//import "../lib/Memory.salx";
 //import "../lib/String.salx";
 //import "../lib/Stream.salx";
-
 //import "../lib/IO.salx";
-import "../lib/Window.salx";
+//import "../lib/Window.salx";
+
+//import "../lib/Stream.salx";
+import "../lib/String.salx";
 
 i64 main(){
     mem::Allocator alloc = mem::Allocator::new();
+
+    st::String buffer = st::String::new(&alloc);
     
-    win::Window w = win::Window::new(400,300,"Hello World",&alloc);
-    w.delete();
+    buffer.cstr("Hello + ")->int(69)->cstr(" + World!\n");
+    buffer.write(1);
+    
+    alloc.print();
+    buffer.delete();
+
+    //ios::OStream stdout = ios::OStream::new(&alloc,1);
+    //stdout.cstr("Hello ")->cstr("World: ")->int(69)->cstr("\n")->flush();
+    //stdout.delete();
     
     alloc.delete();
     return 0;

@@ -5,16 +5,16 @@ import "../lib/Container.salx";
 
 namespace ios {
     struct OStream[
-        void* file,
+        i64 file,
         con::Vector data
     ];
 
     impl OStream {
-        pub void init(OStream* self,mem::Allocator* alloc,void* file){
+        pub void init(OStream* self,mem::Allocator* alloc,i64 file){
             self->file = file;
             self->data = con::Vector::new(alloc,1);
         }
-        pub OStream new(mem::Allocator* alloc,void* file){
+        pub OStream new(mem::Allocator* alloc,i64 file){
             OStream stream;
             stream.init(alloc,file);
             return stream;
@@ -23,7 +23,7 @@ namespace ios {
             return ios::OStream::new(alloc,sys::open(path,O_WRONLY));
         }
         pub void delete(OStream* self){
-            if self->file>2 {
+            if self->file > 2 {
                 sys::close(self->file);
             }
             self->file = null;
@@ -241,7 +241,7 @@ namespace ios {
             }
         
             u64 size = line.size();
-            i8* out = line.alloc->alloc(size + 1);
+            i8* out = self->alloc->alloc(size + 1);
             ptr::cpy(out,line.data(),size);
             out[size] = 0;
 
