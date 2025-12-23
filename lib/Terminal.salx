@@ -393,10 +393,10 @@ namespace esc {
 namespace ter {
 
     struct Terminos[
-        pub u64 c_iflag,
-        pub u64 c_oflag,
-        pub u64 c_cflag,
-        pub u64 c_lflag,
+        pub u32 c_iflag,
+        pub u32 c_oflag,
+        pub u32 c_cflag,
+        pub u32 c_lflag,
         pub u8  c_line,
         pub u8  c_cc0,
         pub u8  c_cc1,
@@ -485,28 +485,21 @@ namespace ter {
 
     impl Keyboard {
         pub void init(Keyboard* self){
-            io::print("Here0\n");
-            ptr::set((i8*)self,0,152);
+            ptr::set((i8*)self,0,120);
             
-            io::print("Here1\n");
-            i64 oldflags = sys::fcntl(STDIN,3,0);
-            sys::fcntl(STDIN,4,oldflags | O_NONBLOCK);
-
-            io::print("Here2\n");
+            i64 oldflags = sys::fcntl(STDIN,F_GETFL,0);
+            sys::fcntl(STDIN,F_SETFL,oldflags | O_NONBLOCK);
+            
             ter::tcgetattr(STDIN,&(self->oldt));
-            io::print("Here21\n");
-            ptr::cpy((i8*)(&(self->newt)),(i8*)(&(self->oldt)),72);
+            ptr::cpy((i8*)(&(self->newt)),(i8*)(&(self->oldt)),56);
 
-            io::print("Here31\n");
             self->newt.c_iflag = self->newt.c_iflag & ~(IXON | IXOFF | IXANY);
             self->newt.c_oflag = self->newt.c_oflag & ~OPOST;
             self->newt.c_cflag = self->newt.c_cflag | (CS8);
             self->newt.c_lflag = self->newt.c_lflag & ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
     
-            io::print("Here3\n");
             ter::tcsetattr(STDIN,TCSANOW,&(self->newt));
             
-            io::print("Here4\n");
             self->bytesread = 0;
             self->currentkey = 0;
             self->lastkey = 0;
@@ -518,36 +511,38 @@ namespace ter {
         }
         pub void delete(Keyboard* self){
             ter::tcsetattr(STDIN,TCSANOW,&(self->oldt));
-            i64 oldflags = sys::fcntl(STDIN,3,0);
-            sys::fcntl(STDIN,4,oldflags & ~O_NONBLOCK);
+            i64 oldflags = sys::fcntl(STDIN,F_GETFL,0);
+            sys::fcntl(STDIN,F_SETFL,oldflags & ~O_NONBLOCK);
         }
 
         pub void update(Keyboard* self){
             i8[16] buffer;
             ptr::set(buffer,0,16);
-            self->bytesread = sys::read(STDIN,buffer,1);
-            i32 read = self->bytesread;
+            
+            i64 read = sys::read(STDIN,buffer,1);
+            self->bytesread = read;
             
             if read>0 {
-                buffer[read] = '\0';
+                //buffer[read] = '\0';
+                
                 i8 ch = *buffer;
                 self->currentkey = ch;
                 self->lastkey = ch;
-
                 self->upkey = 0;
                 self->downkey = 0;
+
                 if ch==0x1b {
-                    read = sys::read(STDIN,buffer,2);
-                    i8 bracket = *buffer;
-                    if read==2 && bracket==0x5b {
-                        i8 arr = *(buffer+1);
-                        if arr=='A' {
-                            self->upkey = 1;
-                        }
-                        if arr=='B' {
-                            self->downkey = 1;
-                        }
-                    }
+                   read = sys::read(STDIN,buffer,2);
+                   i8 bracket = *buffer;
+                   if read==2 && bracket==0x5b {
+                       i8 arr = *(buffer+1);
+                       if arr=='A' {
+                           self->upkey = 1;
+                       }
+                       if arr=='B' {
+                           self->downkey = 1;
+                       }
+                   }
                 }
             }else{
                 self->currentkey = 0;
