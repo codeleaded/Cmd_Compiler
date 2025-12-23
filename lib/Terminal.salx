@@ -4,6 +4,31 @@ import "../lib/Memory.salx";
 import "../lib/Math.salx";
 import "../lib/Parser.salx";
 
+define ICANON       2;
+define ECHO         8;
+define ISIG         1;
+define IEXTEN       32768;
+define CSIZE        768;
+define CSTOPB       1024;
+define CREAD        128;
+define PARENB       4096;
+define IXON         1024;
+define IXOFF        4096;
+define IXANY        2048;
+define OPOST        1;
+define CS8          48;
+define ECHONL       64;
+define TCIFLUSH     1;
+define TCOFLUSH     2;
+define TCIOFLUSH    3;
+define TCSANOW      0;
+define TCSADRAIN    1;
+define TCSAFLUSH    2;
+define TCGETS       21505;
+define TCSETS       21506;
+define KDGKBMETA    19298;
+
+
 namespace esc {
     namespace sgr { // Select Graphic Rendition
         void reset(){
@@ -270,14 +295,14 @@ namespace esc {
         */
         namespace pos {
             void set(i64 x,i64 y){
-                i8[50] cstr;
-                ptr::set(cstr,0,50);
-                ptr::cpy(cstr,"\x1B[",2);
-                parse::uint::get(cstr+cstr::len(cstr),y);
-                ptr::cpy(cstr+cstr::len(cstr),";",1);
-                parse::uint::get(cstr+cstr::len(cstr),x);
-                ptr::cpy(cstr+cstr::len(cstr),"H",1);
-                io::print(cstr);
+                i8[50] buffer;
+                ptr::set(buffer,0,50);
+                ptr::cpy(buffer,"\x1B[",2);
+                parse::uint::get(buffer + cstr::len(buffer),y);
+                ptr::cpy(buffer + cstr::len(buffer),";",1);
+                parse::uint::get(buffer + cstr::len(buffer),x);
+                ptr::cpy(buffer + cstr::len(buffer),"H",1);
+                io::print(buffer);
                 //io::print("\x1B[<n>;<m>H");
             }
             void save(){
@@ -366,37 +391,6 @@ namespace esc {
 }
 
 namespace ter {
-    /*
-    define tcflag_t    u64;
-    define cc_t        u8;
-    define speed_t     u32;
-
-    define ICANON       2;
-    define ECHO         8;
-    define ISIG         1;
-    define IEXTEN       32768;
-    define CSIZE        768;
-    define CSTOPB       1024;
-    define CREAD        128;
-    define PARENB       4096;
-
-    define IXON         1024;
-    define IXOFF        4096;
-    define IXANY        2048;
-    define OPOST        1;
-    define CS8          48;
-    define ECHONL       64;
-
-    define TCIFLUSH     1;
-    define TCOFLUSH     2;
-    define TCIOFLUSH    3;
-
-    define TCSANOW      0;
-    define TCSADRAIN    1;
-    define TCSAFLUSH    2;
-
-    define KDGKBMETA    19298;
-    */
 
     struct Terminos[
         pub u64 c_iflag,
@@ -441,10 +435,10 @@ namespace ter {
     ];
 
     i32 tcgetattr(i32 fd,Terminos* t){
-        return sys::ioctl(fd,21505,t,0);
+        return sys::ioctl(fd,TCGETS,t,0);
     }
     i32 tcsetattr(i32 fd,i32 ap,Terminos* t){
-        return sys::ioctl(fd,21506,t,ap);
+        return sys::ioctl(fd,TCSETS,t,ap);
     }
 
     /*
@@ -457,13 +451,13 @@ namespace ter {
     }
 
     void cfmakeraw(Terminos* t){
-        //t->c_lflag &= ~(ter::ICANON | ter::ECHO | ter::ISIG | ter::IEXTEN);
+        //t->c_lflag &= ~(ICANON | ECHO | ISIG | IEXTEN);
         //t->c_cc4 = 1;
         //t->c_cc5 = 0;
-        t->c_iflag &= ~(ter::IXON | ter::IXOFF | ter::IXANY);
-        t->c_oflag &= ~ter::OPOST;
-        t->c_cflag |= (ter::CS8);
-        t->c_lflag &= ~(ter::ECHO | ter::ECHONL | ter::ICANON | ter::ISIG | ter::IEXTEN);//ISIG
+        t->c_iflag = t->c_iflag & ~(IXON | IXOFF | IXANY);
+        t->c_oflag = t->c_oflag & ~OPOST;
+        t->c_cflag = t->c_cflag | (CS8);
+        t->c_lflag = t->c_lflag & ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);//ISIG
         //t->c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | IXON);
         //t->c_oflag &= ~OPOST;
         //t->c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
@@ -480,70 +474,78 @@ namespace ter {
     */
 
     struct Keyboard[
-        ter::Terminos oldt,
-        ter::Terminos newt,
+        Terminos oldt,
+        Terminos newt,
         i32 bytesread,
         i8 currentkey,
         i8 lastkey,
-        bool upkey,
-        bool downkey
+        i8 upkey,
+        i8 downkey
     ];
 
     impl Keyboard {
-        pub void Keyboard::init(Keyboard* self){
-            ptr::set((i8*)self,0,126);
+        pub void init(Keyboard* self){
+            io::print("Here0\n");
+            ptr::set((i8*)self,0,152);
             
+            io::print("Here1\n");
             i64 oldflags = sys::fcntl(STDIN,3,0);
             sys::fcntl(STDIN,4,oldflags | O_NONBLOCK);
 
+            io::print("Here2\n");
             ter::tcgetattr(STDIN,&(self->oldt));
-            //ptr::cpy((i8*)(&(self->newt)),(i8*)(&(self->oldt)),60);
+            io::print("Here21\n");
+            ptr::cpy((i8*)(&(self->newt)),(i8*)(&(self->oldt)),72);
 
-            self->newt.c_iflag &= ~(ter::IXON | ter::IXOFF | ter::IXANY);
-            self->newt.c_oflag &= ~ter::OPOST;
-            self->newt.c_cflag |= (ter::CS8);
-            self->newt.c_lflag &= ~(ter::ECHO | ter::ECHONL | ter::ICANON | ter::ISIG | ter::IEXTEN);
+            io::print("Here31\n");
+            self->newt.c_iflag = self->newt.c_iflag & ~(IXON | IXOFF | IXANY);
+            self->newt.c_oflag = self->newt.c_oflag & ~OPOST;
+            self->newt.c_cflag = self->newt.c_cflag | (CS8);
+            self->newt.c_lflag = self->newt.c_lflag & ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
     
-            ter::tcsetattr(STDIN,ter::TCSANOW,&(self->newt));
+            io::print("Here3\n");
+            ter::tcsetattr(STDIN,TCSANOW,&(self->newt));
             
+            io::print("Here4\n");
             self->bytesread = 0;
             self->currentkey = 0;
             self->lastkey = 0;
         }
-        pub Keyboard Keyboard::new(){
+        pub Keyboard new(){
             Keyboard kb;
             kb.init();
             return kb;
         }
-        pub void Keyboard::delete(Keyboard* self){
-            ter::tcsetattr(STDIN,ter::TCSANOW,&(self->oldt));
+        pub void delete(Keyboard* self){
+            ter::tcsetattr(STDIN,TCSANOW,&(self->oldt));
             i64 oldflags = sys::fcntl(STDIN,3,0);
             sys::fcntl(STDIN,4,oldflags & ~O_NONBLOCK);
         }
 
-        pub void Keyboard::update(Keyboard* self){
-            i8 buffer[16];
+        pub void update(Keyboard* self){
+            i8[16] buffer;
             ptr::set(buffer,0,16);
             self->bytesread = sys::read(STDIN,buffer,1);
             i32 read = self->bytesread;
+            
             if read>0 {
                 buffer[read] = '\0';
                 i8 ch = *buffer;
                 self->currentkey = ch;
                 self->lastkey = ch;
 
-                self->upkey = false;
-                self->downkey = false;
+                self->upkey = 0;
+                self->downkey = 0;
                 if ch==0x1b {
                     read = sys::read(STDIN,buffer,2);
                     i8 bracket = *buffer;
                     if read==2 && bracket==0x5b {
                         i8 arr = *(buffer+1);
                         if arr=='A' {
-                            self->upkey = true;
+                            self->upkey = 1;
                         }
                         if arr=='B' {
-                            self->downkey = true;
+                            self->downkey = 1;
                         }
                     }
                 }
@@ -552,16 +554,16 @@ namespace ter {
             }
         }
 
-        pub i8 Keyboard::getcurrent(Keyboard* self){
+        pub i8 getcurrent(Keyboard* self){
             return self->currentkey;
         }
-        pub i8 Keyboard::getlast(Keyboard* self){
+        pub i8 getlast(Keyboard* self){
             return self->lastkey;
         }
-        pub i8 Keyboard::getup(Keyboard* self){
+        pub i8 getup(Keyboard* self){
             return self->upkey;
         }
-        pub i8 Keyboard::getdown(Keyboard* self){
+        pub i8 getdown(Keyboard* self){
             return self->downkey;
         }
     }

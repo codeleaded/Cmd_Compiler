@@ -19,23 +19,159 @@ stack und struct arrays
 
 import "../lib/System.salx";
 import "../lib/IO.salx";
+import "../lib/Terminal.salx";
 import "../lib/Time.salx";
-import "../lib/Stream.salx";
+
+
+i64 World_toScreen(i64 c){
+    return c / 100;
+}
+i64 Screen_toWorld(i64 c){
+    return c * 100;
+}
+
+void render(i64 xw,i64 yw){
+    i64 x = World_toScreen(xw);
+    i64 y = World_toScreen(yw);
+
+    esc::cursor::pos::set(x,y);
+    io::print_char('#');
+    esc::cursor::pos::set(x,y+1);
+    io::print_char('#');
+    esc::cursor::pos::set(x,y+2);
+    io::print_char('#');
+    esc::cursor::pos::set(x,y+3);
+    io::print_char('#');
+    esc::cursor::pos::set(x,y+4);
+    io::print_char('#');
+    esc::cursor::pos::set(x,y+5);
+    io::print_char('#');
+    esc::cursor::pos::set(x,y+6);
+    io::print_char('#');
+    esc::cursor::pos::set(x,y+7);
+    io::print_char('#');
+}
+void renderb(i64 xw,i64 yw){
+    i64 x = World_toScreen(xw);
+    i64 y = World_toScreen(yw);
+
+    esc::cursor::pos::set(x,y);
+    io::print_char('O');
+    io::print_char('O');
+    esc::cursor::pos::set(x,y+1);
+    io::print_char('O');
+    io::print_char('O');
+}
 
 i64 main(){
-    mem::Allocator alloc = mem::Allocator::new();
-    ios::OStream stdout = ios::OStream::new(&alloc,1);
-    stdout.cstr("-> Stdout avalible!\n")->flush();
-    ios::IStream stdin = ios::IStream::new(&alloc,0);
-    stdout.cstr("-> Stdin: Read: ")->flush();
+    //ter::Keyboard kb = ter::Keyboard::new();
 
-    i8* input = stdin.line();
-    stdout.cstr("-> Stdout: Found: \'")->cstr(input)->cstr("\'!\n")->flush();
-    alloc.free(input);
-    stdout.cstr("-> Stdout closed!\n")->flush();
-    stdout.delete();
-    alloc.print();
-    alloc.delete();
+    i64 x1 = Screen_toWorld(1);
+    i64 y1 = Screen_toWorld(30);
+    i64 x2 = Screen_toWorld(160);
+    i64 y2 = Screen_toWorld(30);
+    i64 xb = Screen_toWorld(80);
+    i64 yb = Screen_toWorld(30);
+    i64 vx = 5;
+    i64 vy = 2;
+
+    bool running = true;
+
+    esc::screen::del::all();
+    esc::cursor::invisible();
+
+    while running {
+        /*
+        kb.update();
+
+        i8 ch = kb.getlast();
+
+        if ch=='Q' || ch=='q' {
+            running = false;
+        }
+
+        if ch=='W' || ch=='w' {
+            y1 -= 1;
+        }
+        if ch=='S' || ch=='s' {
+            y1 += 1;
+        }
+        if kb.getup() == 1 {
+            y2 -= 1;
+        }
+        if kb.getdown() == 1 {
+            y2 += 1;
+        }
+        */
+
+        xb += vx;
+        yb += vy;
+
+        if y1<Screen_toWorld(0) {
+            y1 = Screen_toWorld(0);
+        }
+        if y1>Screen_toWorld(60) {
+            y1 = Screen_toWorld(60);
+        }
+        if y2<Screen_toWorld(0) {
+            y2 = Screen_toWorld(0);
+        }
+        if y2>Screen_toWorld(60) {
+            y2 = Screen_toWorld(60);
+        }
+
+        if xb<Screen_toWorld(0) {
+            xb = Screen_toWorld(80);
+            yb = Screen_toWorld(30);
+            vx = 10;
+            vy = 5;
+        }
+        if xb>Screen_toWorld(160) {
+            xb = Screen_toWorld(80);
+            yb = Screen_toWorld(30);
+            vx = 10;
+            vy = 5;
+        }
+        if yb<Screen_toWorld(0) {
+            yb = Screen_toWorld(0);
+            vy = -vy;
+            vy += 1 * math::int::sign(vy);
+        }
+        if yb>Screen_toWorld(60) {
+            yb = Screen_toWorld(60);
+            vy = -vy;
+            vy += 1 * math::int::sign(vy);
+        }
+
+        /*
+        if World_toScreen(x1)==World_toScreen(xb) && World_toScreen(x1)==World_toScreen(xb)+1 {
+            if World_toScreen(yb)==World_toScreen(y1)-2 && World_toScreen(x1)==World_toScreen(xb)+8 {
+                xb = x1 + World_toScreen(1);
+                vx = -vx;
+                vx += 5 * math::int::sign(vx);
+            }
+        }
+        if World_toScreen(x2)==World_toScreen(xb) && World_toScreen(x2)==World_toScreen(xb)-1 {
+            if World_toScreen(yb)==World_toScreen(y2)-2 && World_toScreen(yb)==World_toScreen(y2)+8 {
+                xb = x2 - World_toScreen(2);
+                vx = -vx;
+                vx += 5 * math::int::sign(vx);
+            }
+        }
+        */
+
+        esc::screen::del::all();
+        render(x1,y1);
+        render(x2,y2);
+        renderb(xb,yb);
+
+        time::msleep(2);
+    }
+
+    esc::cursor::pos::set(0,0);
+    esc::screen::del::all();
+    esc::cursor::visible();
+    //kb.delete();
     
     return 0;
 }
