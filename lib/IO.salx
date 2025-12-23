@@ -19,6 +19,9 @@ define O_CLOEXEC    524288;   // Setzt das FD_CLOEXEC-Flag, welches den Dateides
 define O_DIRECTORY  65536;    // Öffnet die Datei nur, wenn sie ein Verzeichnis ist; anderenfalls schlägt der Syscall mit einem Fehler fehl.
 define O_TMPFILE    4259840;  // Erzeugt eine temporäre Datei, die beim Schließen automatisch gelöscht wird, falls sie keinen Link im Dateisystem hat.
 
+define F_GETFL      3;
+define F_SETFL      4;
+
 define SEEK_SET     0;        // Datei Anfang.
 define SEEK_CUR     1;        // Datei relativ.
 define SEEK_END     2;        // Datei Ende.

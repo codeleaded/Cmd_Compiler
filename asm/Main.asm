@@ -90,13 +90,6 @@ GLOBAL_STR79: db 27,"[?1049l",0
 GLOBAL_STR80: db 27,"[7h",0
 GLOBAL_STR81: db 27,"[7l",0
 GLOBAL_STR82: db 27,"[c",0
-GLOBAL_STR83: db "Here0",10,0
-GLOBAL_STR84: db "Here1",10,0
-GLOBAL_STR85: db "Here2",10,0
-GLOBAL_STR86: db "Here21",10,0
-GLOBAL_STR87: db "Here31",10,0
-GLOBAL_STR88: db "Here3",10,0
-GLOBAL_STR89: db "Here4",10,0
 
 section .text
 global _start
@@ -9153,10 +9146,6 @@ f.ter.tcsetattr:
 
 f.ter.Keyboard.init:
     sub rsp,8
-    mov QWORD[rsp + 0],GLOBAL_STR83
-    call f.io.print
-    add rsp,8
-    sub rsp,8
     sub rsp,8
     mov rax,QWORD[rsp + 24]
     mov QWORD[rsp + 0],rax
@@ -9166,14 +9155,10 @@ f.ter.Keyboard.init:
     sub rsp,1
     mov BYTE[rsp + 0],0
     sub rsp,8
-    mov QWORD[rsp + 0],152
+    mov QWORD[rsp + 0],120
     call f.ptr.set
     add rsp,8
     add rsp,1
-    add rsp,8
-    sub rsp,8
-    mov QWORD[rsp + 0],GLOBAL_STR84
-    call f.io.print
     add rsp,8
     sub rsp,8
     sub rsp,4
@@ -9208,10 +9193,6 @@ f.ter.Keyboard.init:
     add rsp,8
     add rsp,8
     add rsp,4
-    sub rsp,8
-    mov QWORD[rsp + 0],GLOBAL_STR85
-    call f.io.print
-    add rsp,8
     sub rsp,4
     sub rsp,4
     mov DWORD[rsp + 0],0
@@ -9221,7 +9202,7 @@ f.ter.Keyboard.init:
     mov QWORD[rsp + 0],rax
     add QWORD[rsp + 0],0
     sub rsp,8
-    lea rax,[rsp + 8]
+    mov rax,[rsp + 8]
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 16],rax
@@ -9232,16 +9213,12 @@ f.ter.Keyboard.init:
     add rsp,4
     add rsp,4
     sub rsp,8
-    mov QWORD[rsp + 0],GLOBAL_STR86
-    call f.io.print
-    add rsp,8
-    sub rsp,8
     sub rsp,8
     mov rax,QWORD[rsp + 32]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],73
+    add QWORD[rsp + 0],57
     sub rsp,8
-    lea rax,[rsp + 8]
+    mov rax,[rsp + 8]
     mov QWORD[rsp + 0],rax
     sub rsp,8
     mov rax,QWORD[rsp + 8]
@@ -9257,7 +9234,7 @@ f.ter.Keyboard.init:
     mov QWORD[rsp + 0],rax
     add QWORD[rsp + 0],0
     sub rsp,8
-    lea rax,[rsp + 8]
+    mov rax,[rsp + 8]
     mov QWORD[rsp + 0],rax
     sub rsp,8
     mov rax,QWORD[rsp + 8]
@@ -9268,19 +9245,15 @@ f.ter.Keyboard.init:
     add rsp,8
     add rsp,8
     sub rsp,8
-    mov QWORD[rsp + 0],72
+    mov QWORD[rsp + 0],56
     call f.ptr.cpy
     add rsp,8
     add rsp,8
     add rsp,8
     sub rsp,8
-    mov QWORD[rsp + 0],GLOBAL_STR87
-    call f.io.print
-    add rsp,8
-    sub rsp,8
     mov rax,QWORD[rsp + 24]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],73
+    add QWORD[rsp + 0],57
     sub rsp,8
     mov rax,QWORD[rsp + 8]
     mov QWORD[rsp + 0],rax
@@ -9288,20 +9261,21 @@ f.ter.Keyboard.init:
     sub rsp,8
     mov rax,QWORD[rsp + 40]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],73
+    add QWORD[rsp + 0],57
     sub rsp,8
     mov rax,QWORD[rsp + 8]
     mov QWORD[rsp + 0],rax
     add QWORD[rsp + 0],0
-    sub rsp,8
-    mov r10,QWORD[rsp + 8]
-    mov rax,QWORD[r10]
+    sub rsp,4
+    mov rax,0
+    mov r10,QWORD[rsp + 4]
+    mov eax,DWORD[r10]
     and rax,-7169
-    mov QWORD[rsp + 0],rax
-    mov rax,QWORD[rsp + 0]
-    mov r10,QWORD[rsp + 24]
-    mov QWORD[r10],rax
-    add rsp,8
+    mov DWORD[rsp + 0],eax
+    mov eax,DWORD[rsp + 0]
+    mov r10,QWORD[rsp + 20]
+    mov DWORD[r10],eax
+    add rsp,4
     add rsp,8
     add rsp,8
     add rsp,8
@@ -9309,28 +9283,29 @@ f.ter.Keyboard.init:
     sub rsp,8
     mov rax,QWORD[rsp + 24]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],73
+    add QWORD[rsp + 0],57
     sub rsp,8
     mov rax,QWORD[rsp + 8]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],8
+    add QWORD[rsp + 0],4
     sub rsp,8
     mov rax,QWORD[rsp + 40]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],73
+    add QWORD[rsp + 0],57
     sub rsp,8
     mov rax,QWORD[rsp + 8]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],8
-    sub rsp,8
-    mov r10,QWORD[rsp + 8]
-    mov rax,QWORD[r10]
+    add QWORD[rsp + 0],4
+    sub rsp,4
+    mov rax,0
+    mov r10,QWORD[rsp + 4]
+    mov eax,DWORD[r10]
     and rax,-2
-    mov QWORD[rsp + 0],rax
-    mov rax,QWORD[rsp + 0]
-    mov r10,QWORD[rsp + 24]
-    mov QWORD[r10],rax
-    add rsp,8
+    mov DWORD[rsp + 0],eax
+    mov eax,DWORD[rsp + 0]
+    mov r10,QWORD[rsp + 20]
+    mov DWORD[r10],eax
+    add rsp,4
     add rsp,8
     add rsp,8
     add rsp,8
@@ -9338,28 +9313,29 @@ f.ter.Keyboard.init:
     sub rsp,8
     mov rax,QWORD[rsp + 24]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],73
+    add QWORD[rsp + 0],57
     sub rsp,8
     mov rax,QWORD[rsp + 8]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],16
+    add QWORD[rsp + 0],8
     sub rsp,8
     mov rax,QWORD[rsp + 40]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],73
+    add QWORD[rsp + 0],57
     sub rsp,8
     mov rax,QWORD[rsp + 8]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],16
-    sub rsp,8
-    mov r10,QWORD[rsp + 8]
-    mov rax,QWORD[r10]
+    add QWORD[rsp + 0],8
+    sub rsp,4
+    mov rax,0
+    mov r10,QWORD[rsp + 4]
+    mov eax,DWORD[r10]
     or rax,48
-    mov QWORD[rsp + 0],rax
-    mov rax,QWORD[rsp + 0]
-    mov r10,QWORD[rsp + 24]
-    mov QWORD[r10],rax
-    add rsp,8
+    mov DWORD[rsp + 0],eax
+    mov eax,DWORD[rsp + 0]
+    mov r10,QWORD[rsp + 20]
+    mov DWORD[r10],eax
+    add rsp,4
     add rsp,8
     add rsp,8
     add rsp,8
@@ -9367,35 +9343,32 @@ f.ter.Keyboard.init:
     sub rsp,8
     mov rax,QWORD[rsp + 24]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],73
+    add QWORD[rsp + 0],57
     sub rsp,8
     mov rax,QWORD[rsp + 8]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],24
+    add QWORD[rsp + 0],12
     sub rsp,8
     mov rax,QWORD[rsp + 40]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],73
+    add QWORD[rsp + 0],57
     sub rsp,8
     mov rax,QWORD[rsp + 8]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],24
-    sub rsp,8
-    mov r10,QWORD[rsp + 8]
-    mov rax,QWORD[r10]
+    add QWORD[rsp + 0],12
+    sub rsp,4
+    mov rax,0
+    mov r10,QWORD[rsp + 4]
+    mov eax,DWORD[r10]
     and rax,-32844
-    mov QWORD[rsp + 0],rax
-    mov rax,QWORD[rsp + 0]
-    mov r10,QWORD[rsp + 24]
-    mov QWORD[r10],rax
+    mov DWORD[rsp + 0],eax
+    mov eax,DWORD[rsp + 0]
+    mov r10,QWORD[rsp + 20]
+    mov DWORD[r10],eax
+    add rsp,4
     add rsp,8
     add rsp,8
     add rsp,8
-    add rsp,8
-    add rsp,8
-    sub rsp,8
-    mov QWORD[rsp + 0],GLOBAL_STR88
-    call f.io.print
     add rsp,8
     sub rsp,4
     sub rsp,4
@@ -9406,9 +9379,9 @@ f.ter.Keyboard.init:
     sub rsp,8
     mov rax,QWORD[rsp + 44]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],73
+    add QWORD[rsp + 0],57
     sub rsp,8
-    lea rax,[rsp + 8]
+    mov rax,[rsp + 8]
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 16],rax
@@ -9420,27 +9393,23 @@ f.ter.Keyboard.init:
     add rsp,4
     add rsp,4
     sub rsp,8
-    mov QWORD[rsp + 0],GLOBAL_STR89
-    call f.io.print
-    add rsp,8
-    sub rsp,8
     mov rax,QWORD[rsp + 24]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],146
+    add QWORD[rsp + 0],114
     mov r10,QWORD[rsp + 0]
     mov DWORD[r10],0
     add rsp,8
     sub rsp,8
     mov rax,QWORD[rsp + 24]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],150
+    add QWORD[rsp + 0],118
     mov r10,QWORD[rsp + 0]
     mov BYTE[r10],0
     add rsp,8
     sub rsp,8
     mov rax,QWORD[rsp + 24]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],151
+    add QWORD[rsp + 0],119
     mov r10,QWORD[rsp + 0]
     mov BYTE[r10],0
     add rsp,8
@@ -9448,7 +9417,7 @@ f.ter.Keyboard.init:
     ret
 
 f.ter.Keyboard.new:
-    sub rsp,154
+    sub rsp,122
     sub rsp,8
     sub rsp,8
     lea rax,[rsp + 16]
@@ -9459,48 +9428,40 @@ f.ter.Keyboard.new:
     call f.ter.Keyboard.init
     add rsp,8
     mov rax,QWORD[rsp + 0 + 0]
-    mov QWORD[rsp + 162 + 0],rax
+    mov QWORD[rsp + 130 + 0],rax
     mov rax,QWORD[rsp + 0 + 8]
-    mov QWORD[rsp + 162 + 8],rax
+    mov QWORD[rsp + 130 + 8],rax
     mov rax,QWORD[rsp + 0 + 16]
-    mov QWORD[rsp + 162 + 16],rax
+    mov QWORD[rsp + 130 + 16],rax
     mov rax,QWORD[rsp + 0 + 24]
-    mov QWORD[rsp + 162 + 24],rax
+    mov QWORD[rsp + 130 + 24],rax
     mov rax,QWORD[rsp + 0 + 32]
-    mov QWORD[rsp + 162 + 32],rax
+    mov QWORD[rsp + 130 + 32],rax
     mov rax,QWORD[rsp + 0 + 40]
-    mov QWORD[rsp + 162 + 40],rax
+    mov QWORD[rsp + 130 + 40],rax
     mov rax,QWORD[rsp + 0 + 48]
-    mov QWORD[rsp + 162 + 48],rax
+    mov QWORD[rsp + 130 + 48],rax
     mov rax,QWORD[rsp + 0 + 56]
-    mov QWORD[rsp + 162 + 56],rax
+    mov QWORD[rsp + 130 + 56],rax
     mov rax,QWORD[rsp + 0 + 64]
-    mov QWORD[rsp + 162 + 64],rax
+    mov QWORD[rsp + 130 + 64],rax
     mov rax,QWORD[rsp + 0 + 72]
-    mov QWORD[rsp + 162 + 72],rax
+    mov QWORD[rsp + 130 + 72],rax
     mov rax,QWORD[rsp + 0 + 80]
-    mov QWORD[rsp + 162 + 80],rax
+    mov QWORD[rsp + 130 + 80],rax
     mov rax,QWORD[rsp + 0 + 88]
-    mov QWORD[rsp + 162 + 88],rax
+    mov QWORD[rsp + 130 + 88],rax
     mov rax,QWORD[rsp + 0 + 96]
-    mov QWORD[rsp + 162 + 96],rax
+    mov QWORD[rsp + 130 + 96],rax
     mov rax,QWORD[rsp + 0 + 104]
-    mov QWORD[rsp + 162 + 104],rax
+    mov QWORD[rsp + 130 + 104],rax
     mov rax,QWORD[rsp + 0 + 112]
-    mov QWORD[rsp + 162 + 112],rax
-    mov rax,QWORD[rsp + 0 + 120]
-    mov QWORD[rsp + 162 + 120],rax
-    mov rax,QWORD[rsp + 0 + 128]
-    mov QWORD[rsp + 162 + 128],rax
-    mov rax,QWORD[rsp + 0 + 136]
-    mov QWORD[rsp + 162 + 136],rax
-    mov rax,QWORD[rsp + 0 + 144]
-    mov QWORD[rsp + 162 + 144],rax
-    mov ax,WORD[rsp + 0 + 152]
-    mov WORD[rsp + 162 + 152],ax
-    add rsp,154
+    mov QWORD[rsp + 130 + 112],rax
+    mov ax,WORD[rsp + 0 + 120]
+    mov WORD[rsp + 130 + 120],ax
+    add rsp,122
     ret
-    add rsp,154
+    add rsp,122
     ret
 
 f.ter.Keyboard.delete:
@@ -9515,7 +9476,7 @@ f.ter.Keyboard.delete:
     mov QWORD[rsp + 0],rax
     add QWORD[rsp + 0],0
     sub rsp,8
-    lea rax,[rsp + 8]
+    mov rax,[rsp + 8]
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
     mov QWORD[rsp + 16],rax
@@ -9578,9 +9539,6 @@ f.ter.Keyboard.update:
     add rsp,1
     add rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 40]
-    mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],146
     sub rsp,8
     sub rsp,8
     mov QWORD[rsp + 0],0
@@ -9593,25 +9551,21 @@ f.ter.Keyboard.update:
     add rsp,8
     add rsp,8
     add rsp,8
-    mov rax,0
     mov rax,QWORD[rsp + 0]
-    mov r10,QWORD[rsp + 8]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 48]
+    mov QWORD[rsp + 0],rax
+    add QWORD[rsp + 0],114
+    mov rax,0
+    mov rax,QWORD[rsp + 8]
+    mov r10,QWORD[rsp + 0]
     mov DWORD[r10],eax
     add rsp,8
-    add rsp,8
-    sub rsp,4
-    sub rsp,8
-    mov rax,QWORD[rsp + 44]
-    mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],146
-    mov r10,QWORD[rsp + 0]
-    mov eax,DWORD[r10]
-    mov DWORD[rsp + 8],eax
-    add rsp,8
     sub rsp,1
     sub rsp,1
-    mov rax,0
-    mov eax,DWORD[rsp + 2]
+    mov rax,QWORD[rsp + 2]
     cmp rax,0
     setg BYTE[rsp + 0]
     mov al,BYTE[rsp + 0]
@@ -9622,54 +9576,41 @@ f.ter.Keyboard.update:
     cmp al,0
     je l.1_IF2_78
     l.0_IF2_78:
-    sub rsp,8
-    mov rax,QWORD[rsp + 28]
-    add eax,DWORD[rsp + 8]
-    mov QWORD[rsp + 0],rax
-    sub rsp,8
-    mov rax,QWORD[rsp + 8]
-    mov QWORD[rsp + 0],rax
-    mov rax,0
-    mov eax,48
-    mov r10,QWORD[rsp + 0]
-    mov BYTE[r10],al
-    add rsp,8
-    add rsp,8
     sub rsp,1
     sub rsp,8
-    mov rax,QWORD[rsp + 29]
+    mov rax,QWORD[rsp + 33]
     mov QWORD[rsp + 0],rax
     mov r10,QWORD[rsp + 0]
     mov al,BYTE[r10]
     mov BYTE[rsp + 8],al
     add rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 45]
+    mov rax,QWORD[rsp + 49]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],150
+    add QWORD[rsp + 0],118
     mov al,BYTE[rsp + 8]
     mov r10,QWORD[rsp + 0]
     mov BYTE[r10],al
     add rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 45]
+    mov rax,QWORD[rsp + 49]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],151
+    add QWORD[rsp + 0],119
     mov al,BYTE[rsp + 8]
     mov r10,QWORD[rsp + 0]
     mov BYTE[r10],al
     add rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 45]
+    mov rax,QWORD[rsp + 49]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],152
+    add QWORD[rsp + 0],120
     mov r10,QWORD[rsp + 0]
     mov BYTE[r10],0
     add rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 45]
+    mov rax,QWORD[rsp + 49]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],153
+    add QWORD[rsp + 0],121
     mov r10,QWORD[rsp + 0]
     mov BYTE[r10],0
     add rsp,8
@@ -9691,7 +9632,7 @@ f.ter.Keyboard.update:
     sub rsp,8
     mov QWORD[rsp + 0],0
     sub rsp,8
-    mov rax,QWORD[rsp + 45]
+    mov rax,QWORD[rsp + 49]
     mov QWORD[rsp + 0],rax
     sub rsp,8
     mov QWORD[rsp + 0],2
@@ -9699,13 +9640,12 @@ f.ter.Keyboard.update:
     add rsp,8
     add rsp,8
     add rsp,8
-    mov rax,0
     mov rax,QWORD[rsp + 0]
-    mov DWORD[rsp + 9],eax
+    mov QWORD[rsp + 9],rax
     add rsp,8
     sub rsp,1
     sub rsp,8
-    mov rax,QWORD[rsp + 30]
+    mov rax,QWORD[rsp + 34]
     mov QWORD[rsp + 0],rax
     mov r10,QWORD[rsp + 0]
     mov al,BYTE[r10]
@@ -9713,8 +9653,7 @@ f.ter.Keyboard.update:
     add rsp,8
     sub rsp,1
     sub rsp,1
-    mov rax,0
-    mov eax,DWORD[rsp + 4]
+    mov rax,QWORD[rsp + 4]
     cmp rax,2
     sete BYTE[rsp + 0]
     sub rsp,1
@@ -9738,7 +9677,7 @@ f.ter.Keyboard.update:
     l.0_IF4_12:
     sub rsp,1
     sub rsp,8
-    mov rax,QWORD[rsp + 31]
+    mov rax,QWORD[rsp + 35]
     add rax,1
     mov QWORD[rsp + 0],rax
     sub rsp,8
@@ -9764,9 +9703,9 @@ f.ter.Keyboard.update:
     je l.1_IF5_6
     l.0_IF5_6:
     sub rsp,8
-    mov rax,QWORD[rsp + 47]
+    mov rax,QWORD[rsp + 51]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],152
+    add QWORD[rsp + 0],120
     mov r10,QWORD[rsp + 0]
     mov BYTE[r10],1
     add rsp,8
@@ -9787,9 +9726,9 @@ f.ter.Keyboard.update:
     je l.1_IF5_7
     l.0_IF5_7:
     sub rsp,8
-    mov rax,QWORD[rsp + 47]
+    mov rax,QWORD[rsp + 51]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],153
+    add QWORD[rsp + 0],121
     mov r10,QWORD[rsp + 0]
     mov BYTE[r10],1
     add rsp,8
@@ -9806,14 +9745,14 @@ f.ter.Keyboard.update:
     l.1_IF2_78:
     l.0_ELSE2_78:
     sub rsp,8
-    mov rax,QWORD[rsp + 44]
+    mov rax,QWORD[rsp + 48]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],150
+    add QWORD[rsp + 0],118
     mov r10,QWORD[rsp + 0]
     mov BYTE[r10],0
     add rsp,8
     l.1_LOG2_78:
-    add rsp,4
+    add rsp,8
     add rsp,8
     add rsp,16
     ret
@@ -9822,7 +9761,7 @@ f.ter.Keyboard.getcurrent:
     sub rsp,8
     mov rax,QWORD[rsp + 16]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],150
+    add QWORD[rsp + 0],118
     mov r10,QWORD[rsp + 0]
     mov al,BYTE[r10]
     mov BYTE[rsp + 24],al
@@ -9834,7 +9773,7 @@ f.ter.Keyboard.getlast:
     sub rsp,8
     mov rax,QWORD[rsp + 16]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],151
+    add QWORD[rsp + 0],119
     mov r10,QWORD[rsp + 0]
     mov al,BYTE[r10]
     mov BYTE[rsp + 24],al
@@ -9846,7 +9785,7 @@ f.ter.Keyboard.getup:
     sub rsp,8
     mov rax,QWORD[rsp + 16]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],152
+    add QWORD[rsp + 0],120
     mov r10,QWORD[rsp + 0]
     mov al,BYTE[r10]
     mov BYTE[rsp + 24],al
@@ -9858,7 +9797,7 @@ f.ter.Keyboard.getdown:
     sub rsp,8
     mov rax,QWORD[rsp + 16]
     mov QWORD[rsp + 0],rax
-    add QWORD[rsp + 0],153
+    add QWORD[rsp + 0],121
     mov r10,QWORD[rsp + 0]
     mov al,BYTE[r10]
     mov BYTE[rsp + 24],al
@@ -10298,10 +10237,46 @@ f.renderb:
     ret
 
 f.main:
+    sub rsp,122
+    sub rsp,122
+    call f.ter.Keyboard.new
+    mov rax,QWORD[rsp + 0 + 0]
+    mov QWORD[rsp + 122 + 0],rax
+    mov rax,QWORD[rsp + 0 + 8]
+    mov QWORD[rsp + 122 + 8],rax
+    mov rax,QWORD[rsp + 0 + 16]
+    mov QWORD[rsp + 122 + 16],rax
+    mov rax,QWORD[rsp + 0 + 24]
+    mov QWORD[rsp + 122 + 24],rax
+    mov rax,QWORD[rsp + 0 + 32]
+    mov QWORD[rsp + 122 + 32],rax
+    mov rax,QWORD[rsp + 0 + 40]
+    mov QWORD[rsp + 122 + 40],rax
+    mov rax,QWORD[rsp + 0 + 48]
+    mov QWORD[rsp + 122 + 48],rax
+    mov rax,QWORD[rsp + 0 + 56]
+    mov QWORD[rsp + 122 + 56],rax
+    mov rax,QWORD[rsp + 0 + 64]
+    mov QWORD[rsp + 122 + 64],rax
+    mov rax,QWORD[rsp + 0 + 72]
+    mov QWORD[rsp + 122 + 72],rax
+    mov rax,QWORD[rsp + 0 + 80]
+    mov QWORD[rsp + 122 + 80],rax
+    mov rax,QWORD[rsp + 0 + 88]
+    mov QWORD[rsp + 122 + 88],rax
+    mov rax,QWORD[rsp + 0 + 96]
+    mov QWORD[rsp + 122 + 96],rax
+    mov rax,QWORD[rsp + 0 + 104]
+    mov QWORD[rsp + 122 + 104],rax
+    mov rax,QWORD[rsp + 0 + 112]
+    mov QWORD[rsp + 122 + 112],rax
+    mov ax,WORD[rsp + 0 + 120]
+    mov WORD[rsp + 122 + 120],ax
+    add rsp,122
     sub rsp,8
     sub rsp,8
     sub rsp,8
-    mov QWORD[rsp + 0],1
+    mov QWORD[rsp + 0],10
     call f.Screen_toWorld
     add rsp,8
     mov rax,QWORD[rsp + 0]
@@ -10319,7 +10294,7 @@ f.main:
     sub rsp,8
     sub rsp,8
     sub rsp,8
-    mov QWORD[rsp + 0],160
+    mov QWORD[rsp + 0],150
     call f.Screen_toWorld
     add rsp,8
     mov rax,QWORD[rsp + 0]
@@ -10368,126 +10343,173 @@ f.main:
     add rsp,1
     cmp al,0
     je l.1_WHILE2_79
-    mov rax,QWORD[rsp + 9]
-    add QWORD[rsp + 25],rax
-    mov rax,QWORD[rsp + 1]
-    add QWORD[rsp + 17],rax
-    sub rsp,1
     sub rsp,8
     sub rsp,8
-    mov QWORD[rsp + 0],0
-    call f.Screen_toWorld
+    lea rax,[rsp + 81]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    call f.ter.Keyboard.update
     add rsp,8
     sub rsp,1
-    mov rax,QWORD[rsp + 59]
-    cmp rax,QWORD[rsp + 1]
-    setl BYTE[rsp + 0]
+    sub rsp,1
+    sub rsp,8
+    sub rsp,8
+    lea rax,[rsp + 83]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    call f.ter.Keyboard.getlast
+    add rsp,8
     mov al,BYTE[rsp + 0]
-    mov BYTE[rsp + 9],al
+    mov BYTE[rsp + 1],al
     add rsp,1
-    add rsp,8
+    sub rsp,1
+    sub rsp,1
+    mov rax,0
+    mov al,BYTE[rsp + 2]
+    cmp eax,81
+    sete BYTE[rsp + 0]
+    sub rsp,1
+    mov rax,0
+    mov al,BYTE[rsp + 3]
+    cmp eax,113
+    sete BYTE[rsp + 0]
+    sub rsp,1
+    mov al,BYTE[rsp + 2]
+    or al,BYTE[rsp + 1]
+    mov BYTE[rsp + 0],al
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 3],al
+    add rsp,1
+    add rsp,1
+    add rsp,1
     mov al,BYTE[rsp + 0]
     add rsp,1
     cmp al,0
     je l.1_IF3_31
     l.0_IF3_31:
-    sub rsp,8
-    sub rsp,8
-    mov QWORD[rsp + 0],0
-    call f.Screen_toWorld
-    add rsp,8
-    mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 57],rax
-    add rsp,8
+    mov BYTE[rsp + 1],0
     l.1_LOG3_31:
     l.1_IF3_31:
     sub rsp,1
-    sub rsp,8
-    sub rsp,8
-    mov QWORD[rsp + 0],60
-    call f.Screen_toWorld
-    add rsp,8
     sub rsp,1
-    mov rax,QWORD[rsp + 59]
-    cmp rax,QWORD[rsp + 1]
-    setg BYTE[rsp + 0]
+    mov rax,0
+    mov al,BYTE[rsp + 2]
+    cmp eax,87
+    sete BYTE[rsp + 0]
+    sub rsp,1
+    mov rax,0
+    mov al,BYTE[rsp + 3]
+    cmp eax,119
+    sete BYTE[rsp + 0]
+    sub rsp,1
+    mov al,BYTE[rsp + 2]
+    or al,BYTE[rsp + 1]
+    mov BYTE[rsp + 0],al
     mov al,BYTE[rsp + 0]
-    mov BYTE[rsp + 9],al
+    mov BYTE[rsp + 3],al
     add rsp,1
-    add rsp,8
+    add rsp,1
+    add rsp,1
     mov al,BYTE[rsp + 0]
     add rsp,1
     cmp al,0
     je l.1_IF3_32
     l.0_IF3_32:
-    sub rsp,8
-    sub rsp,8
-    mov QWORD[rsp + 0],60
-    call f.Screen_toWorld
-    add rsp,8
-    mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 57],rax
-    add rsp,8
+    sub QWORD[rsp + 50],5
     l.1_LOG3_32:
     l.1_IF3_32:
     sub rsp,1
-    sub rsp,8
-    sub rsp,8
-    mov QWORD[rsp + 0],0
-    call f.Screen_toWorld
-    add rsp,8
     sub rsp,1
-    mov rax,QWORD[rsp + 43]
-    cmp rax,QWORD[rsp + 1]
-    setl BYTE[rsp + 0]
+    mov rax,0
+    mov al,BYTE[rsp + 2]
+    cmp eax,83
+    sete BYTE[rsp + 0]
+    sub rsp,1
+    mov rax,0
+    mov al,BYTE[rsp + 3]
+    cmp eax,115
+    sete BYTE[rsp + 0]
+    sub rsp,1
+    mov al,BYTE[rsp + 2]
+    or al,BYTE[rsp + 1]
+    mov BYTE[rsp + 0],al
     mov al,BYTE[rsp + 0]
-    mov BYTE[rsp + 9],al
+    mov BYTE[rsp + 3],al
     add rsp,1
-    add rsp,8
+    add rsp,1
+    add rsp,1
     mov al,BYTE[rsp + 0]
     add rsp,1
     cmp al,0
     je l.1_IF3_33
     l.0_IF3_33:
-    sub rsp,8
-    sub rsp,8
-    mov QWORD[rsp + 0],0
-    call f.Screen_toWorld
-    add rsp,8
-    mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 41],rax
-    add rsp,8
+    add QWORD[rsp + 50],5
     l.1_LOG3_33:
     l.1_IF3_33:
     sub rsp,1
+    sub rsp,1
     sub rsp,8
     sub rsp,8
-    mov QWORD[rsp + 0],60
-    call f.Screen_toWorld
+    lea rax,[rsp + 84]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    call f.ter.Keyboard.getup
     add rsp,8
     sub rsp,1
-    mov rax,QWORD[rsp + 43]
-    cmp rax,QWORD[rsp + 1]
-    setg BYTE[rsp + 0]
+    mov rax,0
+    mov al,BYTE[rsp + 1]
+    cmp rax,1
+    sete BYTE[rsp + 0]
     mov al,BYTE[rsp + 0]
-    mov BYTE[rsp + 9],al
+    mov BYTE[rsp + 2],al
     add rsp,1
-    add rsp,8
+    add rsp,1
     mov al,BYTE[rsp + 0]
     add rsp,1
     cmp al,0
     je l.1_IF3_34
     l.0_IF3_34:
-    sub rsp,8
-    sub rsp,8
-    mov QWORD[rsp + 0],60
-    call f.Screen_toWorld
-    add rsp,8
-    mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 41],rax
-    add rsp,8
+    sub QWORD[rsp + 34],5
     l.1_LOG3_34:
     l.1_IF3_34:
+    sub rsp,1
+    sub rsp,1
+    sub rsp,8
+    sub rsp,8
+    lea rax,[rsp + 84]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    call f.ter.Keyboard.getdown
+    add rsp,8
+    sub rsp,1
+    mov rax,0
+    mov al,BYTE[rsp + 1]
+    cmp rax,1
+    sete BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 2],al
+    add rsp,1
+    add rsp,1
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF3_35
+    l.0_IF3_35:
+    add QWORD[rsp + 34],5
+    l.1_LOG3_35:
+    l.1_IF3_35:
+    mov rax,QWORD[rsp + 10]
+    add QWORD[rsp + 26],rax
+    mov rax,QWORD[rsp + 2]
+    add QWORD[rsp + 18],rax
     sub rsp,1
     sub rsp,8
     sub rsp,8
@@ -10495,48 +10517,9 @@ f.main:
     call f.Screen_toWorld
     add rsp,8
     sub rsp,1
-    mov rax,QWORD[rsp + 35]
+    mov rax,QWORD[rsp + 60]
     cmp rax,QWORD[rsp + 1]
     setl BYTE[rsp + 0]
-    mov al,BYTE[rsp + 0]
-    mov BYTE[rsp + 9],al
-    add rsp,1
-    add rsp,8
-    mov al,BYTE[rsp + 0]
-    add rsp,1
-    cmp al,0
-    je l.1_IF3_35
-    l.0_IF3_35:
-    sub rsp,8
-    sub rsp,8
-    mov QWORD[rsp + 0],80
-    call f.Screen_toWorld
-    add rsp,8
-    mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 33],rax
-    add rsp,8
-    sub rsp,8
-    sub rsp,8
-    mov QWORD[rsp + 0],30
-    call f.Screen_toWorld
-    add rsp,8
-    mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 25],rax
-    add rsp,8
-    mov QWORD[rsp + 9],10
-    mov QWORD[rsp + 1],5
-    l.1_LOG3_35:
-    l.1_IF3_35:
-    sub rsp,1
-    sub rsp,8
-    sub rsp,8
-    mov QWORD[rsp + 0],160
-    call f.Screen_toWorld
-    add rsp,8
-    sub rsp,1
-    mov rax,QWORD[rsp + 35]
-    cmp rax,QWORD[rsp + 1]
-    setg BYTE[rsp + 0]
     mov al,BYTE[rsp + 0]
     mov BYTE[rsp + 9],al
     add rsp,1
@@ -10548,34 +10531,24 @@ f.main:
     l.0_IF3_36:
     sub rsp,8
     sub rsp,8
-    mov QWORD[rsp + 0],80
+    mov QWORD[rsp + 0],0
     call f.Screen_toWorld
     add rsp,8
     mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 33],rax
+    mov QWORD[rsp + 58],rax
     add rsp,8
-    sub rsp,8
-    sub rsp,8
-    mov QWORD[rsp + 0],30
-    call f.Screen_toWorld
-    add rsp,8
-    mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 25],rax
-    add rsp,8
-    mov QWORD[rsp + 9],10
-    mov QWORD[rsp + 1],5
     l.1_LOG3_36:
     l.1_IF3_36:
     sub rsp,1
     sub rsp,8
     sub rsp,8
-    mov QWORD[rsp + 0],0
+    mov QWORD[rsp + 0],60
     call f.Screen_toWorld
     add rsp,8
     sub rsp,1
-    mov rax,QWORD[rsp + 27]
+    mov rax,QWORD[rsp + 60]
     cmp rax,QWORD[rsp + 1]
-    setl BYTE[rsp + 0]
+    setg BYTE[rsp + 0]
     mov al,BYTE[rsp + 0]
     mov BYTE[rsp + 9],al
     add rsp,1
@@ -10587,45 +10560,24 @@ f.main:
     l.0_IF3_37:
     sub rsp,8
     sub rsp,8
-    mov QWORD[rsp + 0],0
+    mov QWORD[rsp + 0],60
     call f.Screen_toWorld
     add rsp,8
     mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 25],rax
-    add rsp,8
-    sub rsp,8
-    mov rax,QWORD[rsp + 9]
-    neg rax
-    mov QWORD[rsp + 0],rax
-    mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 9],rax
-    add rsp,8
-    sub rsp,8
-    sub rsp,8
-    mov rax,QWORD[rsp + 17]
-    mov QWORD[rsp + 0],rax
-    call f.math.int.sign
-    add rsp,8
-    sub rsp,8
-    mov rax,1
-    imul QWORD[rsp + 8]
-    mov QWORD[rsp + 0],rax
-    mov rax,QWORD[rsp + 0]
-    add QWORD[rsp + 17],rax
-    add rsp,8
+    mov QWORD[rsp + 58],rax
     add rsp,8
     l.1_LOG3_37:
     l.1_IF3_37:
     sub rsp,1
     sub rsp,8
     sub rsp,8
-    mov QWORD[rsp + 0],60
+    mov QWORD[rsp + 0],0
     call f.Screen_toWorld
     add rsp,8
     sub rsp,1
-    mov rax,QWORD[rsp + 27]
+    mov rax,QWORD[rsp + 44]
     cmp rax,QWORD[rsp + 1]
-    setg BYTE[rsp + 0]
+    setl BYTE[rsp + 0]
     mov al,BYTE[rsp + 0]
     mov BYTE[rsp + 9],al
     add rsp,1
@@ -10637,22 +10589,158 @@ f.main:
     l.0_IF3_38:
     sub rsp,8
     sub rsp,8
+    mov QWORD[rsp + 0],0
+    call f.Screen_toWorld
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 42],rax
+    add rsp,8
+    l.1_LOG3_38:
+    l.1_IF3_38:
+    sub rsp,1
+    sub rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],60
+    call f.Screen_toWorld
+    add rsp,8
+    sub rsp,1
+    mov rax,QWORD[rsp + 44]
+    cmp rax,QWORD[rsp + 1]
+    setg BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 9],al
+    add rsp,1
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF3_39
+    l.0_IF3_39:
+    sub rsp,8
+    sub rsp,8
     mov QWORD[rsp + 0],60
     call f.Screen_toWorld
     add rsp,8
     mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 25],rax
+    mov QWORD[rsp + 42],rax
+    add rsp,8
+    l.1_LOG3_39:
+    l.1_IF3_39:
+    sub rsp,1
+    sub rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    call f.Screen_toWorld
+    add rsp,8
+    sub rsp,1
+    mov rax,QWORD[rsp + 36]
+    cmp rax,QWORD[rsp + 1]
+    setl BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 9],al
+    add rsp,1
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF3_40
+    l.0_IF3_40:
+    sub rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],80
+    call f.Screen_toWorld
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 34],rax
     add rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 9]
+    sub rsp,8
+    mov QWORD[rsp + 0],30
+    call f.Screen_toWorld
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 26],rax
+    add rsp,8
+    mov QWORD[rsp + 10],10
+    mov QWORD[rsp + 2],5
+    l.1_LOG3_40:
+    l.1_IF3_40:
+    sub rsp,1
+    sub rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],160
+    call f.Screen_toWorld
+    add rsp,8
+    sub rsp,1
+    mov rax,QWORD[rsp + 36]
+    cmp rax,QWORD[rsp + 1]
+    setg BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 9],al
+    add rsp,1
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF3_41
+    l.0_IF3_41:
+    sub rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],80
+    call f.Screen_toWorld
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 34],rax
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],30
+    call f.Screen_toWorld
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 26],rax
+    add rsp,8
+    mov QWORD[rsp + 10],10
+    mov QWORD[rsp + 2],5
+    l.1_LOG3_41:
+    l.1_IF3_41:
+    sub rsp,1
+    sub rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    call f.Screen_toWorld
+    add rsp,8
+    sub rsp,1
+    mov rax,QWORD[rsp + 28]
+    cmp rax,QWORD[rsp + 1]
+    setl BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 9],al
+    add rsp,1
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF3_42
+    l.0_IF3_42:
+    sub rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],0
+    call f.Screen_toWorld
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 26],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 10]
     neg rax
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
-    mov QWORD[rsp + 9],rax
+    mov QWORD[rsp + 10],rax
     add rsp,8
     sub rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 17]
+    mov rax,QWORD[rsp + 18]
     mov QWORD[rsp + 0],rax
     call f.math.int.sign
     add rsp,8
@@ -10661,35 +10749,395 @@ f.main:
     imul QWORD[rsp + 8]
     mov QWORD[rsp + 0],rax
     mov rax,QWORD[rsp + 0]
-    add QWORD[rsp + 17],rax
+    add QWORD[rsp + 18],rax
     add rsp,8
     add rsp,8
-    l.1_LOG3_38:
-    l.1_IF3_38:
+    l.1_LOG3_42:
+    l.1_IF3_42:
+    sub rsp,1
+    sub rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],60
+    call f.Screen_toWorld
+    add rsp,8
+    sub rsp,1
+    mov rax,QWORD[rsp + 28]
+    cmp rax,QWORD[rsp + 1]
+    setg BYTE[rsp + 0]
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 9],al
+    add rsp,1
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF3_43
+    l.0_IF3_43:
+    sub rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],60
+    call f.Screen_toWorld
+    add rsp,8
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 26],rax
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 10]
+    neg rax
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 10],rax
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 18]
+    mov QWORD[rsp + 0],rax
+    call f.math.int.sign
+    add rsp,8
+    sub rsp,8
+    mov rax,1
+    imul QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    add QWORD[rsp + 18],rax
+    add rsp,8
+    add rsp,8
+    l.1_LOG3_43:
+    l.1_IF3_43:
+    sub rsp,1
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 75]
+    mov QWORD[rsp + 0],rax
+    call f.World_toScreen
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 51]
+    mov QWORD[rsp + 0],rax
+    call f.World_toScreen
+    add rsp,8
+    sub rsp,1
+    mov rax,QWORD[rsp + 9]
+    cmp rax,QWORD[rsp + 1]
+    sete BYTE[rsp + 0]
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 60]
+    mov QWORD[rsp + 0],rax
+    call f.World_toScreen
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    add rax,1
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 108]
+    mov QWORD[rsp + 0],rax
+    call f.World_toScreen
+    add rsp,8
+    sub rsp,1
+    mov rax,QWORD[rsp + 1]
+    cmp rax,QWORD[rsp + 9]
+    sete BYTE[rsp + 0]
+    sub rsp,1
+    mov al,BYTE[rsp + 26]
+    or al,BYTE[rsp + 1]
+    mov BYTE[rsp + 0],al
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 43],al
+    add rsp,1
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF3_44
+    l.0_IF3_44:
+    sub rsp,1
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 67]
+    mov QWORD[rsp + 0],rax
+    call f.World_toScreen
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    sub rax,2
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 51]
+    mov QWORD[rsp + 0],rax
+    call f.World_toScreen
+    add rsp,8
+    sub rsp,1
+    mov rax,QWORD[rsp + 1]
+    cmp rax,QWORD[rsp + 9]
+    setge BYTE[rsp + 0]
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 92]
+    mov QWORD[rsp + 0],rax
+    call f.World_toScreen
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    add rax,8
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 76]
+    mov QWORD[rsp + 0],rax
+    call f.World_toScreen
+    add rsp,8
+    sub rsp,1
+    mov rax,QWORD[rsp + 1]
+    cmp rax,QWORD[rsp + 9]
+    setl BYTE[rsp + 0]
+    sub rsp,1
+    mov al,BYTE[rsp + 26]
+    and al,BYTE[rsp + 1]
+    mov BYTE[rsp + 0],al
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 51],al
+    add rsp,1
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF4_13
+    l.0_IF4_13:
+    sub rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],2
+    call f.World_toScreen
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 74]
+    add rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 42],rax
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 18]
+    neg rax
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 18],rax
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 26]
+    mov QWORD[rsp + 0],rax
+    call f.math.int.sign
+    add rsp,8
+    sub rsp,8
+    mov rax,2
+    imul QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    add QWORD[rsp + 26],rax
+    add rsp,8
+    add rsp,8
+    l.1_LOG4_13:
+    l.1_IF4_13:
+    l.1_LOG3_44:
+    l.1_IF3_44:
+    sub rsp,1
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 59]
+    mov QWORD[rsp + 0],rax
+    call f.World_toScreen
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 51]
+    mov QWORD[rsp + 0],rax
+    call f.World_toScreen
+    add rsp,8
+    sub rsp,1
+    mov rax,QWORD[rsp + 9]
+    cmp rax,QWORD[rsp + 1]
+    sete BYTE[rsp + 0]
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 60]
+    mov QWORD[rsp + 0],rax
+    call f.World_toScreen
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    sub rax,1
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 92]
+    mov QWORD[rsp + 0],rax
+    call f.World_toScreen
+    add rsp,8
+    sub rsp,1
+    mov rax,QWORD[rsp + 1]
+    cmp rax,QWORD[rsp + 9]
+    sete BYTE[rsp + 0]
+    sub rsp,1
+    mov al,BYTE[rsp + 26]
+    or al,BYTE[rsp + 1]
+    mov BYTE[rsp + 0],al
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 43],al
+    add rsp,1
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF3_45
+    l.0_IF3_45:
+    sub rsp,1
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 51]
+    mov QWORD[rsp + 0],rax
+    call f.World_toScreen
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    sub rax,2
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 51]
+    mov QWORD[rsp + 0],rax
+    call f.World_toScreen
+    add rsp,8
+    sub rsp,1
+    mov rax,QWORD[rsp + 1]
+    cmp rax,QWORD[rsp + 9]
+    setge BYTE[rsp + 0]
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 76]
+    mov QWORD[rsp + 0],rax
+    call f.World_toScreen
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 8]
+    add rax,8
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 76]
+    mov QWORD[rsp + 0],rax
+    call f.World_toScreen
+    add rsp,8
+    sub rsp,1
+    mov rax,QWORD[rsp + 1]
+    cmp rax,QWORD[rsp + 9]
+    setl BYTE[rsp + 0]
+    sub rsp,1
+    mov al,BYTE[rsp + 26]
+    and al,BYTE[rsp + 1]
+    mov BYTE[rsp + 0],al
+    mov al,BYTE[rsp + 0]
+    mov BYTE[rsp + 51],al
+    add rsp,1
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    add rsp,1
+    add rsp,8
+    add rsp,8
+    add rsp,8
+    mov al,BYTE[rsp + 0]
+    add rsp,1
+    cmp al,0
+    je l.1_IF4_14
+    l.0_IF4_14:
+    sub rsp,8
+    sub rsp,8
+    mov QWORD[rsp + 0],2
+    call f.World_toScreen
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 58]
+    sub rax,QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 42],rax
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 18]
+    neg rax
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 18],rax
+    add rsp,8
+    sub rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 26]
+    mov QWORD[rsp + 0],rax
+    call f.math.int.sign
+    add rsp,8
+    sub rsp,8
+    mov rax,2
+    imul QWORD[rsp + 8]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    add QWORD[rsp + 26],rax
+    add rsp,8
+    add rsp,8
+    l.1_LOG4_14:
+    l.1_IF4_14:
+    l.1_LOG3_45:
+    l.1_IF3_45:
     call f.esc.screen.del.all
     sub rsp,8
-    mov rax,QWORD[rsp + 65]
+    mov rax,QWORD[rsp + 66]
     mov QWORD[rsp + 0],rax
     sub rsp,8
-    mov rax,QWORD[rsp + 65]
-    mov QWORD[rsp + 0],rax
-    call f.render
-    add rsp,8
-    add rsp,8
-    sub rsp,8
-    mov rax,QWORD[rsp + 49]
-    mov QWORD[rsp + 0],rax
-    sub rsp,8
-    mov rax,QWORD[rsp + 49]
+    mov rax,QWORD[rsp + 66]
     mov QWORD[rsp + 0],rax
     call f.render
     add rsp,8
     add rsp,8
     sub rsp,8
-    mov rax,QWORD[rsp + 33]
+    mov rax,QWORD[rsp + 50]
     mov QWORD[rsp + 0],rax
     sub rsp,8
-    mov rax,QWORD[rsp + 33]
+    mov rax,QWORD[rsp + 50]
+    mov QWORD[rsp + 0],rax
+    call f.render
+    add rsp,8
+    add rsp,8
+    sub rsp,8
+    mov rax,QWORD[rsp + 34]
+    mov QWORD[rsp + 0],rax
+    sub rsp,8
+    mov rax,QWORD[rsp + 34]
     mov QWORD[rsp + 0],rax
     call f.renderb
     add rsp,8
@@ -10698,6 +11146,7 @@ f.main:
     mov QWORD[rsp + 0],2
     call f.time.msleep
     add rsp,8
+    add rsp,1
     jmp l.0_WHILE2_79
     l.1_WHILE2_79:
     sub rsp,8
@@ -10709,7 +11158,16 @@ f.main:
     add rsp,8
     call f.esc.screen.del.all
     call f.esc.cursor.visible
-    mov QWORD[rsp + 73],0
+    sub rsp,8
+    sub rsp,8
+    lea rax,[rsp + 81]
+    mov QWORD[rsp + 0],rax
+    mov rax,QWORD[rsp + 0]
+    mov QWORD[rsp + 8],rax
+    add rsp,8
+    call f.ter.Keyboard.delete
+    add rsp,8
+    mov QWORD[rsp + 195],0
     add rsp,1
     add rsp,8
     add rsp,8
@@ -10719,6 +11177,7 @@ f.main:
     add rsp,8
     add rsp,8
     add rsp,8
+    add rsp,122
     ret
     add rsp,1
     add rsp,8
@@ -10729,6 +11188,7 @@ f.main:
     add rsp,8
     add rsp,8
     add rsp,8
+    add rsp,122
     ret
 
 

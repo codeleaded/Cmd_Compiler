@@ -72,23 +72,27 @@ Token Struct_Handler_Adr(SuperALX* ll,Token* op,Vector* args){
         Variable* v = Scope_FindVariable(&ll->ev.sc,a->str);
         SuperALXVariable* va = (SuperALXVariable*)Variable_Data(v);
         CStr stack_name = SuperALX_Variablename_Next(ll,".STACK",6);
-        
+        Token stack_t = Token_Move(TOKEN_STRING,stack_name);
+
         if(SuperALX_DrefType(ll,v->typename)){
             CStr type = CStr_Cpy(v->typename);
             type[CStr_Size(type) - 1] = '*';
             SuperALX_Variable_Build_Decl(ll,stack_name,type);
             CStr_Free(&type);
+
+            CStr location_a = SuperALX_StackAtNT(ll,va->stack);
+            SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,%s",SUPERALX_REG_A_64,location_a);
+            SuperALX_IntoSet(ll,&stack_t,SUPERALX_REG_A_64);
         }else{
             CStr type = CStr_Concat(v->typename,"*");
             SuperALX_Variable_Build_Decl(ll,stack_name,type);
             CStr_Free(&type);
+
+            CStr location_a = SuperALX_StackAtNT(ll,va->stack);
+            SuperALX_Indentation_Appendf(ll,&ll->text,"lea %s,%s",SUPERALX_REG_A_64,location_a);
+            SuperALX_IntoSet(ll,&stack_t,SUPERALX_REG_A_64);
         }
         
-        Token stack_t = Token_Move(TOKEN_STRING,stack_name);
-        
-        CStr location_a = SuperALX_StackAtNT(ll,va->stack);
-        SuperALX_Indentation_Appendf(ll,&ll->text,"lea %s,%s",SUPERALX_REG_A_64,location_a);
-        SuperALX_IntoSet(ll,&stack_t,SUPERALX_REG_A_64);
         return stack_t;
     }else{
         Enviroment_ErrorHandler(&ll->ev,"Adr: Error -> %s has no address!",a->str);

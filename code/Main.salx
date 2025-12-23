@@ -64,11 +64,11 @@ void renderb(i64 xw,i64 yw){
 }
 
 i64 main(){
-    //ter::Keyboard kb = ter::Keyboard::new();
+    ter::Keyboard kb = ter::Keyboard::new();
 
-    i64 x1 = Screen_toWorld(1);
+    i64 x1 = Screen_toWorld(10);
     i64 y1 = Screen_toWorld(30);
-    i64 x2 = Screen_toWorld(160);
+    i64 x2 = Screen_toWorld(150);
     i64 y2 = Screen_toWorld(30);
     i64 xb = Screen_toWorld(80);
     i64 yb = Screen_toWorld(30);
@@ -81,7 +81,6 @@ i64 main(){
     esc::cursor::invisible();
 
     while running {
-        /*
         kb.update();
 
         i8 ch = kb.getlast();
@@ -91,18 +90,17 @@ i64 main(){
         }
 
         if ch=='W' || ch=='w' {
-            y1 -= 1;
+            y1 -= 5;
         }
         if ch=='S' || ch=='s' {
-            y1 += 1;
+            y1 += 5;
         }
         if kb.getup() == 1 {
-            y2 -= 1;
+            y2 -= 5;
         }
         if kb.getdown() == 1 {
-            y2 += 1;
+            y2 += 5;
         }
-        */
 
         xb += vx;
         yb += vy;
@@ -143,22 +141,20 @@ i64 main(){
             vy += 1 * math::int::sign(vy);
         }
 
-        /*
-        if World_toScreen(x1)==World_toScreen(xb) && World_toScreen(x1)==World_toScreen(xb)+1 {
-            if World_toScreen(yb)==World_toScreen(y1)-2 && World_toScreen(x1)==World_toScreen(xb)+8 {
-                xb = x1 + World_toScreen(1);
+        if World_toScreen(x1)==World_toScreen(xb) || World_toScreen(x1)==World_toScreen(xb)+1 {
+            if World_toScreen(yb)>=World_toScreen(y1)-2 && World_toScreen(yb)<World_toScreen(y1)+8 {
+                xb = x1 + World_toScreen(2);
                 vx = -vx;
-                vx += 5 * math::int::sign(vx);
+                vx += 0 * math::int::sign(vx);
             }
         }
-        if World_toScreen(x2)==World_toScreen(xb) && World_toScreen(x2)==World_toScreen(xb)-1 {
-            if World_toScreen(yb)==World_toScreen(y2)-2 && World_toScreen(yb)==World_toScreen(y2)+8 {
+        if World_toScreen(x2)==World_toScreen(xb) || World_toScreen(x2)==World_toScreen(xb)-1 {
+            if World_toScreen(yb)>=World_toScreen(y2)-2 && World_toScreen(yb)<World_toScreen(y2)+8 {
                 xb = x2 - World_toScreen(2);
                 vx = -vx;
-                vx += 5 * math::int::sign(vx);
+                vx += 0 * math::int::sign(vx);
             }
         }
-        */
 
         esc::screen::del::all();
         render(x1,y1);
@@ -171,7 +167,7 @@ i64 main(){
     esc::cursor::pos::set(0,0);
     esc::screen::del::all();
     esc::cursor::visible();
-    //kb.delete();
+    kb.delete();
     
     return 0;
 }

@@ -74,19 +74,22 @@ Token Bool_Handler_Adr(SuperALX* ll,Token* op,Vector* args){
     }else if(a->tt==TOKEN_STRING){
         Variable* v = Scope_FindVariable(&ll->ev.sc,a->str);
         CStr stack_name = SuperALX_Variablename_Next(ll,".STACK",6);
+        Token stack_t = Token_Move(TOKEN_STRING,stack_name);
         
         if(SuperALX_DrefType(ll,v->typename)){
             CStr type = CStr_Cpy(v->typename);
             type[CStr_Size(type) - 1] = '*';
             SuperALX_Variable_Build_Decl(ll,stack_name,type);
             CStr_Free(&type);
+
+            SuperALX_AtReg(ll,a,SUPERALX_REG_A_64,"mov");
+            SuperALX_IntoSet(ll,&stack_t,SUPERALX_REG_A_64);
         }else{
             SuperALX_Variable_Build_Decl(ll,stack_name,BOOL_TYPE"*");
+
+            SuperALX_AtReg(ll,a,SUPERALX_REG_A_64,"lea");
+            SuperALX_IntoSet(ll,&stack_t,SUPERALX_REG_A_64);
         }
-        
-        Token stack_t = Token_Move(TOKEN_STRING,stack_name);
-        SuperALX_AtReg(ll,a,SUPERALX_REG_A_64,"lea");
-        SuperALX_IntoSet(ll,&stack_t,SUPERALX_REG_A_64);
 
         return stack_t;
     }else{
