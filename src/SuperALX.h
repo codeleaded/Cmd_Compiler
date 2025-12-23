@@ -1022,12 +1022,10 @@ Boolean SuperALX_Assembly(SuperALX* ll,TokenMap* tm){
     return False;
 }
 
-
-
 Boolean SuperALX_FunctionCall_Acs(SuperALX* ll,TokenMap* tm,int i,int args,Token* tok){
-    if(i - args >= 0 && i - args + 1 < tm->size){
-        Token* accssed = (Token*)Vector_Get(tm,i - args);
-        Token* func = (Token*)Vector_Get(tm,i - args + 1);
+    if(tm->size > 1){
+        Token* accssed = (Token*)Vector_Get(tm,0);
+        Token* func = (Token*)Vector_Get(tm,1);
 
         if(func->tt==TOKEN_FUNCTION){
             Variable* v = Scope_FindVariable(&ll->ev.sc,accssed->str);
@@ -1078,9 +1076,9 @@ Boolean SuperALX_FunctionCall_Acs(SuperALX* ll,TokenMap* tm,int i,int args,Token
     return FUNCTIONRT_NONE;
 }
 Boolean SuperALX_FunctionCall_Arw(SuperALX* ll,TokenMap* tm,int i,int args,Token* tok){
-    if(i - args >= 0 && i - args + 1 < tm->size){
-        Token* accssed = (Token*)Vector_Get(tm,i - args);
-        Token* func = (Token*)Vector_Get(tm,i - args + 1);
+    if(tm->size > 1){
+        Token* accssed = (Token*)Vector_Get(tm,0);
+        Token* func = (Token*)Vector_Get(tm,1);
 
         if(func->tt==TOKEN_FUNCTION){
             Variable* v = Scope_FindVariable(&ll->ev.sc,accssed->str);
