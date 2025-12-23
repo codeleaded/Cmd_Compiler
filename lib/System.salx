@@ -144,16 +144,16 @@ namespace sys {
         return code;
     }
 
-    i32 ioctl(i32 fd,i64 cmd,void* t,i64 ap){
+    i64 ioctl(i64 fd,i64 cmd,void* t,i64 ap){
         asm "mov rax,16";
-        asm "mov edi," fd;
+        asm "mov rdi," fd;
         asm "mov rsi," cmd;
         asm "mov rdx," t;
         asm "mov rcx," ap;
         asm "syscall";
         
-        i32 code;
-        asm "mov " code ",eax";
+        i64 code;
+        asm "mov " code ",rax";
         return code;
     }
     
