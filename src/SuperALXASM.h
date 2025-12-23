@@ -475,7 +475,8 @@ CStr SuperALX_VariablesType(SuperALX* ll,Token* a,Token* b){
 
 int SuperALX_TypeRealSize(SuperALX* ll,Token* a){
     CStr type = SuperALX_VariableType(ll,a);
-    
+    if(!type) return 0;
+
     if(SuperALX_DrefType(ll,type)){
         CStr ntype = SuperALX_TypeOfDref(ll,type);
         CStr_Set(&type,ntype);
@@ -902,6 +903,13 @@ Boolean SuperALX_ErrorsInArg(SuperALX* ll,Token* a){
             return 1;
         }
     }
+
+    const int size = SuperALX_TypeRealSize(ll,a);
+    if(size <= 0){
+        Compiler_ErrorHandler(&ll->ev,"Errors -> size of %s is %d!",a->str,size);
+        return 1;
+    }
+
     return 0;
 }
 
@@ -1238,6 +1246,7 @@ Token SuperALX_Execute(SuperALX* ll,Token* a,Token* b,Token* op,CStr instname,CS
         return Token_Move(TOKEN_NUMBER,resstr);
     }else{
         CStr typename_a = SuperALX_VariableType(ll,a);
+
         int realsize_a = SuperALX_TypeRealSize(ll,a);
         int realsize_b = SuperALX_TypeRealSize(ll,b);
         

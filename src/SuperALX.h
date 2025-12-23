@@ -1022,6 +1022,8 @@ Boolean SuperALX_Assembly(SuperALX* ll,TokenMap* tm){
     return False;
 }
 
+
+
 Boolean SuperALX_FunctionCall_Acs(SuperALX* ll,TokenMap* tm,int i,int args,Token* tok){
     if(i - args >= 0 && i - args + 1 < tm->size){
         Token* accssed = (Token*)Vector_Get(tm,i - args);
@@ -1076,49 +1078,50 @@ Boolean SuperALX_FunctionCall_Acs(SuperALX* ll,TokenMap* tm,int i,int args,Token
     return FUNCTIONRT_NONE;
 }
 Boolean SuperALX_FunctionCall_Arw(SuperALX* ll,TokenMap* tm,int i,int args,Token* tok){
-    Token* accssed = (Token*)Vector_Get(tm,i - args);
-    Token* func = (Token*)Vector_Get(tm,i - args + 1);
+    if(i - args >= 0 && i - args + 1 < tm->size){
+        Token* accssed = (Token*)Vector_Get(tm,i - args);
+        Token* func = (Token*)Vector_Get(tm,i - args + 1);
 
-    if(func->tt==TOKEN_FUNCTION){
-        Variable* v = Scope_FindVariable(&ll->ev.sc,accssed->str);
+        if(func->tt==TOKEN_FUNCTION){
+            Variable* v = Scope_FindVariable(&ll->ev.sc,accssed->str);
 
-        if(v){
-            CStr type = SuperALX_TypeOfPointer(ll,v->typename);
-            CStr newname = CStr_Format("%s::%s",type,func->str);
+            if(v){
+                CStr type = SuperALX_TypeOfPointer(ll,v->typename);
+                CStr newname = CStr_Format("%s::%s",type,func->str);
 
-            TT_Iter it_f = FunctionMap_Find(&ll->ev.fs,newname);
-            if(it_f>=0){
-                CStr_Set((char**)&func->str,newname);
+                TT_Iter it_f = FunctionMap_Find(&ll->ev.fs,newname);
+                if(it_f>=0){
+                    CStr_Set((char**)&func->str,newname);
 
-                TokenMap acs = TokenMap_Make((Token[]){
-                    Token_Cpy(accssed),
-                    Token_Null()
-                });
+                    TokenMap acs = TokenMap_Make((Token[]){
+                        Token_Cpy(accssed),
+                        Token_Null()
+                    });
 
-                Vector_Add(func->args,&acs,0);
-            }
+                    Vector_Add(func->args,&acs,0);
+                }
 
-            CStr_Free(&newname);
-            CStr_Free(&type);
+                CStr_Free(&newname);
+                CStr_Free(&type);
 
-            it_f = FunctionMap_Find(&ll->ev.fs,func->str);
-            if(it_f>=0){
-                Function* f = (Function*)Vector_Get(&ll->ev.fs,it_f);
-                if(f->access || CStr_Cmp(accssed->str,SUPERALX_SELF)){
-                    Boolean ret = Compiler_FunctionCall(&ll->ev,func);
-                    if(!ret){
-                        CStr retstr = Compiler_Variablename_This(&ll->ev,COMPILER_RETURN,7);
-                        *tok = Token_Move(TOKEN_STRING,retstr);
+                it_f = FunctionMap_Find(&ll->ev.fs,func->str);
+                if(it_f>=0){
+                    Function* f = (Function*)Vector_Get(&ll->ev.fs,it_f);
+                    if(f->access || CStr_Cmp(accssed->str,SUPERALX_SELF)){
+                        Boolean ret = Compiler_FunctionCall(&ll->ev,func);
+                        if(!ret){
+                            CStr retstr = Compiler_Variablename_This(&ll->ev,COMPILER_RETURN,7);
+                            *tok = Token_Move(TOKEN_STRING,retstr);
+                        }
+                        return ret;
+                    }else{
+                        Compiler_ErrorHandler(&ll->ev,"Function: %s isn't pub or non self %s tries to access!",func->str,accssed->str);
+                        return FUNCTIONRT_NONE;
                     }
-                    return ret;
-                }else{
-                    Compiler_ErrorHandler(&ll->ev,"Function: %s isn't pub or non self %s tries to access!",func->str,accssed->str);
-                    return FUNCTIONRT_NONE;
                 }
             }
         }
     }
-        
     return FUNCTIONRT_NONE;
 }
 
