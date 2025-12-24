@@ -59,7 +59,7 @@ Token Struct_Struct_Handler_Ass(RexLang* ll,Token* op,Vector* args){
         CStr_Free(&location_b);
         CStr_Free(&location_a);
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"Ass: Error -> %s is no struct type!",b->str);
+        Environment_ErrorHandler(&ll->ev,"Ass: Error -> %s is no struct type!",b->str);
         return Token_Null();
     }
     return Token_Cpy(a);
@@ -95,7 +95,7 @@ Token Struct_Handler_Adr(RexLang* ll,Token* op,Vector* args){
         
         return stack_t;
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"Adr: Error -> %s has no address!",a->str);
+        Environment_ErrorHandler(&ll->ev,"Adr: Error -> %s has no address!",a->str);
         return Token_Null();
     }
 }
@@ -141,23 +141,23 @@ Token Struct_Handler_Acs(RexLang* ll,Token* op,Vector* args){
 
                         return Token_Move(TOKEN_STRING,stack_name);
                     }else{
-                        Enviroment_ErrorHandler(&ll->ev,"Acs: Member %s isn't pub or non self %s tries to access!",b->str,a->str);
+                        Environment_ErrorHandler(&ll->ev,"Acs: Member %s isn't pub or non self %s tries to access!",b->str,a->str);
                         return Token_Null();
                     }
                 }else{
-                    Enviroment_ErrorHandler(&ll->ev,"Acs: Member %s not found!",b->str);
+                    Environment_ErrorHandler(&ll->ev,"Acs: Member %s not found!",b->str);
                     return Token_Null();
                 }
             }else{
-                Enviroment_ErrorHandler(&ll->ev,"Acs: Type %s not found!",v->typename);
+                Environment_ErrorHandler(&ll->ev,"Acs: Type %s not found!",v->typename);
                 return Token_Null();
             }
         }else{
-            Enviroment_ErrorHandler(&ll->ev,"Acs: 1. Arg: %s not found as a variable!",a->str);
+            Environment_ErrorHandler(&ll->ev,"Acs: 1. Arg: %s not found as a variable!",a->str);
             return Token_Null();
         }
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"Acs: 1. Arg: %s is not a variable type!",a->str);
+        Environment_ErrorHandler(&ll->ev,"Acs: 1. Arg: %s is not a variable type!",a->str);
         return Token_Null();
     }
 
@@ -179,7 +179,7 @@ Token Struct_Null_Handler_Cast(RexLang* ll,Token* op,Vector* args){
             RexLangVariable* sv = (RexLangVariable*)Variable_Data(v);
             String_Appendf(&ret,"T: %s,S:%d [&:%d,%d]",v->typename,sv->stack,sv->destroy,sv->sizeonstack);
         }else{
-            Enviroment_ErrorHandler(&ll->ev,"Cast -> Error!");
+            Environment_ErrorHandler(&ll->ev,"Cast -> Error!");
             String_Append(&ret,"ERROR");
         }
     }

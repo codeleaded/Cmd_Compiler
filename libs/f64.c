@@ -111,7 +111,7 @@ Token F64_Handler_Adr(RexLang* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
 
     if(a->tt==TOKEN_FLOAT){
-        Enviroment_ErrorHandler(&ll->ev,"Adr -> Error: can not get address of const: %s!",a->str);
+        Environment_ErrorHandler(&ll->ev,"Adr -> Error: can not get address of const: %s!",a->str);
         return Token_Null();
     }else if(a->tt==TOKEN_STRING){
         Variable* v = Scope_FindVariable(&ll->ev.sc,a->str);
@@ -135,7 +135,7 @@ Token F64_Handler_Adr(RexLang* ll,Token* op,Vector* args){
 
         return stack_t;
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"Adr: Error -> %s has no address!",a->str);
+        Environment_ErrorHandler(&ll->ev,"Adr: Error -> %s has no address!",a->str);
         return Token_Null();
     }
 }
@@ -155,7 +155,7 @@ Token F64_Null_Handler_Cast(RexLang* ll,Token* op,Vector* args){
             RexLangVariable* sv = (RexLangVariable*)Variable_Data(v);
             String_Appendf(&ret,"T: %s,S:%d [&:%d,%d]",v->typename,sv->stack,sv->destroy,sv->sizeonstack);
         }else{
-            Enviroment_ErrorHandler(&ll->ev,"Cast -> Error!");
+            Environment_ErrorHandler(&ll->ev,"Cast -> Error!");
             String_Append(&ret,"ERROR");
         }
     }
@@ -181,7 +181,7 @@ Token F64_I64_Handler_Cast(RexLang* ll,Token* op,Vector* args){
         RexLang_FromFPU(ll,&stack_t);
         return stack_t;
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"Cast(f64 -> i64): Error -> %s is from no possible type!",a->str);
+        Environment_ErrorHandler(&ll->ev,"Cast(f64 -> i64): Error -> %s is from no possible type!",a->str);
         return Token_Null();
     }
 }

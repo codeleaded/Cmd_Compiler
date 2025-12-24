@@ -27,7 +27,7 @@ Token Pointer_Pointer_Handler_Ass(RexLang* ll,Token* op,Vector* args){
         RexLang_IntoReg(ll,b,RexLang_SelectRT(ll,realsize_b)[RexLang_REG_A]);
         RexLang_IntoSet(ll,a,RexLang_SelectRT(ll,realsize_a)[RexLang_REG_A]);
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"Ass: Error -> %s has no pointer type!",b->str);
+        Environment_ErrorHandler(&ll->ev,"Ass: Error -> %s has no pointer type!",b->str);
         return Token_Null();
     }
     return Token_Cpy(a);
@@ -85,7 +85,7 @@ Token Pointer_Handler_Adr(RexLang* ll,Token* op,Vector* args){
     //printf("[Pointer]: ADR: &%s\n",a->str);
     
     if(a->tt==TOKEN_NUMBER){
-        Enviroment_ErrorHandler(&ll->ev,"Adr -> Error: can not get address of const: %s!",a->str);
+        Environment_ErrorHandler(&ll->ev,"Adr -> Error: can not get address of const: %s!",a->str);
         return Token_Null();
     }else if(a->tt==TOKEN_STRING){
         Variable* v = Scope_FindVariable(&ll->ev.sc,a->str);
@@ -111,7 +111,7 @@ Token Pointer_Handler_Adr(RexLang* ll,Token* op,Vector* args){
         
         return stack_t;
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"Adr: Error -> %s has no address!",a->str);
+        Environment_ErrorHandler(&ll->ev,"Adr: Error -> %s has no address!",a->str);
         return Token_Null();
     }
 }
@@ -158,7 +158,7 @@ Token Pointer_Handler_Drf(RexLang* ll,Token* op,Vector* args){
             return stack_t;
         }
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"Drf: Error -> %s has no dref op!",a->str);
+        Environment_ErrorHandler(&ll->ev,"Drf: Error -> %s has no dref op!",a->str);
         return Token_Null();
     }
 }
@@ -221,23 +221,23 @@ Token Pointer_Handler_Arw(RexLang* ll,Token* op,Vector* args){
                         }
                         return Token_Move(TOKEN_STRING,stack_name);
                     }else{
-                        Enviroment_ErrorHandler(&ll->ev,"Arw: Member %s isn't pub or non self %s tries to access!",b->str,a->str);
+                        Environment_ErrorHandler(&ll->ev,"Arw: Member %s isn't pub or non self %s tries to access!",b->str,a->str);
                         return Token_Null();
                     }
                 }else{
-                    Enviroment_ErrorHandler(&ll->ev,"Arw: Member %s not found!",b->str);
+                    Environment_ErrorHandler(&ll->ev,"Arw: Member %s not found!",b->str);
                     return Token_Null();
                 }
             }else{
-                Enviroment_ErrorHandler(&ll->ev,"Arw: Type %s not found!",v->typename);
+                Environment_ErrorHandler(&ll->ev,"Arw: Type %s not found!",v->typename);
                 return Token_Null();
             }
         }else{
-            Enviroment_ErrorHandler(&ll->ev,"Arw: Variable %s not found!",a->str);
+            Environment_ErrorHandler(&ll->ev,"Arw: Variable %s not found!",a->str);
             return Token_Null();
         }
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"Arw: Error -> %s has no dref op!",a->str);
+        Environment_ErrorHandler(&ll->ev,"Arw: Error -> %s has no dref op!",a->str);
         return Token_Null();
     }
 }
