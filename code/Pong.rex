@@ -1,7 +1,7 @@
-import "../lib/System.salx";
-import "../lib/IO.salx";
-import "../lib/Terminal.salx";
-import "../lib/Time.salx";
+import "../lib/System.rex";
+import "../lib/IO.rex";
+import "../lib/Terminal.rex";
+import "../lib/Time.rex";
 
 
 i64 World_toScreen(i64 c){

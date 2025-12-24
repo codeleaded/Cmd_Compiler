@@ -17,8 +17,8 @@ stack und struct arrays
 
 */
 
-//import "../lib/Memory.salx";
-//import "../lib/Stream.salx";
+//import "../lib/Memory.rex";
+//import "../lib/Stream.rex";
 import Memory;
 import Stream;
 

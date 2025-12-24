@@ -1,7 +1,7 @@
-import "../lib/System.salx";
-import "../lib/CStr.salx";
-import "../lib/Pointer.salx";
-import "../lib/Parser.salx";
+import "../lib/System.rex";
+import "../lib/CStr.rex";
+import "../lib/Pointer.rex";
+import "../lib/Parser.rex";
 
 
 define O_RDONLY     0;        // Datei nur zum Lesen.

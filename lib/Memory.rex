@@ -1,7 +1,7 @@
-import "../lib/System.salx";
-import "../lib/IO.salx";
-import "../lib/Pointer.salx";
-import "../lib/Parser.salx";
+import "../lib/System.rex";
+import "../lib/IO.rex";
+import "../lib/Pointer.rex";
+import "../lib/Parser.rex";
 
 namespace mem {
     struct Header[

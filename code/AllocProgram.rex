@@ -1,13 +1,13 @@
-import "../lib/System.salx";
-import "../lib/CStr.salx";
-import "../lib/IO.salx";
-import "../lib/Char.salx";
-import "../lib/Math.salx";
-import "../lib/Parser.salx";
-import "../lib/Pointer.salx";
-import "../lib/Memory.salx";
-import "../lib/String.salx";
-import "../lib/Stream.salx";
+import "../lib/System.rex";
+import "../lib/CStr.rex";
+import "../lib/IO.rex";
+import "../lib/Char.rex";
+import "../lib/Math.rex";
+import "../lib/Parser.rex";
+import "../lib/Pointer.rex";
+import "../lib/Memory.rex";
+import "../lib/String.rex";
+import "../lib/Stream.rex";
 
 i64 main(){
 

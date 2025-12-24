@@ -1,6 +1,6 @@
-import "../lib/CStr.salx";
-import "../lib/Math.salx";
-import "../lib/System.salx";
+import "../lib/CStr.rex";
+import "../lib/Math.rex";
+import "../lib/System.rex";
 
 define IO_FILE void*;
 

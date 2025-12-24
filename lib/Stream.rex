@@ -1,7 +1,7 @@
-import "../lib/System.salx";
-import "../lib/IO.salx";
-import "../lib/Memory.salx";
-import "../lib/Container.salx";
+import "../lib/System.rex";
+import "../lib/IO.rex";
+import "../lib/Memory.rex";
+import "../lib/Container.rex";
 
 namespace ios {
     struct OStream[

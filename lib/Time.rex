@@ -1,4 +1,4 @@
-import "../lib/System.salx";
+import "../lib/System.rex";
 
 define CLOCK_REALTIME           0;
 define CLOCK_MONOTONIC          1;

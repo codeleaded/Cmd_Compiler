@@ -1,8 +1,8 @@
-import "../lib/System.salx";
-import "../lib/IO.salx";
-import "../lib/Memory.salx";
-import "../lib/Math.salx";
-import "../lib/Parser.salx";
+import "../lib/System.rex";
+import "../lib/IO.rex";
+import "../lib/Memory.rex";
+import "../lib/Math.rex";
+import "../lib/Parser.rex";
 
 define ICANON       2;
 define ECHO         8;

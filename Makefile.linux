@@ -26,10 +26,10 @@ alldebug:
 	$(CC) -g $(CFLAGS) $(INCLUDES) ./$(SRC_DIR)/Main.c -o ./$(TARGET) $(LDFLAGS) 
 
 debug:
-	gdb ./$(TARGET) ./code/Main.salx ./asm/Main.asm
+	gdb ./$(TARGET) ./code/Main.rex ./asm/Main.asm
 
 exe:
-	./$(TARGET) ./code/Main.salx ./asm/Main.asm
+	./$(TARGET) ./code/Main.rex ./asm/Main.asm
 
 clean:
 	rm -rf $(BUILD_DIR)/*
