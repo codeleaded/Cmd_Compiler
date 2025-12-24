@@ -15,6 +15,45 @@
 #include "F:/home/codeleaded/Hecke/C/Cmd_Compiler/src/SuperALXASM.h"
 #endif
 
+/*
+-- Cmp operation: --
+je true
+mov c,0
+jmp end
+true:
+mov c,1
+end:
+
+-- AND operation: --
+jne false
+jne false
+true:
+mov c,1
+jmp end
+false:
+mov c,0
+end:
+
+-- OR operation: --
+je true
+jne false
+true:
+mov c,1
+jmp end
+false:
+mov c,0
+end:
+
+-- Not operation: --
+je false
+true:
+mov c,1
+jmp end
+false:
+mov c,0
+end:
+*/
+
 Token Bool_Bool_Handler_Ass(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
     Token* b = (Token*)Vector_Get(args,1);
@@ -55,12 +94,14 @@ Token Bool_Handler_Lot(SuperALX* ll,Token* op,Vector* args){
 Token Bool_Bool_Handler_Equ(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
     Token* b = (Token*)Vector_Get(args,1);
-    return SuperALX_ExecuteCmp(ll,a,b,op,"sete","EQU",SuperALX_Function_Equ);
+    //return SuperALX_ExecuteCmp(ll,a,b,op,"sete","EQU",SuperALX_Function_Equ);
+    return SuperALX_ExecuteJmp(ll,a,b,op,"je","EQU",SuperALX_Function_Equ);
 }
 Token Bool_Bool_Handler_Neq(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
     Token* b = (Token*)Vector_Get(args,1);
-    return SuperALX_ExecuteCmp(ll,a,b,op,"setne","NEQ",SuperALX_Function_Neq);
+    //return SuperALX_ExecuteCmp(ll,a,b,op,"setne","NEQ",SuperALX_Function_Neq);
+    return SuperALX_ExecuteJmp(ll,a,b,op,"jne","NEQ",SuperALX_Function_Neq);
 }
 
 Token Bool_Handler_Adr(SuperALX* ll,Token* op,Vector* args){
@@ -127,6 +168,9 @@ Token Bool_Handler_Cast(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
 
     if(op->str==NULL) return Bool_Null_Handler_Cast(ll,op,args);
+    if(CStr_Cmp(op->str,I8_TYPE) || CStr_Cmp(op->str,I16_TYPE) || CStr_Cmp(op->str,I32_TYPE) || CStr_Cmp(op->str,I64_TYPE) ||
+       CStr_Cmp(op->str,U8_TYPE) || CStr_Cmp(op->str,U16_TYPE) || CStr_Cmp(op->str,U32_TYPE) || CStr_Cmp(op->str,U64_TYPE))
+        return Int_Int_Handler_Cast(ll,op,args,op->str);
     return Token_Null();
 }
 Token Bool_Handler_Size(SuperALX* ll,Token* op,Vector* args){

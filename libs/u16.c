@@ -95,32 +95,38 @@ Token U16_Handler_Not(SuperALX* ll,Token* op,Vector* args){
 Token U16_U16_Handler_Equ(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
     Token* b = (Token*)Vector_Get(args,1);
-    return SuperALX_ExecuteCmp(ll,a,b,op,"sete","EQU",SuperALX_Function_Equ);
+    //return SuperALX_ExecuteCmp(ll,a,b,op,"sete","EQU",SuperALX_Function_Equ);
+    return SuperALX_ExecuteJmp(ll,a,b,op,"je","EQU",SuperALX_Function_Equ);
 }
 Token U16_U16_Handler_Neq(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
     Token* b = (Token*)Vector_Get(args,1);
-    return SuperALX_ExecuteCmp(ll,a,b,op,"setne","NEQ",SuperALX_Function_Neq);
+    //return SuperALX_ExecuteCmp(ll,a,b,op,"setne","NEQ",SuperALX_Function_Neq);
+    return SuperALX_ExecuteJmp(ll,a,b,op,"jne","NEQ",SuperALX_Function_Neq);
 }
 Token U16_U16_Handler_Les(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
     Token* b = (Token*)Vector_Get(args,1);
-    return SuperALX_ExecuteCmp(ll,a,b,op,"setl","LES",SuperALX_Function_Les);
+    //return SuperALX_ExecuteCmp(ll,a,b,op,"setl","LES",SuperALX_Function_Les);
+    return SuperALX_ExecuteJmp(ll,a,b,op,"jl","LES",SuperALX_Function_Les);
 }
 Token U16_U16_Handler_Grt(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
     Token* b = (Token*)Vector_Get(args,1);
-    return SuperALX_ExecuteCmp(ll,a,b,op,"setg","GRT",SuperALX_Function_Grt);
+    //return SuperALX_ExecuteCmp(ll,a,b,op,"setg","GRT",SuperALX_Function_Grt);
+    return SuperALX_ExecuteJmp(ll,a,b,op,"jg","GRT",SuperALX_Function_Grt);
 }
 Token U16_U16_Handler_Leq(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
     Token* b = (Token*)Vector_Get(args,1);
-    return SuperALX_ExecuteCmp(ll,a,b,op,"setle","LEQ",SuperALX_Function_Leq);
+    //return SuperALX_ExecuteCmp(ll,a,b,op,"setle","LEQ",SuperALX_Function_Leq);
+    return SuperALX_ExecuteJmp(ll,a,b,op,"jle","LEQ",SuperALX_Function_Leq);
 }
 Token U16_U16_Handler_Grq(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
     Token* b = (Token*)Vector_Get(args,1);
-    return SuperALX_ExecuteCmp(ll,a,b,op,"setge","GRQ",SuperALX_Function_Grq);
+    //return SuperALX_ExecuteCmp(ll,a,b,op,"setge","GRQ",SuperALX_Function_Grq);
+    return SuperALX_ExecuteJmp(ll,a,b,op,"jge","GRQ",SuperALX_Function_Grq);
 }
 
 Token U16_Handler_Adr(SuperALX* ll,Token* op,Vector* args){

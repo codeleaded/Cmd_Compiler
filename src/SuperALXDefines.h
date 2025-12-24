@@ -78,6 +78,8 @@
 #define SUPERALX_WHILE                      "WHILE"
 #define SUPERALX_FOR                        "FOR"
 #define SUPERALX_LOG                        "LOG"
+#define SUPERALX_LOG_TRUE                   "TRUE"
+#define SUPERALX_LOG_END                    "END"
 
 #define SUPERALX_DREF_8                     "BYTE"
 #define SUPERALX_DREF_16                    "WORD"
