@@ -55,10 +55,10 @@ typedef struct SuperALX {
     char* output;
     char bits;
     char PADD1;
-    short PADD2;
+    TT_Type logic;
     unsigned int stack;
     unsigned int indent;
-    TT_Type logic;
+    unsigned int lcmps;
 } SuperALX;
 
 int SuperALX_Bytes(SuperALX* ll){
@@ -660,6 +660,9 @@ void SuperALX_LogicCorrection(SuperALX* ll,TokenMap* tm){
         Scope_Pop(&ll->ev.sc);// first possible decl in for ... , 
     }
     ll->logic = TOKEN_NONE;
+}
+CStr SuperALX_LogicCmp(SuperALX* ll,CStr type){
+    return CStr_Format("lcmp.%d_%s",ll->lcmps++,type);
 }
 
 Boolean SuperALX_TypeInt(CStr typename){
@@ -1425,6 +1428,46 @@ Token SuperALX_ExecuteCmp(SuperALX* ll,Token* a,Token* b,Token* op,CStr instname
         return stack_t;
     }
 }
+Token SuperALX_ExecuteJmp(SuperALX* ll,Token* a,Token* b,Token* op,CStr instname,CStr instnameupper,Boolean (*inst)(Number,Number)){
+    //Compiler_InfoHandler(&ll->ev,"%s: %s %s %s",instnameupper,a->str,op->str,b->str);
+    
+    if(SuperALX_ErrorsInArg(ll,a)) return Token_Null();
+    if(SuperALX_ErrorsInArg(ll,b)) return Token_Null();
+
+    if(a->tt==TOKEN_NUMBER && b->tt==TOKEN_NUMBER){
+        char* resstr = Boolean_Get(inst(Number_Parse(a->str),Number_Parse(b->str)));
+        return Token_Move(TOKEN_SUPERALX_BOOLEAN,resstr);
+    }else{
+        int realsize_a = SuperALX_TypeRealSize(ll,a);
+        int realsize_b = SuperALX_TypeRealSize(ll,b);
+        
+        CStr stack_name = SuperALX_Variablename_Next(ll,".STACK",6);
+        SuperALX_Variable_Build_Decl(ll,stack_name,BOOL_TYPE);
+        Token stack_t = Token_Move(TOKEN_STRING,stack_name);
+        
+        if(realsize_b>realsize_a)
+            SuperALX_Indentation_Appendf(ll,&ll->text,"mov %s,0",SUPERALX_REG_A_64);
+
+        SuperALX_IntoReg(ll,a,SuperALX_SelectRT(ll,realsize_a)[SUPERALX_REG_A]);
+        SuperALX_CmpAtReg(ll,b,SuperALX_SelectRT(ll,realsize_b)[SUPERALX_REG_A]);
+        
+        CStr label_true = SuperALX_LogicCmp(ll,SUPERALX_LOG_TRUE);
+        CStr label_end = SuperALX_LogicCmp(ll,SUPERALX_LOG_END);
+
+        SuperALX_Indentation_Appendf(ll,&ll->text,"%s %s",instname,label_true);
+        SuperALX_IntoSet(ll,&stack_t,"0");
+        SuperALX_Indentation_Appendf(ll,&ll->text,"jmp %s",label_end);
+        SuperALX_Indentation_Appendf(ll,&ll->text,"%s:",label_true);
+        SuperALX_IntoSet(ll,&stack_t,"1");
+        SuperALX_Indentation_Appendf(ll,&ll->text,"%s:",label_end);
+
+        CStr_Free(&label_true);
+        CStr_Free(&label_end);
+        return stack_t;
+    }
+}
+
+
 
 Token Int_Int_Handler_Cast(SuperALX* ll,Token* op,Vector* args,CStr type){
     Token* a = (Token*)Vector_Get(args,0);

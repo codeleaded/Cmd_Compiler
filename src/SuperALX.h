@@ -506,6 +506,23 @@ Boolean SuperALX_Import(SuperALX* ll,TokenMap* tm){
             Compiler_ErrorHandler(&ll->ev,"file type of module \"%s\" is wrong: .%s, should be .%s",file->str,type,SUPERALX_TYPE);
         }
         free(type);
+    }else if(file->tt==TOKEN_STRING){
+        CStr current = *(CStr*)CVector_Get(&ll->filesstack,ll->filesstack.size-1);
+        CStr path = CStr_Concat(file->str,"." SUPERALX_TYPE);
+        CStr realpath = Files_FromPath("./lib/",path);
+        CStr_Free(&path);
+
+        if(!CVector_Contains(&ll->filesinc,(CStr[]){ realpath })){
+            CVector_Push(&ll->filesstack,(CStr[]){ CStr_Cpy(realpath) });
+            CVector_Push(&ll->filesinc,(CStr[]){ CStr_Cpy(realpath) });
+            
+            Compiler_AddScript(&ll->ev,ll->ev.iter,realpath);
+        
+            CVector_PopTop(&ll->filesstack);
+            CStr_Free(&realpath);
+        }else{
+            //Compiler_ErrorHandler(&ll->ev,"module \"%s\" already included!",file->str);
+        }
     }else{
         Compiler_ErrorHandler(&ll->ev,"module \"%s\" doesn't exist!",file->str);
     }
@@ -1511,6 +1528,7 @@ SuperALX SuperALX_New(char* dllpath,char* src,char* output,char bits) {
     ll.logic = TOKEN_NONE;
     ll.stack = 0U;
     ll.indent = 0U;
+    ll.lcmps = 0U;
     ll.src = CStr_Cpy(src);
     ll.output = CStr_Cpy(output);
     ll.dllpath = CStr_Cpy(dllpath);

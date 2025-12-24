@@ -213,6 +213,9 @@ alloc.delete();
 
 
 
+import "../lib/Memory.salx";
+import "../lib/Stream.salx";
+
 i64 fib(i64 n){
     if n <= 1 {
         return n;
@@ -234,3 +237,8 @@ i64 main(){
     alloc.delete();
     return 0;
 }
+
+
+i64 a = 1;
+    bool c = a == 0 || a != 1 || a > 0 || a < 0 || a >= 0 || a <= 0;
+    return (i64)c;

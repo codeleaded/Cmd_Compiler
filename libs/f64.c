@@ -73,32 +73,38 @@ Token F64_Handler_Dec(SuperALX* ll,Token* op,Vector* args){
 Token F64_F64_Handler_Equ(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
     Token* b = (Token*)Vector_Get(args,1);
-    return SuperALX_ExecuteFCmp(ll,a,b,op,"sete","FEQU",SuperALX_Function_FEqu);
+    //return SuperALX_ExecuteFCmp(ll,a,b,op,"sete","FEQU",SuperALX_Function_FEqu);
+    return SuperALX_ExecuteFJmp(ll,a,b,op,"je","FEQU",SuperALX_Function_FEqu);
 }
 Token F64_F64_Handler_Neq(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
     Token* b = (Token*)Vector_Get(args,1);
-    return SuperALX_ExecuteFCmp(ll,a,b,op,"setne","FNEQ",SuperALX_Function_FNeq);
+    //return SuperALX_ExecuteFCmp(ll,a,b,op,"setne","FNEQ",SuperALX_Function_FNeq);
+    return SuperALX_ExecuteFJmp(ll,a,b,op,"jne","FNEQ",SuperALX_Function_FNeq);
 }
 Token F64_F64_Handler_Les(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
     Token* b = (Token*)Vector_Get(args,1);
-    return SuperALX_ExecuteFCmp(ll,a,b,op,"setl","FLES",SuperALX_Function_FLes);
+    //return SuperALX_ExecuteFCmp(ll,a,b,op,"setl","FLES",SuperALX_Function_FLes);
+    return SuperALX_ExecuteFJmp(ll,a,b,op,"jl","FLES",SuperALX_Function_FLes);
 }
 Token F64_F64_Handler_Grt(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
     Token* b = (Token*)Vector_Get(args,1);
-    return SuperALX_ExecuteFCmp(ll,a,b,op,"setg","FGRT",SuperALX_Function_FGrt);
+    //return SuperALX_ExecuteFCmp(ll,a,b,op,"setg","FGRT",SuperALX_Function_FGrt);
+    return SuperALX_ExecuteFJmp(ll,a,b,op,"jg","FGRT",SuperALX_Function_FGrt);
 }
 Token F64_F64_Handler_Leq(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
     Token* b = (Token*)Vector_Get(args,1);
-    return SuperALX_ExecuteFCmp(ll,a,b,op,"setle","FLEQ",SuperALX_Function_FLeq);
+    //return SuperALX_ExecuteFCmp(ll,a,b,op,"setle","FLEQ",SuperALX_Function_FLeq);
+    return SuperALX_ExecuteFJmp(ll,a,b,op,"jle","FLEQ",SuperALX_Function_FLeq);
 }
 Token F64_F64_Handler_Grq(SuperALX* ll,Token* op,Vector* args){
     Token* a = (Token*)Vector_Get(args,0);
     Token* b = (Token*)Vector_Get(args,1);
-    return SuperALX_ExecuteFCmp(ll,a,b,op,"setge","FGRQ",SuperALX_Function_FGrq);
+    //return SuperALX_ExecuteFCmp(ll,a,b,op,"setge","FGRQ",SuperALX_Function_FGrq);
+    return SuperALX_ExecuteFJmp(ll,a,b,op,"jge","FGRQ",SuperALX_Function_FGrq);
 }
 
 Token F64_Handler_Adr(SuperALX* ll,Token* op,Vector* args){
