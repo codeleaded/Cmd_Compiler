@@ -1,4 +1,4 @@
-import "../lib/Memory.salx";
+import "../lib/Memory.rex";
 
 namespace st {
     struct String[

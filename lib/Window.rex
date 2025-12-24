@@ -1,4 +1,4 @@
-import "../lib/Memory.salx";
+import "../lib/Memory.rex";
 
 // XID -> u64
 // Display -> void

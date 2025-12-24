@@ -1,7 +1,7 @@
-import "../lib/IO.salx";
-import "../lib/Parser.salx";
-import "../lib/Pointer.salx";
-import "../lib/Memory.salx";
+import "../lib/IO.rex";
+import "../lib/Parser.rex";
+import "../lib/Pointer.rex";
+import "../lib/Memory.rex";
 
 namespace con {
     struct Vector[

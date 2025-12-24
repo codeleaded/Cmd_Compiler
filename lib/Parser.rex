@@ -1,7 +1,7 @@
-import "../lib/CStr.salx";
-import "../lib/Char.salx";
-import "../lib/Math.salx";
-import "../lib/IO.salx";
+import "../lib/CStr.rex";
+import "../lib/Char.rex";
+import "../lib/Math.rex";
+import "../lib/IO.rex";
 
 namespace parse {
     namespace boolean {

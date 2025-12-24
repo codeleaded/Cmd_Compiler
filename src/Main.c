@@ -1,12 +1,12 @@
-#include "SuperALX.h"
+#include "/home/codeleaded/System/Static/Library/RexLang.h"
 
-#define PATH_SRC "./code/Main.salx"
+#define PATH_SRC "./code/Main.rex"
 #define PATH_ASM "./asm/Main.asm"
 
 
 int main(int argc,char** argv){
     //if(argc<=1){
-    //    printf("Missing Src File ."SUPERALX_TYPE"!\n");
+    //    printf("Missing Src File ."RexLang_TYPE"!\n");
     //    return 1;
     //}
     //if(argc<=2){
@@ -14,11 +14,11 @@ int main(int argc,char** argv){
     //    return 1;
     //}
 
-    SuperALX ll = SuperALX_New("./bin",PATH_SRC,PATH_ASM,64);
-    //SuperALX_Print(&ll);
-    SuperALX_Build(&ll);
-    //SuperALX_Print(&ll);
-    SuperALX_Free(&ll);
+    RexLang ll = RexLang_New("./bin",PATH_SRC,PATH_ASM,64);
+    //RexLang_Print(&ll);
+    RexLang_Build(&ll);
+    //RexLang_Print(&ll);
+    RexLang_Free(&ll);
     
     return 0;
 }

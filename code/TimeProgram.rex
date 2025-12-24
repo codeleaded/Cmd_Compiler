@@ -1,5 +1,5 @@
-import "../lib/IO.salx";
-import "../lib/Time.salx";
+import "../lib/IO.rex";
+import "../lib/Time.rex";
 
 i64 main(){
 

@@ -1,5 +1,5 @@
 ;|
-;| SuperALX by codeleaded
+;| RexLang by codeleaded
 ;|
 
 bits 64

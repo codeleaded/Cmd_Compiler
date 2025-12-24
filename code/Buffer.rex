@@ -213,8 +213,8 @@ alloc.delete();
 
 
 
-import "../lib/Memory.salx";
-import "../lib/Stream.salx";
+import "../lib/Memory.rex";
+import "../lib/Stream.rex";
 
 i64 fib(i64 n){
     if n <= 1 {

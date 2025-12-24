@@ -26,7 +26,7 @@ comp:
 #./build/Output; echo $$?
 
 exe:
-	$(TARGET) ./code/Main.salx ./asm/Main.asm
+	$(TARGET) ./code/Main.rex ./asm/Main.asm
 
 clean:
 	if exist "$(BUILD_DIR)" del /Q "$(BUILD_DIR)\*"
