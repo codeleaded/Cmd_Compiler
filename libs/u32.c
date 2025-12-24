@@ -134,7 +134,7 @@ Token U32_Handler_Adr(RexLang* ll,Token* op,Vector* args){
     //printf("[U32]: ADR: &%s\n",a->str);
     
     if(a->tt==TOKEN_NUMBER){
-        Enviroment_ErrorHandler(&ll->ev,"Adr -> Error: can not get address of const: %s!",a->str);
+        Environment_ErrorHandler(&ll->ev,"Adr -> Error: can not get address of const: %s!",a->str);
         return Token_Null();
     }else if(a->tt==TOKEN_STRING){
         Variable* v = Scope_FindVariable(&ll->ev.sc,a->str);
@@ -157,7 +157,7 @@ Token U32_Handler_Adr(RexLang* ll,Token* op,Vector* args){
 
         return stack_t;
     }else{
-        Enviroment_ErrorHandler(&ll->ev,"Adr: Error -> %s has no address!",a->str);
+        Environment_ErrorHandler(&ll->ev,"Adr: Error -> %s has no address!",a->str);
         return Token_Null();
     }
 }
@@ -177,7 +177,7 @@ Token U32_Null_Handler_Cast(RexLang* ll,Token* op,Vector* args){
             RexLangVariable* sv = (RexLangVariable*)Variable_Data(v);
             String_Appendf(&ret,"T: %s,S:%d [&:%d,%d]",v->typename,sv->stack,sv->destroy,sv->sizeonstack);
         }else{
-            Enviroment_ErrorHandler(&ll->ev,"Cast -> Error!");
+            Environment_ErrorHandler(&ll->ev,"Cast -> Error!");
             String_Append(&ret,"ERROR");
         }
     }

@@ -18,7 +18,7 @@ Token Dref_Null_Handler_Cast(RexLang* ll,Token* op,Vector* args){
             RexLangVariable* sv = (RexLangVariable*)Variable_Data(v);
             String_Appendf(&ret,"T: %s,S:%d [&:%d,%d]",v->typename,sv->stack,sv->destroy,sv->sizeonstack);
         }else{
-            Enviroment_ErrorHandler(&ll->ev,"Cast -> Error!");
+            Environment_ErrorHandler(&ll->ev,"Cast -> Error!");
             String_Append(&ret,"ERROR");
         }
     }
