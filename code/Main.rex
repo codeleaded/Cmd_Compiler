@@ -7,39 +7,57 @@ Fehlt:
 //- pub AM
 //- f32, f64
 //- = Operatoren
-- break,continue
+//- break,continue
 //- function pointer
-/- casts
+//- casts
 - struct constructor: T[...]
 //- 1. Error at PP
-stack und struct arrays
-++,--
+/stack und struct arrays
+//++,--
 
 */
 
 //import "../lib/Memory.rex";
 //import "../lib/Stream.rex";
-import Memory;
-import Stream;
 
-i64 fib(i64 n){
-    if n <= 1 {
-        return n;
+import IO;
+import Pointer;
+import CStr;
+
+struct Human[
+    pub i8* name,
+    pub i64 age
+];
+
+impl Human{
+    pub void init(Human* self,i8* name,i64 age){
+        self->name = name;
+        self->age = age;
+
+        io::print("Human: Init -> \'");
+        io::print(self->name);
+        io::print("\'\n");
     }
-    return fib(n - 1) + fib(n - 2);
+    pub void delete(Human* self){
+        io::print("Human: Delete -> \'");
+        io::print(self->name);
+        io::print("\'\n");
+    }
+    pub Human new(i8* name,i64 age){
+        Human vec;
+        vec.init(name,age);
+        return vec;
+    }
+    pub void print(Human* self){
+        io::print("Human: Print -> \'");
+        io::print(self->name);
+        io::print("\'\n");
+    }
 }
 
 i64 main(){
-    mem::Allocator alloc = mem::Allocator::new();
-    ios::OStream stdout = ios::OStream::new(&alloc,1);
-    
-    for i64 i = 0,i<20,i+=1 {
-        i64 num = fib(i);
-        stdout.cstr("Fib(")->int(i)->cstr(") = ")->int(num)->cstr("\n")->flush();
-    }
-    
-    stdout.delete();
-    alloc.print();
-    alloc.delete();
+    Human h = Human::new("Alex",19);
+    h.print();
+    h.delete();
     return 0;
 }
