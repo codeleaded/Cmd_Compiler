@@ -46,12 +46,12 @@ void Ex_Packer(ExternFunctionMap* Extern_Functions,Vector* funcs,Scope* s){//Vec
             OperatorInterater_Make((CStr[]){ NULL },OperatorDefineMap_Make((OperatorDefiner[]){
                 OperatorDefiner_New(TOKEN_CAST,(Token(*)(void*,Token*,Vector*))Str_Handler_Cast),
                 OperatorDefiner_New(TOKEN_INIT,(Token(*)(void*,Token*,Vector*))RexLang_Init),
-                OperatorDefiner_New(TOKEN_RexLang_SIZE,(Token(*)(void*,Token*,Vector*))Str_Handler_Size),
+                OperatorDefiner_New(TOKEN_REXLANG_SIZE,(Token(*)(void*,Token*,Vector*))Str_Handler_Size),
                 //OperatorDefiner_New(TOKEN_DESTROY,NULL),
                 OPERATORDEFINER_END
             })),
             OperatorInterater_Make((CStr[]){ VOID_TYPE,NULL },OperatorDefineMap_Make((OperatorDefiner[]){
-                //OperatorDefiner_New(TOKEN_RexLang_ASS,(Token(*)(void*,Token*,Vector*))Str_Str_Handler_Ass),
+                //OperatorDefiner_New(TOKEN_REXLANG_ASS,(Token(*)(void*,Token*,Vector*))Str_Str_Handler_Ass),
                 OPERATORDEFINER_END
             })),
             OPERATORINTERATER_END

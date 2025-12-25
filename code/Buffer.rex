@@ -242,3 +242,15 @@ i64 main(){
 i64 a = 1;
     bool c = a == 0 || a != 1 || a > 0 || a < 0 || a >= 0 || a <= 0;
     return (i64)c;
+
+
+i64 sum = 0;
+    for i64 i = 0,i<20,i+=1 {
+        if i == 13 {
+            continue;
+        }
+
+        sum += i;
+    }
+
+    return sum;

@@ -19,7 +19,7 @@ Token Pointer_Pointer_Handler_Ass(RexLang* ll,Token* op,Vector* args){
         CStr name = RexLang_FunctionName(ll,b->str);
         RexLang_IntoSet(ll,a,name);
         CStr_Free(&name);
-    }else if(b->tt==TOKEN_RexLang_NULL){
+    }else if(b->tt==TOKEN_REXLANG_NULL){
         RexLang_IntoSet(ll,a,"0");
     }else if(b->tt==TOKEN_STRING){
         int realsize_a = RexLang_TypeRealSize(ll,a);
@@ -247,8 +247,8 @@ Token Pointer_I64_Handler_Subs(RexLang* ll,Token* op,Vector* args){
     Token* b = (Token*)Vector_Get(args,1);
     //printf("[Pointer]: SUBS: %s[%s]\n",a->str,b->str);
     
-    Token add = Token_By(TOKEN_RexLang_ADD,"+");
-    Token drf = Token_By(TOKEN_RexLang_DRF,"*");
+    Token add = Token_By(TOKEN_REXLANG_ADD,"+");
+    Token drf = Token_By(TOKEN_REXLANG_DRF,"*");
 
     Token out = Pointer_Pointer_Handler_Add(ll,&add,args);
     TokenMap newargs = TokenMap_Make((Token[]){ out,Token_Null() });
@@ -305,80 +305,80 @@ void Ex_Packer(ExternFunctionMap* Extern_Functions,Vector* funcs,Scope* s){//Vec
     TypeMap_PushContained(&s->types,funcs,
         Type_Make(POINTER_TYPE,sizeof(RexLangVariable),OperatorInterationMap_Make((OperatorInterater[]){
             OperatorInterater_Make((CStr[]){ NULL },OperatorDefineMap_Make((OperatorDefiner[]){
-                OperatorDefiner_New(TOKEN_RexLang_ADR,(Token(*)(void*,Token*,Vector*))Pointer_Handler_Adr),
-                OperatorDefiner_New(TOKEN_RexLang_DRF,(Token(*)(void*,Token*,Vector*))Pointer_Handler_Drf),
+                OperatorDefiner_New(TOKEN_REXLANG_ADR,(Token(*)(void*,Token*,Vector*))Pointer_Handler_Adr),
+                OperatorDefiner_New(TOKEN_REXLANG_DRF,(Token(*)(void*,Token*,Vector*))Pointer_Handler_Drf),
                 OperatorDefiner_New(TOKEN_CAST,(Token(*)(void*,Token*,Vector*))Pointer_Handler_Cast),
                 OperatorDefiner_New(TOKEN_INIT,(Token(*)(void*,Token*,Vector*))RexLang_Init),
-                OperatorDefiner_New(TOKEN_RexLang_SIZE,(Token(*)(void*,Token*,Vector*))Pointer_Handler_Size),
+                OperatorDefiner_New(TOKEN_REXLANG_SIZE,(Token(*)(void*,Token*,Vector*))Pointer_Handler_Size),
                 //OperatorDefiner_New(TOKEN_DESTROY,NULL),
                 OPERATORDEFINER_END
             })),
             OperatorInterater_Make((CStr[]){ POINTER_TYPE,NULL },OperatorDefineMap_Make((OperatorDefiner[]){
-                OperatorDefiner_New(TOKEN_RexLang_ASS,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Ass),
-                OperatorDefiner_New(TOKEN_RexLang_ADD,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Add),
-                OperatorDefiner_New(TOKEN_RexLang_SUB,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Sub),
-                OperatorDefiner_New(TOKEN_RexLang_EQU,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Equ),
-                OperatorDefiner_New(TOKEN_RexLang_NEQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Neq),
-                OperatorDefiner_New(TOKEN_RexLang_LES,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Les),
-                OperatorDefiner_New(TOKEN_RexLang_GRT,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Grt),
-                OperatorDefiner_New(TOKEN_RexLang_LEQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Leq),
-                OperatorDefiner_New(TOKEN_RexLang_GRQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Grq),
+                OperatorDefiner_New(TOKEN_REXLANG_ASS,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Ass),
+                OperatorDefiner_New(TOKEN_REXLANG_ADD,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Add),
+                OperatorDefiner_New(TOKEN_REXLANG_SUB,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Sub),
+                OperatorDefiner_New(TOKEN_REXLANG_EQU,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Equ),
+                OperatorDefiner_New(TOKEN_REXLANG_NEQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Neq),
+                OperatorDefiner_New(TOKEN_REXLANG_LES,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Les),
+                OperatorDefiner_New(TOKEN_REXLANG_GRT,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Grt),
+                OperatorDefiner_New(TOKEN_REXLANG_LEQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Leq),
+                OperatorDefiner_New(TOKEN_REXLANG_GRQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Grq),
                 OPERATORDEFINER_END
             })),
             OperatorInterater_Make((CStr[]){ I32_TYPE,NULL },OperatorDefineMap_Make((OperatorDefiner[]){
-                OperatorDefiner_New(TOKEN_RexLang_ASS,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Ass),
-                OperatorDefiner_New(TOKEN_RexLang_ADD,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Add),
-                OperatorDefiner_New(TOKEN_RexLang_SUB,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Sub),
-                OperatorDefiner_New(TOKEN_RexLang_EQU,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Equ),
-                OperatorDefiner_New(TOKEN_RexLang_NEQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Neq),
-                OperatorDefiner_New(TOKEN_RexLang_LES,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Les),
-                OperatorDefiner_New(TOKEN_RexLang_GRT,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Grt),
-                OperatorDefiner_New(TOKEN_RexLang_LEQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Leq),
-                OperatorDefiner_New(TOKEN_RexLang_GRQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Grq),
-                OperatorDefiner_New(TOKEN_RexLang_SUBS,(Token(*)(void*,Token*,Vector*))Pointer_I64_Handler_Subs),
+                OperatorDefiner_New(TOKEN_REXLANG_ASS,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Ass),
+                OperatorDefiner_New(TOKEN_REXLANG_ADD,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Add),
+                OperatorDefiner_New(TOKEN_REXLANG_SUB,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Sub),
+                OperatorDefiner_New(TOKEN_REXLANG_EQU,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Equ),
+                OperatorDefiner_New(TOKEN_REXLANG_NEQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Neq),
+                OperatorDefiner_New(TOKEN_REXLANG_LES,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Les),
+                OperatorDefiner_New(TOKEN_REXLANG_GRT,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Grt),
+                OperatorDefiner_New(TOKEN_REXLANG_LEQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Leq),
+                OperatorDefiner_New(TOKEN_REXLANG_GRQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Grq),
+                OperatorDefiner_New(TOKEN_REXLANG_SUBS,(Token(*)(void*,Token*,Vector*))Pointer_I64_Handler_Subs),
                 OPERATORDEFINER_END
             })),
             OperatorInterater_Make((CStr[]){ I64_TYPE,NULL },OperatorDefineMap_Make((OperatorDefiner[]){
-                OperatorDefiner_New(TOKEN_RexLang_ASS,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Ass),
-                OperatorDefiner_New(TOKEN_RexLang_ADD,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Add),
-                OperatorDefiner_New(TOKEN_RexLang_SUB,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Sub),
-                OperatorDefiner_New(TOKEN_RexLang_EQU,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Equ),
-                OperatorDefiner_New(TOKEN_RexLang_NEQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Neq),
-                OperatorDefiner_New(TOKEN_RexLang_LES,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Les),
-                OperatorDefiner_New(TOKEN_RexLang_GRT,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Grt),
-                OperatorDefiner_New(TOKEN_RexLang_LEQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Leq),
-                OperatorDefiner_New(TOKEN_RexLang_GRQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Grq),
-                OperatorDefiner_New(TOKEN_RexLang_SUBS,(Token(*)(void*,Token*,Vector*))Pointer_I64_Handler_Subs),
+                OperatorDefiner_New(TOKEN_REXLANG_ASS,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Ass),
+                OperatorDefiner_New(TOKEN_REXLANG_ADD,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Add),
+                OperatorDefiner_New(TOKEN_REXLANG_SUB,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Sub),
+                OperatorDefiner_New(TOKEN_REXLANG_EQU,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Equ),
+                OperatorDefiner_New(TOKEN_REXLANG_NEQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Neq),
+                OperatorDefiner_New(TOKEN_REXLANG_LES,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Les),
+                OperatorDefiner_New(TOKEN_REXLANG_GRT,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Grt),
+                OperatorDefiner_New(TOKEN_REXLANG_LEQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Leq),
+                OperatorDefiner_New(TOKEN_REXLANG_GRQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Grq),
+                OperatorDefiner_New(TOKEN_REXLANG_SUBS,(Token(*)(void*,Token*,Vector*))Pointer_I64_Handler_Subs),
                 OPERATORDEFINER_END
             })),
             OperatorInterater_Make((CStr[]){ U32_TYPE,NULL },OperatorDefineMap_Make((OperatorDefiner[]){
-                OperatorDefiner_New(TOKEN_RexLang_ASS,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Ass),
-                OperatorDefiner_New(TOKEN_RexLang_ADD,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Add),
-                OperatorDefiner_New(TOKEN_RexLang_SUB,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Sub),
-                OperatorDefiner_New(TOKEN_RexLang_EQU,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Equ),
-                OperatorDefiner_New(TOKEN_RexLang_NEQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Neq),
-                OperatorDefiner_New(TOKEN_RexLang_LES,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Les),
-                OperatorDefiner_New(TOKEN_RexLang_GRT,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Grt),
-                OperatorDefiner_New(TOKEN_RexLang_LEQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Leq),
-                OperatorDefiner_New(TOKEN_RexLang_GRQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Grq),
-                OperatorDefiner_New(TOKEN_RexLang_SUBS,(Token(*)(void*,Token*,Vector*))Pointer_I64_Handler_Subs),
+                OperatorDefiner_New(TOKEN_REXLANG_ASS,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Ass),
+                OperatorDefiner_New(TOKEN_REXLANG_ADD,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Add),
+                OperatorDefiner_New(TOKEN_REXLANG_SUB,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Sub),
+                OperatorDefiner_New(TOKEN_REXLANG_EQU,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Equ),
+                OperatorDefiner_New(TOKEN_REXLANG_NEQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Neq),
+                OperatorDefiner_New(TOKEN_REXLANG_LES,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Les),
+                OperatorDefiner_New(TOKEN_REXLANG_GRT,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Grt),
+                OperatorDefiner_New(TOKEN_REXLANG_LEQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Leq),
+                OperatorDefiner_New(TOKEN_REXLANG_GRQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Grq),
+                OperatorDefiner_New(TOKEN_REXLANG_SUBS,(Token(*)(void*,Token*,Vector*))Pointer_I64_Handler_Subs),
                 OPERATORDEFINER_END
             })),
             OperatorInterater_Make((CStr[]){ U64_TYPE,NULL },OperatorDefineMap_Make((OperatorDefiner[]){
-                OperatorDefiner_New(TOKEN_RexLang_ASS,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Ass),
-                OperatorDefiner_New(TOKEN_RexLang_ADD,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Add),
-                OperatorDefiner_New(TOKEN_RexLang_SUB,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Sub),
-                OperatorDefiner_New(TOKEN_RexLang_EQU,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Equ),
-                OperatorDefiner_New(TOKEN_RexLang_NEQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Neq),
-                OperatorDefiner_New(TOKEN_RexLang_LES,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Les),
-                OperatorDefiner_New(TOKEN_RexLang_GRT,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Grt),
-                OperatorDefiner_New(TOKEN_RexLang_LEQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Leq),
-                OperatorDefiner_New(TOKEN_RexLang_GRQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Grq),
-                OperatorDefiner_New(TOKEN_RexLang_SUBS,(Token(*)(void*,Token*,Vector*))Pointer_I64_Handler_Subs),
+                OperatorDefiner_New(TOKEN_REXLANG_ASS,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Ass),
+                OperatorDefiner_New(TOKEN_REXLANG_ADD,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Add),
+                OperatorDefiner_New(TOKEN_REXLANG_SUB,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Sub),
+                OperatorDefiner_New(TOKEN_REXLANG_EQU,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Equ),
+                OperatorDefiner_New(TOKEN_REXLANG_NEQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Neq),
+                OperatorDefiner_New(TOKEN_REXLANG_LES,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Les),
+                OperatorDefiner_New(TOKEN_REXLANG_GRT,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Grt),
+                OperatorDefiner_New(TOKEN_REXLANG_LEQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Leq),
+                OperatorDefiner_New(TOKEN_REXLANG_GRQ,(Token(*)(void*,Token*,Vector*))Pointer_Pointer_Handler_Grq),
+                OperatorDefiner_New(TOKEN_REXLANG_SUBS,(Token(*)(void*,Token*,Vector*))Pointer_I64_Handler_Subs),
                 OPERATORDEFINER_END
             })),
             OperatorInterater_Make((CStr[]){ OPERATORINTERATER_DONTCARE,NULL },OperatorDefineMap_Make((OperatorDefiner[]){
-                OperatorDefiner_New(TOKEN_RexLang_ARW,(Token(*)(void*,Token*,Vector*))Pointer_Handler_Arw),
+                OperatorDefiner_New(TOKEN_REXLANG_ARW,(Token(*)(void*,Token*,Vector*))Pointer_Handler_Arw),
                 OPERATORDEFINER_END
             })),
             OPERATORINTERATER_END

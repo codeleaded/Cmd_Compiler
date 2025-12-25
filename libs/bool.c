@@ -62,7 +62,7 @@ Token Bool_Bool_Handler_Ass(RexLang* ll,Token* op,Vector* args){
 
     if(b->tt==TOKEN_NUMBER){
         RexLang_IntoSet(ll,a,b->str);
-    }else if(b->tt==TOKEN_RexLang_BOOLEAN){
+    }else if(b->tt==TOKEN_REXLANG_BOOLEAN){
         CStr value = Number_Get(Boolean_Parse(b->str));
         RexLang_IntoSet(ll,a,value);
         CStr_Free(&value);
@@ -183,19 +183,19 @@ void Ex_Packer(ExternFunctionMap* Extern_Functions,Vector* funcs,Scope* s){//Vec
     TypeMap_PushContained(&s->types,funcs,
         Type_Make(BOOL_TYPE,sizeof(RexLangVariable),OperatorInterationMap_Make((OperatorInterater[]){
             OperatorInterater_Make((CStr[]){ NULL },OperatorDefineMap_Make((OperatorDefiner[]){
-                OperatorDefiner_New(TOKEN_RexLang_LOT, (Token(*)(void*,Token*,Vector*))Bool_Handler_Lot),
+                OperatorDefiner_New(TOKEN_REXLANG_LOT, (Token(*)(void*,Token*,Vector*))Bool_Handler_Lot),
                 OperatorDefiner_New(TOKEN_CAST,         (Token(*)(void*,Token*,Vector*))Bool_Handler_Cast),
                 OperatorDefiner_New(TOKEN_INIT,         (Token(*)(void*,Token*,Vector*))RexLang_Init),
-                OperatorDefiner_New(TOKEN_RexLang_SIZE,(Token(*)(void*,Token*,Vector*))Bool_Handler_Size),
+                OperatorDefiner_New(TOKEN_REXLANG_SIZE,(Token(*)(void*,Token*,Vector*))Bool_Handler_Size),
                 //OperatorDefiner_New(TOKEN_DESTROY,NULL),
                 OPERATORDEFINER_END
             })),
             OperatorInterater_Make((CStr[]){ BOOL_TYPE,NULL },OperatorDefineMap_Make((OperatorDefiner[]){
-                OperatorDefiner_New(TOKEN_RexLang_ASS,(Token(*)(void*,Token*,Vector*))Bool_Bool_Handler_Ass),
-                OperatorDefiner_New(TOKEN_RexLang_LND,(Token(*)(void*,Token*,Vector*))Bool_Bool_Handler_Lnd),
-                OperatorDefiner_New(TOKEN_RexLang_LOR,(Token(*)(void*,Token*,Vector*))Bool_Bool_Handler_Lor),
-                OperatorDefiner_New(TOKEN_RexLang_EQU,(Token(*)(void*,Token*,Vector*))Bool_Bool_Handler_Equ),
-                OperatorDefiner_New(TOKEN_RexLang_NEQ,(Token(*)(void*,Token*,Vector*))Bool_Bool_Handler_Neq),
+                OperatorDefiner_New(TOKEN_REXLANG_ASS,(Token(*)(void*,Token*,Vector*))Bool_Bool_Handler_Ass),
+                OperatorDefiner_New(TOKEN_REXLANG_LND,(Token(*)(void*,Token*,Vector*))Bool_Bool_Handler_Lnd),
+                OperatorDefiner_New(TOKEN_REXLANG_LOR,(Token(*)(void*,Token*,Vector*))Bool_Bool_Handler_Lor),
+                OperatorDefiner_New(TOKEN_REXLANG_EQU,(Token(*)(void*,Token*,Vector*))Bool_Bool_Handler_Equ),
+                OperatorDefiner_New(TOKEN_REXLANG_NEQ,(Token(*)(void*,Token*,Vector*))Bool_Bool_Handler_Neq),
                 OPERATORDEFINER_END
             })),
             OPERATORINTERATER_END
